@@ -2,8 +2,12 @@
 // MAIN //
 //////////
 
+
+// $.LoadingOverlay("show");
+
 // standard global variables
 var container, scene, camera, renderer, controls, stats;
+var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 // var keyboard = new THREEx.keyboardstate();
 var clock = new THREE.Clock();
 
@@ -13,12 +17,6 @@ var counter
 
 // initialization
 init();
-
-// animation loop
-animate();
-
-
-
 
 ///////////////
 // FUNCTIONS //
@@ -57,8 +55,6 @@ function init()
 	container.appendChild( renderer.domElement );
 	
 	////////// EVENTS //////////
-	// automatically resize renderer
-	// THREEx.WindowResize(renderer, camera);
 	window.addEventListener( 'resize', onWindowResize, false );
 	
 	///////// CONTROLS /////////
@@ -71,62 +67,56 @@ function init()
 	light.position.set(0,1000,0);
 	light.castShadow = true;
 	scene.add(light);
-
 	var ambientLight = new THREE.AmbientLight(0x111111,1.5);
 	scene.add(ambientLight);
 
 	
 	//////// GEOMETRY /////////
 
-	//CHECKS//
+	var index = 0;
+	var countLoaded = 0
+	var files = ["meshRoof.obj", "meshRoof1.obj", "meshRoof2.obj"];
+
+
+	//////////CHECKS///////////
+
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
 			var percentComplete = xhr.loaded / xhr.total * 100;
-			console.log( Math.round(percentComplete, 2) + '% downloaded' );
-		}
-	};
-
-	var onError = function ( xhr ) {
-	};
-
+			console.log( Math.round(percentComplete, 2) + '% downloaded' );	
+	}};
+	var onError = function ( xhr ) {};
+	
 	var manager = new THREE.LoadingManager();
+	
+	manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+		console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+	};
 	manager.onProgress = function ( item, loaded, total ) {
 		console.log( item, loaded, total );
 	};
+	manager.onLoad = function ( ) {
+		animate();
+		console.log( 'Loading complete!');
+	};
 
+	var objLoader = new THREE.OBJLoader( manager);
 
-	//LOADER//
-	var axo = ["meshRoof.obj", "meshRoof1.obj", "meshRoof2.obj"]
-
-	var loader = new THREE.OBJLoader( manager );
-	
-	loader.load(axo[0], function ( object ) {	
-		object.id = "layer1";
-		object.position.y = 20;
+	function loadNextFile() {
+	  if (index > files.length - 1) return;
+	  objLoader.load(files[index], function(object) {
+		object.name = "obj" + index;
+		object.position.y = 5;
 		object.position.z = 45;
 		object.receiveShadow = true;
 		object.castShadow = true;
-		scene.add( object );
-	}, onProgress, onError );
-
-	loader.load(axo[1], function ( object ) {	
-		object.id = "layer2";
-		object.position.y = 40;
-		object.position.z = 45;
-		object.receiveShadow = true;
-		object.castShadow = true;
-		scene.add( object );
-	}, onProgress, onError );
-
-	loader.load(axo[2], function ( object ) {	
-		object.id = "layer3";
-		object.position.y = 60;
-		object.position.z = 45;
-		object.receiveShadow = true;
-		object.castShadow = true;
-		scene.add( object );
-	}, onProgress, onError );
-
+	    scene.add(object);
+	    index++;
+	    loadNextFile();
+	    console.log(object.name);
+	  }, onProgress, onError);
+	};
+	loadNextFile();
 
 	//Materials
 	var imgTexture = new THREE.ImageUtils.loadTexture( "UV.jpg" );
@@ -141,11 +131,8 @@ function init()
 	terrain.rotation.x = Math.PI / -2;
 	terrain.receiveShadow = true;
 	terrain.castShadow = true;
-
 	var gridHelper = new THREE.GridHelper( 700, 200 );
 	scene.add( gridHelper );
-
-	//Addition to Scene
 	scene.add(terrain);	
 
 
@@ -156,17 +143,23 @@ function init()
 	skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
 	scene.add(skyBox);
 	scene.fog = new THREE.FogExp2( 0xFFFFFF, 0.0065 );
-}
 
+	////////CUSTOM /////////////
+	// projector = new THREE.Projector();
+	// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+};
+
+// function onDocumentMouseMove( event ) {
+// 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+// 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+// };
 
 function animate() 
 {
     requestAnimationFrame( animate );	
 	render();		
 	update();
-}
-
-
+};
 
 function onWindowResize() {
 	var aspect = window.innerWidth / window.innerHeight;
@@ -176,40 +169,54 @@ function onWindowResize() {
 	camera.bottom = - frustumSize / 2;
 	camera.updateProjectionMatrix();
 	renderer.setSize( window.innerWidth, window.innerHeight );
-}
+};
 
 
 function update()
 {
 	// delta = change in time since last call (in seconds)
 	var delta = clock.getDelta(); 
-	// terrain.rotation.z += 0.005;
-	// skyBox.rotation.z += -0.005;
-	// skyBox.rotation.x += -0.005;
+
+	var obj2 = scene.getObjectByName("obj2");
+	var obj3 = scene.getObjectByName("obj3");
+	
+	if (document.getElementById("axo").checked == true){
+		obj2.position.y += 0.2;
+		obj3.position.y += 0.1;
+	} else {
+		obj2.position.y = 5;
+		obj3.position.y = 5;
+	}
 
 
 
-	// for (var i = 0 ; i < (cubes.length) ; i++){
-	// 	var num1 = Math.random()*(0.05-0.001)+0.001;
-	// 	var num2 = Math.random()*(0.05-0.001)+0.001;
-	// 	var num3 = Math.random()*(0.05-0.001)+0.001;
-	// 	// object.rotation.z += num1;
-	// 	// object.rotation.x += num2;
-	// 	// object.rotation.y += num3;
-	// };
+	/////// find intersections///////
 
-	// // functionality provided by THREEx.KeyboardState.js
-	// if ( keyboard.pressed("1") )
-	// 	document.getElementById('message').innerHTML = ' Have a nice day! - 1';	
-	// if ( keyboard.pressed("2") )
-	// 	document.getElementById('message').innerHTML = ' Have a nice day! - 2 ';	
+	// // create a Ray with origin at the mouse position
+	// //   and direction into the scene (camera direction)
+	// var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+	// projector.unprojectVector( vector, camera );
+	// var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+	// // create an array containing all objects in the scene with which the ray intersects
+	// var intersects = ray.intersectObjects( scene.children );
+	// console.log(intersects);
+
+	// INTERSECTED = the object in the scene currently closest to the camera 
+	//		and intersected by the Ray projected from the mouse position 	
+	
+	// if there is one (or more) intersections
+	// if ( intersects.length > 0 )
+	// {
+
+	// }
 
 	controls.update();
-	// stats.update();
-}
+	// // stats.update();
+};
 
 
 function render() 
 {	
 	renderer.render( scene, camera );
-}
+};

@@ -13,9 +13,67 @@
 			margin-top: 0.1em;
 			margin-bottom: 0.1em;
 		}
+		/* The switch - the box around the slider */
+		.switch {
+		  position: relative;
+		  display: inline-block;
+		  width: 60px;
+		  height: 34px;
+		}
+
+		/* Hide default HTML checkbox */
+		.switch input {display:none;}
+
+		/* The slider */
+		.slider {
+		  position: absolute;
+		  cursor: pointer;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  background-color: #ccc;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		.slider:before {
+		  position: absolute;
+		  content: "";
+		  height: 26px;
+		  width: 26px;
+		  left: 4px;
+		  bottom: 4px;
+		  background-color: white;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		input:checked + .slider {
+		  background-color: #2196F3;
+		}
+
+		input:focus + .slider {
+		  box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+		  -webkit-transform: translateX(26px);
+		  -ms-transform: translateX(26px);
+		  transform: translateX(26px);
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+		  border-radius: 34px;
+		}
+
+		.slider.round:before {
+		  border-radius: 50%;
+		}
 		::-webkit-scrollbar { 
     	display: none; 
-}
+		}
 		</style>
 	</head>
 	<body>
@@ -26,15 +84,32 @@
 		<script src="js/threex.keyboardstate.js"></script>
 		<script src="js/threex.windowresize.js"></script>
 		<script src="js/OBJLoader.js"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<script src = "https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.4/src/loadingoverlay.min.js"></script>	 
 
-		<div id="ThreeJS" style="z-index: 0; position: absolute; left:0px; top:0px; background:white; width: 500px; height:500px"></div>
+		<div id="renderedContent"><div id="ThreeJS" style="z-index: 0; position: absolute; left:0px; top:0px; background:white; width: 500px; height:500px"></div></div>
 
 		<script src="js/basicSetup.js"></script>	
 		
 		<div id="textContent" style="z-index: 100; position: fixed; left:4%; top:5%; width:400px;">
-			<div id="title" style="position: relative;"><h1>Sydenham Roof</h1></div>
+			<div id="title" style="position: relative;"><h1>Roof</h1></div>
 			<div id="subheading" style="position: relative; font-family:arial; font-size:0.5em; color:#5F5F5F;"><h3>Explorations in webGL</h3></div>
-			<div id="paragraph" style="position: relative; width:200px; height:200px; font-family:arial; font-size:0.5em; overflow:scroll; color:#858585;"><p>Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui. <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui  <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui  <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui</p></div>		
+			<div id="paragraph" style="position: relative; width:200px; height:200px; font-family:arial; font-size:0.5em; overflow:scroll; color:#858585;"><p>Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui. <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui  <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui  <br><br> Alibea doluptis as si dolupta tessim net aut et am reptatq uaersperunt, quam deles nobitatur sit utem recullaccus errum eaquatum id qui omnisqui non consent, simporeriae velent liquam ex expellantur, ulpa voluptatur, a simustiame est, nus, cum aut ditios autem invento evelias quunto blab imillab orerspel isim quam id qui qui</p></div>	
+			<br>
+			<!-- Rounded switch -->
+			<label class="switch">
+			  <input id="axo" type="checkbox" value="true" onchange="alerter()">
+			  <span class="slider round"></span>
+			</label>
 		</div>
+
+		<script type="text/javascript">
+	
+			function alerter(){
+				console.log(document.getElementById("axo").checked);
+			};
+
+		</script>
 	</body>
 </html>
+
