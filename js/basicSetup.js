@@ -27,7 +27,7 @@ var textBox = document.getElementById('controls');
 console.log(textBox);
 // textBox.appendChild(gui.domElement);
 
-gui.add(guiControls, 'positionZ', 0, 25);		
+gui.add(guiControls, 'positionZ', 0, 30);		
 
 // initialization
 init();
@@ -51,9 +51,9 @@ function init()
 	var aspect = window.innerWidth / window.innerHeight;
 
 	camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, NEAR, FAR );
-	camera.zoom = 7;
-	camera.position.set(-10,3.5,-10);
+	camera.zoom = 11;
 	camera.updateProjectionMatrix();
+	camera.position.set(0,2.5,-5);
 	scene.add(camera);
 
 	///////// RENDERER /////////
@@ -73,8 +73,13 @@ function init()
 	
 	///////// CONTROLS /////////
 	controls = new THREE.OrbitControls( camera, renderer.domElement );
-	controls.center.set(0, 40, 0);
-	camera.position.copy(controls.center).add(new THREE.Vector3(10, 5, 10));
+	controls.center.set(0, 20, 0);
+	controls.enablePan = false;
+	controls.enableDamping = true;
+	controls.dampingFactor = 0.2;
+	controls.maxPolarAngle = Math.PI / 2;
+
+	camera.position.copy(controls.center).add(new THREE.Vector3(2,0.8,-4));
 
 	////////// LIGHT /////////
 	var light = new THREE.SpotLight(0xffffff, 0.7);
@@ -100,6 +105,7 @@ function init()
 	}};
 	var onError = function ( xhr ) {};
 	
+	// var progressBar = document.getElementById("loadingBar"); 
 	var manager = new THREE.LoadingManager();
 	
 	manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -107,6 +113,7 @@ function init()
 	};
 	manager.onProgress = function ( item, loaded, total ) {
 		console.log( item, loaded, total );
+		// progressBar.style.width = (loaded / total * 100) + '%';
 	};
 	manager.onLoad = function ( ) {
 		animate();
@@ -114,16 +121,16 @@ function init()
 	};
 
 	var objLoader = new THREE.OBJLoader( manager);
-
 	function loadNextFile() {
 	  if (index > files.length - 1) return;
 	  objLoader.load(files[index], function(object) {
 		object.name = "obj" + index;
-		object.position.y = 5;
+		object.position.y = 4;
 		object.position.z = 45;
+		object.position.x = 10;
 		object.receiveShadow = true;
 		object.castShadow = true;
-		var objMaterial = new THREE.MeshPhongMaterial( { diffuse: 0xD3D3D3, side: THREE.DoubleSide, opacity: 0.4});
+		var objMaterial = new THREE.MeshToonMaterial( { color: 0xFF0000, side: THREE.DoubleSide, transparent: true, opacity: 0.7});
 	    object.traverse( function ( child ) {
 	        if ( child instanceof THREE.Mesh ) {
 	            child.material = objMaterial ;
