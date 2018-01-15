@@ -169,9 +169,6 @@ function init()
 	scene.add(skyBox);
 	scene.fog = new THREE.FogExp2( 0xFFFFFF, 0.0065 );
 
-
-
-
 };
 
 
@@ -211,7 +208,9 @@ function update()
 
 	obj1.position.y = (guiControls.positionZ / 2) + 5;
 	obj2.position.y = guiControls.positionZ + 5;
-
+	
+	controls.center.set(0, ((guiControls.positionZ / 2)+1), 0);
+	camera.position.copy(controls.center).add(new THREE.Vector3(2,(Math.log(guiControls.positionZ + 1)/2)+0.5,-4));
 
 	/////// find intersections///////
 
