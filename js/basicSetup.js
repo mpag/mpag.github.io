@@ -15,6 +15,20 @@ var clock = new THREE.Clock();
 var cube;
 var counter
 
+////////GUI///////////
+var guiControls = new function (){
+	this.positionZ = 0;
+};
+
+// var gui = new dat.GUI({ autoPlace: false });
+var gui = new dat.GUI();
+
+var textBox = document.getElementById('controls');
+console.log(textBox);
+// textBox.appendChild(gui.domElement);
+
+gui.add(guiControls, 'positionZ', 0, 25);		
+
 // initialization
 init();
 
@@ -77,7 +91,6 @@ function init()
 	var countLoaded = 0
 	var files = ["meshRoof.obj", "meshRoof1.obj", "meshRoof2.obj"];
 
-
 	//////////CHECKS///////////
 
 	var onProgress = function ( xhr ) {
@@ -110,10 +123,15 @@ function init()
 		object.position.z = 45;
 		object.receiveShadow = true;
 		object.castShadow = true;
+		var objMaterial = new THREE.MeshPhongMaterial( { diffuse: 0xD3D3D3, side: THREE.DoubleSide, opacity: 0.4});
+	    object.traverse( function ( child ) {
+	        if ( child instanceof THREE.Mesh ) {
+	            child.material = objMaterial ;
+	        }
+	    });
 	    scene.add(object);
 	    index++;
 	    loadNextFile();
-	    console.log(object.name);
 	  }, onProgress, onError);
 	};
 	loadNextFile();
@@ -123,7 +141,7 @@ function init()
 	imgTexture.wrapS = imgTexture.wrapT = THREE.RepeatWrapping;
 	var imgBumpTexture = new THREE.ImageUtils.loadTexture( "UV.jpg" );
 	imgBumpTexture.wrapS = imgBumpTexture.wrapT = THREE.RepeatWrapping;
-	var material = new THREE.MeshPhongMaterial( { diffuse: imgTexture, bumpMap: imgBumpTexture, bumpScale: 0.01, side: THREE.FrontSide});
+	var material = new THREE.MeshPhongMaterial( { color: imgTexture, bumpMap: imgBumpTexture, bumpScale: 0.01, side: THREE.FrontSide});
 
 	//Geom Definition
 	var geometryTerrain = new THREE.PlaneGeometry( 28000, 28000, 256, 256 );
@@ -144,15 +162,11 @@ function init()
 	scene.add(skyBox);
 	scene.fog = new THREE.FogExp2( 0xFFFFFF, 0.0065 );
 
-	////////CUSTOM /////////////
-	// projector = new THREE.Projector();
-	// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+
+
 };
 
-// function onDocumentMouseMove( event ) {
-// 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-// 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-// };
 
 function animate() 
 {
@@ -177,17 +191,19 @@ function update()
 	// delta = change in time since last call (in seconds)
 	var delta = clock.getDelta(); 
 
+	var obj1 = scene.getObjectByName("obj1");
 	var obj2 = scene.getObjectByName("obj2");
-	var obj3 = scene.getObjectByName("obj3");
 	
-	if (document.getElementById("axo").checked == true){
-		obj2.position.y += 0.2;
-		obj3.position.y += 0.1;
-	} else {
-		obj2.position.y = 5;
-		obj3.position.y = 5;
-	}
+	// if (document.getElementById("axo").checked == true){
+	// 	obj2.position.y = 0.2;
+	// 	obj3.position.y = 0.1;
+	// } else {
+	// 	obj2.position.y = 5;
+	// 	obj3.position.y = 5;
+	// }
 
+	obj1.position.y = (guiControls.positionZ / 2) + 5;
+	obj2.position.y = guiControls.positionZ + 5;
 
 
 	/////// find intersections///////
