@@ -7,7 +7,6 @@
 
 // standard global variables
 var container, scene, camera, renderer, controls, stats;
-var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 // var keyboard = new THREEx.keyboardstate();
 var clock = new THREE.Clock();
 
@@ -51,7 +50,7 @@ function init()
 	var aspect = window.innerWidth / window.innerHeight;
 
 	camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, NEAR, FAR );
-	camera.zoom = 11;
+	camera.zoom = 15;
 	camera.updateProjectionMatrix();
 	camera.position.set(0,2.5,-5);
 	scene.add(camera);
@@ -94,7 +93,7 @@ function init()
 
 	var index = 0;
 	var countLoaded = 0
-	var files = ["meshRoof.obj", "meshRoof1.obj", "meshRoof2.obj"];
+	var files = ["meshRoof_00.obj", "meshRoof_01.obj", "meshRoof_02.obj", "meshRoof_03.obj"];
 
 	//////////CHECKS///////////
 
@@ -116,8 +115,24 @@ function init()
 		// progressBar.style.width = (loaded / total * 100) + '%';
 	};
 	manager.onLoad = function ( ) {
-		animate();
 		console.log( 'Loading complete!');
+		
+		var obj1 = scene.getObjectByName("obj1");
+		var obj2 = scene.getObjectByName("obj2");
+		var obj3 = scene.getObjectByName("obj3");
+		
+		var obj2Material = new THREE.MeshToonMaterial( { color: 0xE8E8E8, side: THREE.DoubleSide, transparent: true, opacity: 0.5});
+		var obj3Material = new THREE.MeshToonMaterial( { color: 0x797979, side: THREE.DoubleSide, transparent: false, opacity: 0.7});
+	    
+	    obj2.traverse( function ( child ) {
+	        if ( child instanceof THREE.Mesh ) {
+	            child.material = obj2Material ;
+        }});
+	    obj3.traverse( function ( child ) {
+	        if ( child instanceof THREE.Mesh ) {
+	            child.material = obj3Material ;
+        }});        
+		animate();
 	};
 
 	var objLoader = new THREE.OBJLoader( manager);
@@ -125,17 +140,8 @@ function init()
 	  if (index > files.length - 1) return;
 	  objLoader.load(files[index], function(object) {
 		object.name = "obj" + index;
-		object.position.y = 4;
-		object.position.z = 45;
-		object.position.x = 10;
 		object.receiveShadow = true;
 		object.castShadow = true;
-		var objMaterial = new THREE.MeshToonMaterial( { color: 0xFF0000, side: THREE.DoubleSide, transparent: true, opacity: 0.7});
-	    object.traverse( function ( child ) {
-	        if ( child instanceof THREE.Mesh ) {
-	            child.material = objMaterial ;
-	        }
-	    });
 	    scene.add(object);
 	    index++;
 	    loadNextFile();
@@ -144,11 +150,7 @@ function init()
 	loadNextFile();
 
 	//Materials
-	var imgTexture = new THREE.ImageUtils.loadTexture( "UV.jpg" );
-	imgTexture.wrapS = imgTexture.wrapT = THREE.RepeatWrapping;
-	var imgBumpTexture = new THREE.ImageUtils.loadTexture( "UV.jpg" );
-	imgBumpTexture.wrapS = imgBumpTexture.wrapT = THREE.RepeatWrapping;
-	var material = new THREE.MeshPhongMaterial( { color: imgTexture, bumpMap: imgBumpTexture, bumpScale: 0.01, side: THREE.FrontSide});
+	var material = new THREE.MeshPhongMaterial( { color: 0xD6D6D6, side: THREE.FrontSide});
 
 	//Geom Definition
 	var geometryTerrain = new THREE.PlaneGeometry( 28000, 28000, 256, 256 );
@@ -197,6 +199,7 @@ function update()
 
 	var obj1 = scene.getObjectByName("obj1");
 	var obj2 = scene.getObjectByName("obj2");
+	var obj3 = scene.getObjectByName("obj3");
 	
 	// if (document.getElementById("axo").checked == true){
 	// 	obj2.position.y = 0.2;
@@ -206,35 +209,28 @@ function update()
 	// 	obj3.position.y = 5;
 	// }
 
-	obj1.position.y = (guiControls.positionZ / 2) + 5;
-	obj2.position.y = guiControls.positionZ + 5;
+	obj1.position.y = (guiControls.positionZ / 2);
+	obj2.position.y = (guiControls.positionZ) ;
+	obj3.position.y = (guiControls.positionZ) ;
 	
-	controls.center.set(0, ((guiControls.positionZ / 2)+1), 0);
-	camera.position.copy(controls.center).add(new THREE.Vector3(2,(Math.log(guiControls.positionZ + 1)/2)+0.5,-4));
+	posX = camera.position.x;
+	posZ = camera.position.z;
 
-	/////// find intersections///////
+	// t: current time, b: begInnIng value, c: change In value, d: duration
 
-	// // create a Ray with origin at the mouse position
-	// //   and direction into the scene (camera direction)
-	// var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-	// projector.unprojectVector( vector, camera );
-	// var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+	var easeInOutQuad = function (t, b, c, d) {
+		return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b;
+	};
 
-	// // create an array containing all objects in the scene with which the ray intersects
-	// var intersects = ray.intersectObjects( scene.children );
-	// console.log(intersects);
 
-	// INTERSECTED = the object in the scene currently closest to the camera 
-	//		and intersected by the Ray projected from the mouse position 	
+	posY = easeInOutQuad(guiControls.positionZ, 1, 1, 30);
+
+
 	
-	// if there is one (or more) intersections
-	// if ( intersects.length > 0 )
-	// {
-
-	// }
+	controls.center.set(0,guiControls.positionZ / 2, 0);
+	camera.position.copy(controls.center).add(new THREE.Vector3(posX, posY, posZ));
 
 	controls.update();
-	// // stats.update();
 };
 
 
