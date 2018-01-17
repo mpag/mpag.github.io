@@ -3,38 +3,31 @@
 //////////
 
 
-// $.LoadingOverlay("show");
 
-// standard global variables
 var container, scene, camera, renderer, controls, stats;
-// var keyboard = new THREEx.keyboardstate();
 var clock = new THREE.Clock();
-
-// custom global variables
 var cube;
-var counter
+var counter;
+
+
+var options = {id: 'progressBar'};
+var nanobar = new Nanobar( options );
+nanobar.go( 1 );
 
 ////////GUI///////////
 var guiControls = new function (){
 	this.positionZ = 0;
+	this.rotate = false;
 };
-
-// var gui = new dat.GUI({ autoPlace: false });
 var gui = new dat.GUI();
+gui.add(guiControls, 'positionZ', 0, 30);
+gui.add(guiControls, 'rotate');
 
-var textBox = document.getElementById('controls');
-console.log(textBox);
-// textBox.appendChild(gui.domElement);
 
-gui.add(guiControls, 'positionZ', 0, 30);		
 
 // initialization
 init();
 
-///////////////
-// FUNCTIONS //
-///////////////
-			
 function init() 
 {
 	// SCENE
@@ -77,6 +70,7 @@ function init()
 	controls.enableDamping = true;
 	controls.dampingFactor = 0.2;
 	controls.maxPolarAngle = Math.PI / 2;
+	controls.autoRotateSpeed = 0.5;
 
 	camera.position.copy(controls.center).add(new THREE.Vector3(2,0.8,-4));
 
@@ -100,11 +94,11 @@ function init()
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
 			var percentComplete = xhr.loaded / xhr.total * 100;
+			nanobar.go( Math.round(percentComplete, 2) );
 			console.log( Math.round(percentComplete, 2) + '% downloaded' );	
 	}};
 	var onError = function ( xhr ) {};
-	
-	// var progressBar = document.getElementById("loadingBar"); 
+	 
 	var manager = new THREE.LoadingManager();
 	
 	manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -116,6 +110,9 @@ function init()
 	};
 	manager.onLoad = function ( ) {
 		console.log( 'Loading complete!');
+		nanobar.go(100);
+		var elem = document.getElementById("progressBar");
+		elem.style.display = "none";
 		
 		var obj1 = scene.getObjectByName("obj1");
 		var obj2 = scene.getObjectByName("obj2");
@@ -174,12 +171,17 @@ function init()
 };
 
 
+
+
+
+
 function animate() 
 {
     requestAnimationFrame( animate );	
 	render();		
 	update();
 };
+
 
 function onWindowResize() {
 	var aspect = window.innerWidth / window.innerHeight;
@@ -201,35 +203,21 @@ function update()
 	var obj2 = scene.getObjectByName("obj2");
 	var obj3 = scene.getObjectByName("obj3");
 	
-	// if (document.getElementById("axo").checked == true){
-	// 	obj2.position.y = 0.2;
-	// 	obj3.position.y = 0.1;
-	// } else {
-	// 	obj2.position.y = 5;
-	// 	obj3.position.y = 5;
-	// }
-
 	obj1.position.y = (guiControls.positionZ / 2);
 	obj2.position.y = (guiControls.positionZ) ;
 	obj3.position.y = (guiControls.positionZ) ;
 	
-	posX = camera.position.x;
-	posZ = camera.position.z;
-
 	// t: current time, b: begInnIng value, c: change In value, d: duration
-
 	var easeInOutQuad = function (t, b, c, d) {
 		return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b;
 	};
 
-
+	posX = camera.position.x;
+	posZ = camera.position.z;
 	posY = easeInOutQuad(guiControls.positionZ, 1, 1, 30);
-
-
-	
 	controls.center.set(0,guiControls.positionZ / 2, 0);
 	camera.position.copy(controls.center).add(new THREE.Vector3(posX, posY, posZ));
-
+	controls.autoRotate = guiControls.rotate;
 	controls.update();
 };
 

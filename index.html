@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset=utf-8>
-		<title>Sydenham Roof</title>
+		<title>Interactive Axonometric</title>
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style type="text/css">
 		h1 {
@@ -14,15 +14,11 @@
 			margin-bottom: 0.1em;
 		}
 
-		#loading {
-		    height: 500px;
-		    width: 100%;
-		    background-color: grey;
-		}
-		#loadingBar {
-		    width: 1%;
-		    height: 30px;
-		    background-color: green;
+		#progressBar {
+			height: 100%;
+			width: 100%
+			background-color: #FFFFFF;
+			display: block;
 		}
 
 		/* The switch - the box around the slider */
@@ -86,6 +82,7 @@
 		::-webkit-scrollbar { 
     	display: none; 
 		}
+
 		</style>
 	</head>
 	
@@ -96,6 +93,7 @@
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/threex.keyboardstate.js"></script>
 		<script src="js/threex.windowresize.js"></script>
+		<script src="js/nanobar.js"></script>
 		<script src="js/OBJLoader.js"></script>
 		<script type="text/javascript" src="js/dat.gui.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
@@ -105,6 +103,7 @@
 
 		<script src="js/basicSetup.js"></script>			
 
+		<div id="progressContainer"><div id="progressBar"></div></div>
 <!-- 		<div id="textContent" style="z-index: 10; position: fixed; left:4%; top:5%; width:400px;">
 			<div id="title" style="position: relative;"><h1>Roof</h1></div>
 			<div id="subheading" style="position: relative; font-family:arial; font-size:0.5em; color:#5F5F5F;"><h3>Explorations in webGL</h3></div>
