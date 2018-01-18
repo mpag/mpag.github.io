@@ -19,9 +19,6 @@ var guiControls = new function (){
 	this.positionZ = 0;
 	this.rotate = false;
 };
-var gui = new dat.GUI();
-gui.add(guiControls, 'positionZ', 0, 30);
-gui.add(guiControls, 'rotate');
 
 
 
@@ -35,9 +32,7 @@ function init()
 
 	//////// CAMERA //////////
 	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-	// camera attributes
 	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = -100000, FAR = 100000;
-	// camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 	frustumSize = 1000;
 
 	var aspect = window.innerWidth / window.innerHeight;
@@ -95,23 +90,27 @@ function init()
 		if ( xhr.lengthComputable ) {
 			var percentComplete = xhr.loaded / xhr.total * 100;
 			nanobar.go( Math.round(percentComplete, 2) );
-			console.log( Math.round(percentComplete, 2) + '% downloaded' );	
+			document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );	
 	}};
 	var onError = function ( xhr ) {};
 	 
 	var manager = new THREE.LoadingManager();
 	
 	manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-		console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+		// console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 	};
 	manager.onProgress = function ( item, loaded, total ) {
 		console.log( item, loaded, total );
-		// progressBar.style.width = (loaded / total * 100) + '%';
+		countLoaded++;
+		document.getElementById("fileComplete").innerHTML =(countLoaded + "/" + files.length + " loaded");
 	};
 	manager.onLoad = function ( ) {
-		console.log( 'Loading complete!');
+		// console.log( 'Loading complete!');
 		nanobar.go(100);
-		var elem = document.getElementById("progressBar");
+		var gui = new dat.GUI();
+		gui.add(guiControls, 'positionZ', 0, 30);
+		gui.add(guiControls, 'rotate');
+		var elem = document.getElementById("progressContainer");
 		elem.style.display = "none";
 		
 		var obj1 = scene.getObjectByName("obj1");
@@ -161,7 +160,6 @@ function init()
 
 
 	//////// SKY /////////////
-
 	var skyBoxGeometry = new THREE.CubeGeometry( 20000, 20000, 20000 );
 	var skyBoxMaterial = new THREE.MeshStandardMaterial( { diffuse: 0xFFFFFF, side: THREE.BackSide});
 	skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
@@ -169,10 +167,6 @@ function init()
 	scene.fog = new THREE.FogExp2( 0xFFFFFF, 0.0065 );
 
 };
-
-
-
-
 
 
 function animate() 
