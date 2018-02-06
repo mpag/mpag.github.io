@@ -10,9 +10,9 @@ var cube;
 var counter;
 
 
-var options = {id: 'progressBar'};
-var nanobar = new Nanobar( options );
-nanobar.go( 1 );
+// var options = {id: 'progressBar'};
+// var nanobar = new Nanobar( options );
+// nanobar.go( 1 );
 
 ////////GUI///////////
 var guiControls = new function (){
@@ -89,7 +89,7 @@ function init()
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
 			var percentComplete = xhr.loaded / xhr.total * 100;
-			nanobar.go( Math.round(percentComplete, 2) );
+			// nanobar.go( Math.round(percentComplete, 2) );
 			document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );	
 	}};
 	var onError = function ( xhr ) {};
@@ -106,7 +106,7 @@ function init()
 	};
 	manager.onLoad = function ( ) {
 		// console.log( 'Loading complete!');
-		nanobar.go(100);
+		// nanobar.go(100);
 		var gui = new dat.GUI();
 		gui.add(guiControls, 'positionZ', 0, 30);
 		gui.add(guiControls, 'rotate');

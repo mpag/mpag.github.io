@@ -16,31 +16,29 @@
 
 			#progressContainer {
 				z-index:150;
-				left: 0px;
-				height: 100%;
-				width: 0%
-				background-color: #FFFFFF;
-				display: block;
+				height:100%;
+				width:100%;
 			}
 
-			.progressBar {
-				z-index:150;
-				height: 100%;
-				width: 100%
-				background-color: #FFFFFF;
-				display: block;
-			}
-
-			#percentComplete, #fileComplete {
-				width: 100%;
-				z-index:200;
+			#percentComplete {
+				text-align: center;
+				position:relative; 
 				margin: auto; 
-				position:absolute; 
 				font-size:1.3em;
 				font-family: Roboto, sans-serif;
 				font-weight: 100;
 				color:#FFFFFF; 
+				display:block;
+			}
+
+			#fileComplete {
 				text-align: center;
+				position:relative; 
+				margin: auto; 
+				font-size:1.3em;
+				font-family: Roboto, sans-serif;
+				font-weight: 100;
+				color:#FFFFFF; 
 				display:block;
 			}
 
@@ -66,14 +64,9 @@
 		<div id="renderedContent"><div id="ThreeJS" style="z-index: 0; position: absolute; left:0px; top:0px; background:white; width: 500px; height:500px"></div></div>
 		<script src="js/basicSetup.js"></script>			
 		<div id="progressContainer">
-			<div class="progressBar"></div>
-			<svg viewBox="100 100 100% 100%" xmlns="http://www.w3.org/2000/svg">
-				<circle id="circleLoad" cx="100" cy="100" r="100"/>
-			</svg>
 			<div id="percentComplete" style="top:46%;">46% downloaded</div><div id="fileComplete" style="top:52%;">1/4</div></div>
-		<div id="controls"></div>
-		<!-- <div id="loading" style="z-index: 20"><div id="loadingBar" style="z-index: 20">helllllloooo</div></div> -->
-		
+		<div id="controls"></div>		
 	</body>
+
 </html>
 
