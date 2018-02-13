@@ -16,13 +16,16 @@
 
 			#progressContainer {
 				z-index:150;
-				height:100%;
-				width:100%;
+				height:10%;
+				width:40%;
+				position:absolute; 
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+				text-align: center
 			}
 
 			#percentComplete {
-				text-align: center;
-				position:relative; 
 				margin: auto; 
 				font-size:1.3em;
 				font-family: Roboto, sans-serif;
@@ -32,9 +35,6 @@
 			}
 
 			#fileComplete {
-				text-align: center;
-				position:relative; 
-				margin: auto; 
 				font-size:1.3em;
 				font-family: Roboto, sans-serif;
 				font-weight: 100;
@@ -42,11 +42,14 @@
 				display:block;
 			}
 
-			#circleLoad {
-				z-index: 300;
-				fill:none;
-				stroke: white;
-				stroke-width: 5px;
+			#svg circle {
+				stroke-dashoffset: 0;
+				transition: stroke-dashoffset 1s linear;
+				stroke: #171717;
+				stroke-width: 0.2em;
+			}
+			#svg #bar {
+				stroke: #FFFFFF;
 			}
 		</style>
 	</head>
@@ -56,7 +59,6 @@
 		<script src="js/Detector.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/threex.windowresize.js"></script>
-		<script src="js/nanobar.js"></script>
 		<script src="js/OBJLoader.js"></script>
 		<script type="text/javascript" src="js/dat.gui.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
@@ -64,7 +66,14 @@
 		<div id="renderedContent"><div id="ThreeJS" style="z-index: 0; position: absolute; left:0px; top:0px; background:white; width: 500px; height:500px"></div></div>
 		<script src="js/basicSetup.js"></script>			
 		<div id="progressContainer">
+
+			<svg id="svg" width="200" height="200" viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+				<circle r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+				<circle id="bar" r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+			</svg>
+
 			<div id="percentComplete" style="top:46%;">46% downloaded</div><div id="fileComplete" style="top:52%;">1/4</div></div>
+
 		<div id="controls"></div>		
 	</body>
 

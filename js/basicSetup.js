@@ -88,8 +88,16 @@ function init()
 
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
+			
 			var percentComplete = xhr.loaded / xhr.total * 100;
-			// nanobar.go( Math.round(percentComplete, 2) );
+		    
+		    var $circle = $('#svg #bar');
+			var r = $circle.attr('r');
+			var c = Math.PI*(r*2);
+			var pct = ((100-percentComplete)/100)*c;
+
+			$circle.css({ strokeDashoffset: pct});
+
 			document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );	
 	}};
 	var onError = function ( xhr ) {};
@@ -97,12 +105,15 @@ function init()
 	var manager = new THREE.LoadingManager();
 	
 	manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-		// console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 	};
+
 	manager.onProgress = function ( item, loaded, total ) {
 		console.log( item, loaded, total );
+
 		countLoaded++;
+
 		document.getElementById("fileComplete").innerHTML =(countLoaded + "/" + files.length + " loaded");
+
 	};
 	manager.onLoad = function ( ) {
 		// console.log( 'Loading complete!');
@@ -136,8 +147,8 @@ function init()
 	  if (index > files.length - 1) return;
 	  objLoader.load(files[index], function(object) {
 		object.name = "obj" + index;
-		object.receiveShadow = true;
-		object.castShadow = true;
+		object.receiveShadow = true
+;		object.castShadow = true;
 	    scene.add(object);
 	    index++;
 	    loadNextFile();
