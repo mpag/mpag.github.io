@@ -95,7 +95,7 @@ function init()
 			var r = $circle.attr('r');
 			var c = Math.PI*(r*2);
 
-			var percentTotal = ((percentComplete/files.length)+((100/files.length)*countLoaded));
+			var percentTotal = ((percentComplete/files.length)+((100/files.length)*(countLoaded+1));
 
 			var pct = ((100-percentTotal)/100)*c;
 
