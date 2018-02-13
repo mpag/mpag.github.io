@@ -94,7 +94,12 @@ function init()
 		    var $circle = $('#svg #bar');
 			var r = $circle.attr('r');
 			var c = Math.PI*(r*2);
-			var pct = ((100-percentComplete)/100)*c;
+
+			var percentTotal = ((percentComplete/files.length)+((100/files.length)*countLoaded));
+
+			var pct = ((100-percentTotal)/100)*c;
+
+			console.log()
 
 			$circle.css({ strokeDashoffset: pct});
 
@@ -121,9 +126,11 @@ function init()
 		var gui = new dat.GUI();
 		gui.add(guiControls, 'positionZ', 0, 30);
 		gui.add(guiControls, 'rotate');
-		var elem = document.getElementById("progressContainer");
-		elem.style.display = "none";
 		
+		if (countLoaded == files.length) {
+			$("#progressContainer").delay(3000).css("display", "none");
+		}
+
 		var obj1 = scene.getObjectByName("obj1");
 		var obj2 = scene.getObjectByName("obj2");
 		var obj3 = scene.getObjectByName("obj3");
