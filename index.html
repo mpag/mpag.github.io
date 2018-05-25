@@ -5,13 +5,29 @@
 		<title>Interactive Axonometric</title>
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style type="text/css">
+			/* TEXT */
+			#title {
+			  position: fixed;
+			  padding: 5px;
+			  padding-top: 20px;
+			  left: 20px;
+			  top: 20px;
+			  width: 400px;
+			  border-bottom: 2px solid white;
+			  border-top: 2px solid white;
+			  z-index: 1;
+			}
+
 			h1 {
-				display: block;
-				font-family: century;
-				color: #000000;
-				font-size: 2em;
-				margin-top: 0.1em;
-				margin-bottom: 0.1em;
+			  font-size: 1.2em;
+			  color: white;
+			  font-family: 'Advent Pro', san-serif;
+			}
+
+			p {
+			  font-size: 0.8em;
+			  color: white;
+			  font-family: 'Advent Pro', san-serif;
 			}
 
 			#progressContainer {
@@ -51,7 +67,63 @@
 			#svg #bar {
 				stroke: #FFFFFF;
 			}
+
+			/* SLIDER BUTTON */
+			.switch {
+			  position: relative;
+			  display: inline-block;
+			  width: 40px;
+			  height: 22px;
+			}
+
+			.switch input {display:none;}
+
+			.slider {
+			  position: absolute;
+			  cursor: pointer;
+			  top: 0;
+			  left: 0;
+			  right: 0;
+			  bottom: 0;
+			  background-color: #757575;
+			  -webkit-transition: .4s;
+			  transition: .4s;
+			}
+
+			.slider:before {
+			  position: absolute;
+			  content: "";
+			  height: 15px;
+			  width: 15px;
+			  left: 3.5px;
+			  bottom: 3.5px;
+			  background-color: white;
+			  -webkit-transition: .4s;
+			  transition: .4s;
+			}
+
+			input:checked + .slider {
+			  background-color: #D32F2F;
+			}
+
+			input:checked + .slider:before {
+			  -webkit-transform: translateX(17px);
+			  -ms-transform: translateX(17px);
+			  transform: translateX(17px);
+			}
+
+			/* Rounded sliders */
+			.slider.round {
+			  border-radius: 34px;
+			}
+
+			.slider.round:before {
+			  border-radius: 50%;
+			}
+
+
 		</style>
+		<link href="https://fonts.googleapis.com/css?family=Advent+Pro: light" rel="stylesheet">
 	</head>
 	
 	<body>
@@ -74,7 +146,17 @@
 
 			<div id="percentComplete" style="top:46%;">46% downloaded</div><div id="fileComplete" style="top:52%;">1/4</div></div>
 
-		<div id="controls"></div>		
+		<div id="controls"></div>	
+		
+		<div id="title">
+			<img style="width:60px;" src="http://gdurl.com/wRlu">
+			<h1>INTERACTIVE DESIGN DOCUMENTATION<br>Example 01</h1>
+			<p> This second example explores the idea of customising materials, background and interactivity to enhance the clarity of your page.<br></p>
+			<label class="switch"><input id="sliderBox" type="checkbox"><span class="slider round"></span></label>
+			<br><br>
+		</div>
+
+		<a href="./page2/"><div id="linkPageNext" style="position: absolute; right: 5%; bottom: 5%;"><h1>NEXT<h1></h1><div></a>	
 	</body>
 
 </html>

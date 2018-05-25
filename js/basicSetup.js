@@ -1,18 +1,6 @@
-//////////	
-// MAIN //
-//////////
-
-
-
-var container, scene, camera, renderer, controls, stats;
+var container, scene, camera, renderer, controls, stats, counter;
 var clock = new THREE.Clock();
-var cube;
-var counter;
 
-
-// var options = {id: 'progressBar'};
-// var nanobar = new Nanobar( options );
-// nanobar.go( 1 );
 
 ////////GUI///////////
 var guiControls = new function (){
@@ -21,40 +9,41 @@ var guiControls = new function (){
 };
 
 
-
-// initialization
+////////INIT//////////
 init();
 
 function init() 
 {
-	// SCENE
+	// SCENE //
 	scene = new THREE.Scene();
+	scene.fog = new THREE.FogExp2( 0xFFFFFF, 0.0065 );
 
 	//////// CAMERA //////////
-	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = -100000, FAR = 100000;
+	var screenWidth = window.innerWidth; 
+	screenHeight = window.innerHeight;
+	var aspect = screenWidth / screenHeight;
+
 	frustumSize = 1000;
-
-	var aspect = window.innerWidth / window.innerHeight;
-
-	camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, NEAR, FAR );
+	near = -100000; 
+	far = 100000;
+	camera = new THREE.OrthographicCamera( frustumSize*aspect/-2, frustumSize*aspect/2, frustumSize/2, frustumSize/-2, near, far );
 	camera.zoom = 15;
 	camera.updateProjectionMatrix();
 	camera.position.set(0,2.5,-5);
-	scene.add(camera);
+	scene.add(camera);		
 
 	///////// RENDERER /////////
-	if ( Detector.webgl )
+	if ( Detector.webgl ) {
 		renderer = new THREE.WebGLRenderer( {antialias:true} );
-	else
+	}else{
 		renderer = new THREE.CanvasRenderer();
+	};
 	
 	renderer.shadowMapEnabled = true;
-	// renderer.shadowMapType = THREE.PCFSoftShadowMap;
-	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	renderer.setSize(screenWidth, screenHeight);
 	container = document.getElementById( 'ThreeJS' );
 	container.appendChild( renderer.domElement );
-	
+
 	////////// EVENTS //////////
 	window.addEventListener( 'resize', onWindowResize, false );
 	
@@ -66,7 +55,6 @@ function init()
 	controls.dampingFactor = 0.2;
 	controls.maxPolarAngle = Math.PI / 2;
 	controls.autoRotateSpeed = 0.5;
-
 	camera.position.copy(controls.center).add(new THREE.Vector3(2,0.8,-4));
 
 	////////// LIGHT /////////
@@ -76,53 +64,37 @@ function init()
 	scene.add(light);
 	var ambientLight = new THREE.AmbientLight(0x111111,1.5);
 	scene.add(ambientLight);
-
 	
 	//////// GEOMETRY /////////
-
 	var index = 0;
 	var countLoaded = 0
 	var files = ["meshRoof_00.obj", "meshRoof_01.obj", "meshRoof_02.obj", "meshRoof_03.obj"];
 
-	//////////CHECKS///////////
+	//////////LOADER///////////
+	var manager = new THREE.LoadingManager();
 
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
 			
 			var percentComplete = xhr.loaded / xhr.total * 100;
-		    
 		    var $circle = $('#svg #bar');
 			var r = $circle.attr('r');
 			var c = Math.PI*(r*2);
-
 			var percentTotal = ((percentComplete/files.length)+((100/files.length)*(countLoaded)));
-
 			var pct = ((100-percentTotal)/100)*c;
-
-			console.log()
-
 			$circle.css({ strokeDashoffset: pct});
-
 			document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );	
 	}};
-	var onError = function ( xhr ) {};
-	 
-	var manager = new THREE.LoadingManager();
 	
-	manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-	};
-
+	var onError = function ( xhr ) {};
+	manager.onStart = function ( url, itemsLoaded, itemsTotal ) {};
 	manager.onProgress = function ( item, loaded, total ) {
 		console.log( item, loaded, total );
-
 		countLoaded++;
-
 		document.getElementById("fileComplete").innerHTML =(countLoaded + "/" + files.length + " loaded");
-
 	};
+
 	manager.onLoad = function ( ) {
-		// console.log( 'Loading complete!');
-		// nanobar.go(100);
 		var gui = new dat.GUI();
 		gui.add(guiControls, 'positionZ', 0, 30);
 		gui.add(guiControls, 'rotate');
@@ -142,48 +114,48 @@ function init()
 	        if ( child instanceof THREE.Mesh ) {
 	            child.material = obj2Material ;
         }});
+
 	    obj3.traverse( function ( child ) {
 	        if ( child instanceof THREE.Mesh ) {
 	            child.material = obj3Material ;
-        }});        
+        }});
+
 		animate();
 	};
 
 	var objLoader = new THREE.OBJLoader( manager);
+	
 	function loadNextFile() {
 	  if (index > files.length - 1) return;
 	  objLoader.load(files[index], function(object) {
 		object.name = "obj" + index;
-		object.receiveShadow = true
-;		object.castShadow = true;
+		object.receiveShadow = true;		
+		object.castShadow = true;
 	    scene.add(object);
 	    index++;
 	    loadNextFile();
 	  }, onProgress, onError);
 	};
+
 	loadNextFile();
 
-	//Materials
+	//////// FLOOR //////////
+	var gridHelper = new THREE.GridHelper( 700, 200 );
 	var material = new THREE.MeshPhongMaterial( { color: 0xD6D6D6, side: THREE.FrontSide});
-
-	//Geom Definition
 	var geometryTerrain = new THREE.PlaneGeometry( 28000, 28000, 256, 256 );
 	terrain = new THREE.Mesh( geometryTerrain, material );
 	terrain.rotation.x = Math.PI / -2;
 	terrain.receiveShadow = true;
 	terrain.castShadow = true;
-	var gridHelper = new THREE.GridHelper( 700, 200 );
-	scene.add( gridHelper );
+	
+	scene.add(gridHelper);
 	scene.add(terrain);	
 
-
-	//////// SKY /////////////
+	//////// SKY //////////
 	var skyBoxGeometry = new THREE.CubeGeometry( 20000, 20000, 20000 );
 	var skyBoxMaterial = new THREE.MeshStandardMaterial( { diffuse: 0xFFFFFF, side: THREE.BackSide});
 	skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
 	scene.add(skyBox);
-	scene.fog = new THREE.FogExp2( 0xFFFFFF, 0.0065 );
-
 };
 
 
@@ -194,7 +166,6 @@ function animate()
 	update();
 };
 
-
 function onWindowResize() {
 	var aspect = window.innerWidth / window.innerHeight;
 	camera.left   = - frustumSize * aspect / 2;
@@ -204,7 +175,6 @@ function onWindowResize() {
 	camera.updateProjectionMatrix();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 };
-
 
 function update()
 {
@@ -232,7 +202,6 @@ function update()
 	controls.autoRotate = guiControls.rotate;
 	controls.update();
 };
-
 
 function render() 
 {	
