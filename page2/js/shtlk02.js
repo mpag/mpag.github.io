@@ -14,7 +14,7 @@ function init(){
   //CAMERA
   scene = new THREE.Scene();
   // scene.fog = new THREE.FogExp2(0x00000, 0.010);
-    var screenWidth = window.innerWidth; 
+  var screenWidth = window.innerWidth; 
   screenHeight = window.innerHeight;
   var aspect = screenWidth / screenHeight;
   frustumSize = 1000;
@@ -26,28 +26,6 @@ function init(){
   camera.position.y = 35;
   camera.zoom = 4;
   camera.updateProjectionMatrix();
-
-  // GEOMS
-  // var geometryBox = new THREE.BoxGeometry(15,15,15);
-  // var materialBox =  new THREE.MeshPhongMaterial({color: "white"});
-  // meshBox = new THREE.Mesh(geometryBox, materialBox);
-  // const edges = new THREE.EdgesGeometry(geometryBox);
-  // const edgesMaterial = new THREE.LineBasicMaterial({
-  //   color: 0x00000,
-  //   linewidth: 2
-  // });
-  // const edgesMesh = new THREE.LineSegments(edges, edgesMaterial);
-  // var group = new THREE.Group();
-  
-  // var materialBox2 =  new THREE.MeshBasicMaterial({color: "white"});
-  // var materialBox3 =  new THREE.MeshPhongMaterial({color: "red"});
-  // meshBox2 = new THREE.Mesh(geometryBox, materialBox2);
-  // meshBox3 = new THREE.Mesh(geometryBox, materialBox3);
-  // meshBox2.position.x = -30;
-  // meshBox3.position.x = 30;
-
-  // group.add( meshBox, meshBox2, meshBox3, edgesMesh );
-  // scene.add(group);
 
   var planeGeometry = new THREE.PlaneGeometry( 500, 500, 32 );
   planeGeometry.rotateX( - Math.PI / 2 );
@@ -127,10 +105,6 @@ function init(){
   loadNextFile();
 
 
-
-  
-
-
   //LIGHT
   var ambientlight = new THREE.AmbientLight( 0x080808, 6 ); 
   var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
@@ -187,7 +161,7 @@ function init(){
 
 // FUNCTIONS
 function onWindowResize() {
+    renderer.setSize( window.innerWidth, window.innerHeight );
 	  camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
-		renderer.setSize( window.innerWidth, window.innerHeight );
 }
