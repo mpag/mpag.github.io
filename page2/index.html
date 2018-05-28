@@ -6,10 +6,12 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r11/Stats.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="js/Reflector.js"></script>
 	<script type="text/javascript" src="js/OutlineEffect.js"></script>
 	<script type="text/javascript" src="js/OrbitControl.js"></script>
+	<script type="text/javascript" src="js/stats.js"></script>
+	<script type="text/javascript" src="js/dat.gui.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="style/index.css">
 	<link href="https://fonts.googleapis.com/css?family=Advent+Pro: light" rel="stylesheet">
@@ -18,20 +20,26 @@
 <div id="title">
   <img style="width:60px;" src="http://gdurl.com/wRlu">
   <h1>INTERACTIVE DESIGN DOCUMENTATION<br>Example 02</h1>
-  <p> This second example explores the idea of customising materials, background and interactivity to enhance the clarity of your page.<br></p>
-  <label class="switch"><input id="sliderBox" type="checkbox"><span class="slider round"></span></label>
-  <br><br>
+  <p> This second example explores the idea of customising materials, background and interactivity to enhance the clarity of your diagram. In particular, the use of dat.gui as an interface to controlling properties of geometry, in this case vertical translation and lighting azimuth<br></p>
 </div>
 
-<div id="progressContainer">
+<body>
+
+<div class = "threeScene" id="example1"></div>
+
+<!-- <div id="statistics" style="bottom: 5%; right: 5%; position: absolute; z-index: 2"></div> -->
+
+<!-- <div id="progressContainer">
+
 	<svg id="svg" width="200" height="200" transform='rotate(-90)' viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
 		<circle r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
 		<circle id="bar" r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
 	</svg>
-<div id="percentComplete" style="top:46%;"></div><div id="fileComplete" style="top:52%;"></div></div>
 
-<body>
-<div class = "threeScene" id="example1"></div>
+	<div id="percentComplete" style="top:46%;"></div><div id="fileComplete" style="top:52%;"></div></div>
+ -->
+<div id="controls"></div>
+
 <script type="text/javascript" src="js/shtlk02.js"></script>	
 </body>
 
