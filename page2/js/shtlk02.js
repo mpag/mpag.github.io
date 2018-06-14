@@ -107,10 +107,19 @@ function init(){
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.setPixelRatio( 1.5 );
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
+
+  function setPixelRatio(){
+    if (isMobileDevice() == true){
+      renderer.setPixelRatio( 1 );
+    } else {
+      renderer.setPixelRatio( 1.5 );
+    }
+  };
+  setPixelRatio();
+
   document.getElementById("example1").appendChild( renderer.domElement );
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
