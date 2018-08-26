@@ -1,11 +1,12 @@
 
 
 //Global Variables
-var camera, scene, renderer, rectangle, div, controls, element;
+var camera, scene, renderer, rectangle, div, controls, element1, element2;
 var scene2, renderer2, manager;
 var line = []; 
 var divs = [];
 var divText = [];
+var divDesc = ["Equitone Natura (PG341) + Solar PV", "Equitone Natura (PG542) + Solar PV", "Equitone Natura (PW841) + Solar PV", "Equitone Natura (PW141) + Solar PV"]
 window.addEventListener( 'resize', onWindowResize, false );
 
 //Loader Variables
@@ -60,30 +61,49 @@ function init(){
 
 
   /////////CSS GEOM//////////
-  element = document.createElement('div');
-  element.className = "tag";
-  elText = document.createElement('div');
-  element.appendChild( elText );
-  elText.className = "titleText";
-  elText.innerHTML = 'STEM SCHOOL';
+  element0 = document.createElement('div');
+  element0.className = "tag";
+  element0.style.opacity = 0;
+  elText0 = document.createElement('div');
+  element0.appendChild( elText0 );
+  elText0.className = "titleText";
+  elText0.innerHTML = '<b>0. </b>Landscaped Topography';
 
-  titleDiv = new THREE.CSS3DObject(element);
-  titleDiv.position.x = -105;
-  titleDiv.position.y = -70;
-  titleDiv.position.z = -66;
-  titleDiv.rotation.x = -Math.PI / 2;
-  titleDiv.rotation.z =  Math.PI;
-  scene2.add(titleDiv);
+  titleDiv0 = new THREE.CSS3DObject(element0);
+  titleDiv0.position.x = -110;
+  titleDiv0.position.y = -65;
+  titleDiv0.position.z = -72;
+  titleDiv0.rotation.x = -Math.PI / 2;
+  titleDiv0.rotation.z =  Math.PI;
+  scene2.add(titleDiv0);
+
+
+  element1 = document.createElement('div');
+  element1.className = "tag";
+  element1.style.opacity = 0;
+  elText1 = document.createElement('div');
+  element1.appendChild( elText1 );
+  elText1.className = "titleText";
+  elText1.innerHTML = '<b>1. </b>Cross-Laminated Timber Structure';
+
+  titleDiv1 = new THREE.CSS3DObject(element1);
+  titleDiv1.position.x = -110;
+  titleDiv1.position.y = -65;
+  titleDiv1.position.z = -45;
+  titleDiv1.rotation.x = -Math.PI / 2;
+  titleDiv1.rotation.z =  Math.PI;
+  scene2.add(titleDiv1);
 
 
   for (i = 0; i < 4; i++){
     elementFacade = document.createElement('div');
     elementFacade.className = "tag";
+    elementFacade.style.opacity = 0;
     elTextFacade = document.createElement('div');
     elementFacade.appendChild( elTextFacade );
     elTextFacade.className = "subText";
     elTextFacade.id = "model" + i ;
-    elTextFacade.innerHTML = "COLOUR TYPE " + i;
+    elTextFacade.innerHTML = "<b>" + (i+2) + ".  </b>" + divDesc[i];
     divText.push( elementFacade );
   };
 
@@ -91,14 +111,14 @@ function init(){
     subText = new THREE.CSS3DObject( divText[i] );
     divs.push(subText);
     subText.name = "cssModel" + i;
-    subText.position.x = -105;
+    subText.position.x = -110;
     subText.position.y = -70;
-    subText.position.z = -66;
+    subText.position.z = -45;
     subText.rotation.x = -Math.PI / 2;
     subText.rotation.z =  Math.PI;
-    console.log(subText);
     scene2.add(subText);
   };
+
 
 
   //////////LOADER///////////
@@ -172,21 +192,22 @@ function init(){
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
-  renderer.domElement.style.zIndex = 1;
-  // renderer.domElement.style.pointerEvents= 'none';
+  renderer.domElement.style.zIndex = 0;
   document.body.appendChild( renderer.domElement );
 
   renderer2 = new THREE.CSS3DRenderer();
   renderer2.setSize(window.innerWidth, window.innerHeight);
   renderer2.domElement.style.position = 'absolute';
   renderer2.domElement.style.top = 0;
-  renderer2.domElement.style.zIndex = -1;
+  renderer2.domElement.style.pointerEvents= 'none';
+  renderer2.domElement.style.zIndex = 1;
   document.body.appendChild(renderer2.domElement);
 
   //CONTROLS
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.dampingFactor = 0.8;
+  controls.dampingFactor = 0.4;
+  controls.enablePan = false;
   controls.update();
   
 };
@@ -198,26 +219,32 @@ function animate(){
   window.requestAnimationFrame( animate );
   // stats.begin();
   slider.oninput = function() {
-    var sliderNum = this.value / 1.5;
+    var sliderNum = this.value;
 
     for (var i = 6; i < (objectMove.length - 1); i++) {
-      objectMove[i].position.y = -65 + (sliderNum / 10) * Math.pow(i, 1.5);
+      objectMove[i].position.y = -65 + (sliderNum / 15) * Math.pow(i, 1.5);
     };
 
     for (i = 0; i < divs.length; i++){
-      divs[i].position.y = objectMove[i+6].position.y + (sliderNum / 10) * Math.pow(i, 1.5);
-    }
+      divs[i].position.y = objectMove[i+6].position.y + (sliderNum / 15) * Math.pow(i, 0.8);
+    };
 
-    camera.zoom = 4 - sliderNum / 60;
+    for (i = 0; i < divText.length; i++){
+      divText[i].style.opacity = (sliderNum / 30);  
+    };
 
-    //Create Line Element between Dynamically Moving Objects
-    scene.remove(line);
-    var geometryLine = new THREE.Geometry();
-    geometryLine.vertices.push(new THREE.Vector3( div.position.x - 17, div.position.y - 15, div.position.z) );
-    geometryLine.vertices.push(new THREE.Vector3( meshKnot.position.x + 20, meshKnot.position.y, meshKnot.position.z) );
-    var lineMaterial = new THREE.LineBasicMaterial( { color: 0x9E9E9E, scale: '0.5' } )
-    line = new THREE.Line( geometryLine, lineMaterial );
-    scene.add(line);
+    element0.style.opacity = (sliderNum / 30);
+    element1.style.opacity = (sliderNum / 30);
+
+    camera.zoom = 4 - sliderNum / 90;
+
+    // scene.remove(line);
+    // var geometryLine = new THREE.Geometry();
+    // geometryLine.vertices.push(new THREE.Vector3( div.position.x - 17, div.position.y - 15, div.position.z) );
+    // geometryLine.vertices.push(new THREE.Vector3( meshKnot.position.x + 20, meshKnot.position.y, meshKnot.position.z) );
+    // var lineMaterial = new THREE.LineBasicMaterial( { color: 0x9E9E9E, scale: '0.5' } )
+    // line = new THREE.Line( geometryLine, lineMaterial );
+    // scene.add(line);
 
   };
 
@@ -247,6 +274,7 @@ function onWindowResize() {
   camera.bottom = - frustumSize / 2;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer2.setSize( window.innerWidth, window.innerHeight );
 };
 
 function isMobileDevice() {

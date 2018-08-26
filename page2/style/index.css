@@ -13,8 +13,8 @@
   left: 20px;
   padding: 5px;
   padding-top: 20px;
-  padding-bottom: 20px;
-  z-index: 1;
+  padding-bottom: 8px;
+  z-index: 2;
 }
 
 h1 {
@@ -24,32 +24,36 @@ h1 {
 }
 
 p {
-  font-size: 1.0em;
+  font-size: 0.8em;
   color: white;
-  font-family: 'Advent Pro', san-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 
 .tag {
-  background-color: rgba(200, 200, 200, 0.5);
+  background-color: rgba(200, 200, 200, 0.4);
   padding: 2px;
   border-radius: 3px;
-  width: 50px;
-  height: 10px;
+  border: 0.5px grey;
+  text-align: left;
+  width: 60px;
 }
 
 .tag:hover {
   box-shadow: 0px 0px 3px black;
+  background-color: rgba(230, 230, 230, 0.4);
 }
 
 .titleText {
-  font-family: 'Advent Pro', san-serif;
-  font-size: 8px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 6px;
+  
 }
 
 .subText {
-  font-family: 'Advent Pro', san-serif;
-  font-size: 8px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 6px;
+  pointer-events: auto;
 }
 
 
@@ -64,7 +68,7 @@ p {
   width: 15px;
   top: 5%;
   right: 5%;
-  z-index: 1;
+  z-index: 2;
 }
 
 .slider {
