@@ -1,98 +1,130 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Stats = factory());
-}(this, (function () { 'use strict';
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
 var Stats = function () {
 
-	var mode = 0;
+	var startTime = Date.now(), prevTime = startTime;
+	var ms = 0, msMin = Infinity, msMax = 0;
+	var fps = 0, fpsMin = Infinity, fpsMax = 0;
+	var frames = 0, mode = 0;
 
 	var container = document.createElement( 'div' );
-	container.style.cssText = 'position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000';
-	container.addEventListener( 'click', function ( event ) {
+	container.id = 'stats';
+	container.addEventListener( 'mousedown', function ( event ) { event.preventDefault(); setMode( ++ mode % 2 ) }, false );
+	container.style.cssText = 'width:80px;opacity:0.9;cursor:pointer';
 
-		event.preventDefault();
-		showPanel( ++ mode % container.children.length );
+	var fpsDiv = document.createElement( 'div' );
+	fpsDiv.id = 'fps';
+	fpsDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#002';
+	container.appendChild( fpsDiv );
 
-	}, false );
+	var fpsText = document.createElement( 'div' );
+	fpsText.id = 'fpsText';
+	fpsText.style.cssText = 'color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+	fpsText.innerHTML = 'FPS';
+	fpsDiv.appendChild( fpsText );
 
-	//
+	var fpsGraph = document.createElement( 'div' );
+	fpsGraph.id = 'fpsGraph';
+	fpsGraph.style.cssText = 'position:relative;width:74px;height:30px;background-color:#0ff';
+	fpsDiv.appendChild( fpsGraph );
 
-	function addPanel( panel ) {
+	while ( fpsGraph.children.length < 74 ) {
 
-		container.appendChild( panel.dom );
-		return panel;
+		var bar = document.createElement( 'span' );
+		bar.style.cssText = 'width:1px;height:30px;float:left;background-color:#113';
+		fpsGraph.appendChild( bar );
 
 	}
 
-	function showPanel( id ) {
+	var msDiv = document.createElement( 'div' );
+	msDiv.id = 'ms';
+	msDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#020;display:none';
+	container.appendChild( msDiv );
 
-		for ( var i = 0; i < container.children.length; i ++ ) {
+	var msText = document.createElement( 'div' );
+	msText.id = 'msText';
+	msText.style.cssText = 'color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+	msText.innerHTML = 'MS';
+	msDiv.appendChild( msText );
 
-			container.children[ i ].style.display = i === id ? 'block' : 'none';
+	var msGraph = document.createElement( 'div' );
+	msGraph.id = 'msGraph';
+	msGraph.style.cssText = 'position:relative;width:74px;height:30px;background-color:#0f0';
+	msDiv.appendChild( msGraph );
 
+	while ( msGraph.children.length < 74 ) {
+
+		var bar = document.createElement( 'span' );
+		bar.style.cssText = 'width:1px;height:30px;float:left;background-color:#131';
+		msGraph.appendChild( bar );
+
+	}
+
+	var setMode = function ( value ) {
+
+		mode = value;
+
+		switch ( mode ) {
+
+			case 0:
+				fpsDiv.style.display = 'block';
+				msDiv.style.display = 'none';
+				break;
+			case 1:
+				fpsDiv.style.display = 'none';
+				msDiv.style.display = 'block';
+				break;
 		}
 
-		mode = id;
-
 	}
 
-	//
+	var updateGraph = function ( dom, value ) {
 
-	var beginTime = ( performance || Date ).now(), prevTime = beginTime, frames = 0;
-
-	var fpsPanel = addPanel( new Stats.Panel( 'FPS', '#0ff', '#002' ) );
-	var msPanel = addPanel( new Stats.Panel( 'MS', '#0f0', '#020' ) );
-
-	if ( self.performance && self.performance.memory ) {
-
-		var memPanel = addPanel( new Stats.Panel( 'MB', '#f08', '#201' ) );
+		var child = dom.appendChild( dom.firstChild );
+		child.style.height = value + 'px';
 
 	}
-
-	showPanel( 0 );
 
 	return {
 
-		REVISION: 16,
+		REVISION: 11,
 
-		dom: container,
+		domElement: container,
 
-		addPanel: addPanel,
-		showPanel: showPanel,
+		setMode: setMode,
 
 		begin: function () {
 
-			beginTime = ( performance || Date ).now();
+			startTime = Date.now();
 
 		},
 
 		end: function () {
 
+			var time = Date.now();
+
+			ms = time - startTime;
+			msMin = Math.min( msMin, ms );
+			msMax = Math.max( msMax, ms );
+
+			msText.textContent = ms + ' MS (' + msMin + '-' + msMax + ')';
+			updateGraph( msGraph, Math.min( 30, 30 - ( ms / 200 ) * 30 ) );
+
 			frames ++;
-
-			var time = ( performance || Date ).now();
-
-			msPanel.update( time - beginTime, 200 );
 
 			if ( time > prevTime + 1000 ) {
 
-				fpsPanel.update( ( frames * 1000 ) / ( time - prevTime ), 100 );
+				fps = Math.round( ( frames * 1000 ) / ( time - prevTime ) );
+				fpsMin = Math.min( fpsMin, fps );
+				fpsMax = Math.max( fpsMax, fps );
+
+				fpsText.textContent = fps + ' FPS (' + fpsMin + '-' + fpsMax + ')';
+				updateGraph( fpsGraph, Math.min( 30, 30 - ( fps / 100 ) * 30 ) );
 
 				prevTime = time;
 				frames = 0;
-
-				if ( memPanel ) {
-
-					var memory = performance.memory;
-					memPanel.update( memory.usedJSHeapSize / 1048576, memory.jsHeapSizeLimit / 1048576 );
-
-				}
 
 			}
 
@@ -102,78 +134,10 @@ var Stats = function () {
 
 		update: function () {
 
-			beginTime = this.end();
-
-		},
-
-		// Backwards Compatibility
-
-		domElement: container,
-		setMode: showPanel
-
-	};
-
-};
-
-Stats.Panel = function ( name, fg, bg ) {
-
-	var min = Infinity, max = 0, round = Math.round;
-	var PR = round( window.devicePixelRatio || 1 );
-
-	var WIDTH = 80 * PR, HEIGHT = 48 * PR,
-			TEXT_X = 3 * PR, TEXT_Y = 2 * PR,
-			GRAPH_X = 3 * PR, GRAPH_Y = 15 * PR,
-			GRAPH_WIDTH = 74 * PR, GRAPH_HEIGHT = 30 * PR;
-
-	var canvas = document.createElement( 'canvas' );
-	canvas.width = WIDTH;
-	canvas.height = HEIGHT;
-	canvas.style.cssText = 'width:80px;height:48px';
-
-	var context = canvas.getContext( '2d' );
-	context.font = 'bold ' + ( 9 * PR ) + 'px Helvetica,Arial,sans-serif';
-	context.textBaseline = 'top';
-
-	context.fillStyle = bg;
-	context.fillRect( 0, 0, WIDTH, HEIGHT );
-
-	context.fillStyle = fg;
-	context.fillText( name, TEXT_X, TEXT_Y );
-	context.fillRect( GRAPH_X, GRAPH_Y, GRAPH_WIDTH, GRAPH_HEIGHT );
-
-	context.fillStyle = bg;
-	context.globalAlpha = 0.9;
-	context.fillRect( GRAPH_X, GRAPH_Y, GRAPH_WIDTH, GRAPH_HEIGHT );
-
-	return {
-
-		dom: canvas,
-
-		update: function ( value, maxValue ) {
-
-			min = Math.min( min, value );
-			max = Math.max( max, value );
-
-			context.fillStyle = bg;
-			context.globalAlpha = 1;
-			context.fillRect( 0, 0, WIDTH, GRAPH_Y );
-			context.fillStyle = fg;
-			context.fillText( round( value ) + ' ' + name + ' (' + round( min ) + '-' + round( max ) + ')', TEXT_X, TEXT_Y );
-
-			context.drawImage( canvas, GRAPH_X + PR, GRAPH_Y, GRAPH_WIDTH - PR, GRAPH_HEIGHT, GRAPH_X, GRAPH_Y, GRAPH_WIDTH - PR, GRAPH_HEIGHT );
-
-			context.fillRect( GRAPH_X + GRAPH_WIDTH - PR, GRAPH_Y, PR, GRAPH_HEIGHT );
-
-			context.fillStyle = bg;
-			context.globalAlpha = 0.9;
-			context.fillRect( GRAPH_X + GRAPH_WIDTH - PR, GRAPH_Y, PR, round( ( 1 - ( value / maxValue ) ) * GRAPH_HEIGHT ) );
+			startTime = this.end();
 
 		}
 
-	};
+	}
 
 };
-
-return Stats;
-
-})));
