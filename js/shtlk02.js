@@ -183,6 +183,9 @@ function init(){
 
   // model
 
+
+
+
   var manager = new THREE.LoadingManager();
 
   manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -190,10 +193,29 @@ function init(){
     console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
 
+
+  // var onProgress = function ( xhr ) {
+  //     if ( xhr.lengthComputable ) {
+  //       var percentComplete = xhr.loaded / xhr.total * 100;
+  //       console.log(percentComplete);
+  //     }
+  // };
+  // var onError = function ( xhr ) {
+  // };
+  // manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+  // };
+  // manager.onProgress = function ( item, loaded, total ) {
+  // };
+  // manager.onLoad = function ( ) {
+  // };
+
+
+
+
+
   var loader = new THREE.FBXLoader( manager );
 
-  loader.load( 'models/tempScene.fbx', function ( object ) {
-
+  loader.load( 'models/tempSceneRobot.fbx', function ( object ) {
 
     objectMat = new THREE.MeshNormalMaterial();
 
