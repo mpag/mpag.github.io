@@ -2,12 +2,14 @@
 <html>
 
 <head>
-	<title>BVN - STEM School</title>
+	<title>BVN - Systems Reef</title>
 
-	<script type="text/javascript" src="js/stats.js"></script>
+	<script type="text/javascript" src="js/statss.js"></script>
 	<script type="text/javascript" src="js/three.min.js"></script>
 	<script type="text/javascript" src="js/tween.min.js"></script>
 	<script type="text/javascript" src="js/CSS3DRenderer.js"></script>
+	<script type="text/javascript" src="js/inflate.min.js"></script>
+	<script type="text/javascript" src="js/FBXLoader.js"></script>
 	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="js/OrbitControl.js"></script>
 	<script type="text/javascript" src="js/stats.js"></script>
@@ -19,13 +21,21 @@
 
 <body>
 
+<div id="loadingScreen">
+	
+	<img class = "center dropShadow rotating" style="width:300px;" src="img/BVN_White_Small.png">
+
+</div>
+
 <div class = "threeScene" id="container" style="z-index: 0; position: absolute; left:0px; top:0px; width: 100%px; height:100%px"></div>
+
 <div id="title">
   <img style="width:60px;" src="img/BVN_White_Small.png">
-  <h1 id="titleText">STEM School<br>Concept Facade Design</h1>
-  <p id="paragraph"> The STEM School Inquiry Hub Facade is a prefabricated, energy-positive, and visually dynamic cladding system. Containing 720 panels, 6 panels types, 4 colours and over 600m<sup>2</sup> of glazing, the facade design seeks to engage and excite students with it's forward-facing design. Prefabricated offsite, and rapidly assembled at speed over over 200m<sup>2</sup> per/day, this facade complements it's formal complexity with on-site efficiency. <br></p>
+  <h1 id="titleText">Systems Reef<br>Robotic Weaving Routine</h1>
+  <!-- <p id="paragraph"> <br></p> -->
 </div>
-<div class="slidecontainer"><input type="range" min="0" max="100" value="0" step="0.1" class="slider" id="myRange"></div>
+
+<!-- <div class="slidecontainer"><input type="range" min="0" max="100" value="0" step="0.1" class="slider" id="myRange"></div> -->
 <script type="text/javascript" src="js/shtlk02.js"></script>	
 
 </body>
