@@ -206,6 +206,7 @@ function init(){
   // manager.onProgress = function ( item, loaded, total ) {
   // };
   manager.onLoad = function ( ) {
+    console.log("success");
     animate();
   };
 
