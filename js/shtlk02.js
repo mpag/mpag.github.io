@@ -216,7 +216,7 @@ function init(){
 
   var loader = new THREE.FBXLoader( manager );
 
-  loader.load( 'model/tempSceneRobot.fbx', function ( object ) {
+  loader.load( 'model/tempSceneRobot.FBX', function ( object ) {
 
     objectMat = new THREE.MeshNormalMaterial();
 
