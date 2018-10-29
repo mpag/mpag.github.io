@@ -27,8 +27,7 @@ var frustumSize = 500;
 // var objectMove = [];
 
 
-init();
-animate(); 
+init(); 
 // uiReshuffle();
 
 
@@ -206,8 +205,9 @@ function init(){
   // };
   // manager.onProgress = function ( item, loaded, total ) {
   // };
-  // manager.onLoad = function ( ) {
-  // };
+  manager.onLoad = function ( ) {
+    animate();
+  };
 
 
 
@@ -215,7 +215,7 @@ function init(){
 
   var loader = new THREE.FBXLoader( manager );
 
-  loader.load( 'models/tempSceneRobot.fbx', function ( object ) {
+  loader.load( 'model/tempSceneRobot.fbx', function ( object ) {
 
     objectMat = new THREE.MeshNormalMaterial();
 
