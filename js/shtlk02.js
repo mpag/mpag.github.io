@@ -192,8 +192,8 @@ function init(){
   };
 
   manager.onLoad = function ( ) {
-    $("#loadingScreen").delay(1000).fadeOut(500);
-    $('#title').delay(3000).fadeIn(500);
+    $("#loadingScreen").fadeOut(500);
+    $('#title').delay(1500).fadeIn(1500);
     animate();
   };
 
