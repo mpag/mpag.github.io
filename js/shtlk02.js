@@ -34,7 +34,7 @@ init();
 function init(){
   //Scenes
   scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x000000, 0.2);
+  scene.fog = new THREE.FogExp2(0x000000, 0.15);
   // scene2 = new THREE.Scene();
   
 
@@ -43,7 +43,7 @@ function init(){
   far = 10000;
   // camera = new THREE.OrthographicCamera( frustumSize*aspect/-2, frustumSize*aspect/2, frustumSize/2, frustumSize/-2, near, far );
   camera = new THREE.PerspectiveCamera( 90, aspect, 0.1, 100 );
-  camera.position.z = 2;
+  camera.position.z = 3;
   camera.position.y = 0.2;
   camera.position.x = 0;
   // camera.zoom = 10;
@@ -53,15 +53,15 @@ function init(){
 
   //////// GEOMETRY /////////
 
-  var planeGeometry = new THREE.PlaneGeometry( 15, 15, 64 );
-  planeGeometry.rotateX( - Math.PI / 2 );
-  planeGeometry.rotateY( - Math.PI / 4 );
-  var planeMaterial = new THREE.ShadowMaterial();
+  var planeGeometry = new THREE.PlaneGeometry( 30, 30, 64 );
+  planeGeometry.rotateX(  Math.PI / 2 );
+  var planeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
   var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-  plane.opacity = 1.0;
-  plane.position.y = -2;
-  plane.receiveShadow = true;
-  scene.add( plane );
+  var plane2 = new THREE.Mesh( planeGeometry, planeMaterial );
+  plane.position.y = 2;
+  plane2.rotateX(  Math.PI );
+  plane2.position.y = -1.3;
+  scene.add( plane, plane2 );
 
   // var radius = 1.5;
   // var radials = 16;
@@ -70,8 +70,8 @@ function init(){
 
   var gridHelper1 = new THREE.GridHelper(40, 80);
   var gridHelper2 = new THREE.GridHelper(40, 80);
-  gridHelper1.position.y = -1.5;
-  gridHelper2.position.y = 1.5;
+  gridHelper1.position.y = -1.3;
+  gridHelper2.position.y = 2;
   scene.add(gridHelper1, gridHelper2);
 
 
@@ -188,25 +188,12 @@ function init(){
   var manager = new THREE.LoadingManager();
 
   manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-    $("#loadingScreen").delay(3000).fadeOut(500);
     console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
 
-
-  // var onProgress = function ( xhr ) {
-  //     if ( xhr.lengthComputable ) {
-  //       var percentComplete = xhr.loaded / xhr.total * 100;
-  //       console.log(percentComplete);
-  //     }
-  // };
-  // var onError = function ( xhr ) {
-  // };
-  // manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-  // };
-  // manager.onProgress = function ( item, loaded, total ) {
-  // };
   manager.onLoad = function ( ) {
-    console.log("success");
+    $("#loadingScreen").delay(1000).fadeOut(500);
+    $('#title').delay(3000).fadeIn(500);
     animate();
   };
 
@@ -216,7 +203,7 @@ function init(){
 
   var loader = new THREE.FBXLoader( manager );
 
-  loader.load( 'model/tempSceneRobot.FBX', function ( object ) {
+  loader.load( 'model/testScene2.fbx', function ( object ) {
 
     objectMat = new THREE.MeshNormalMaterial();
 
@@ -232,16 +219,16 @@ function init(){
     });
       
     
-    object.mixer = new THREE.AnimationMixer( object );
-    mixers.push( object.mixer );
+    // object.mixer = new THREE.AnimationMixer( object );
+    // mixers.push( object.mixer );
 
-    var action = object.mixer.clipAction( object.animations[0] );
-    action.play();
+    // var action = object.mixer.clipAction( object.animations[0] );
+    // action.play();
 
-    object.position.y = -1.5;
-    object.scale.x = 0.01;
-    object.scale.y = 0.01;
-    object.scale.z = 0.01;
+    // object.position.y = -1.5;
+    object.scale.x = 0.001;
+    object.scale.y = 0.001;
+    object.scale.z = 0.001;
 
     scene.add( object );
 
@@ -252,8 +239,8 @@ function init(){
 
   //LIGHT
   var ambientlight = new THREE.AmbientLight( 0x080808, 10); 
-  var spotLight = new THREE.SpotLight( 0xffffff, 2, 0, Math.PI/6, 0.5 );
-  spotLight.position.set( 0, 3, 0 );
+  var spotLight = new THREE.SpotLight( 0xffffff, 2, 0, Math.PI/3, 0.5 );
+  spotLight.position.set( 0, 2, 0 );
   // spotLight.penumbra = 0;
   // spotlight.angle = Math.PI / 6;
   // spotlight.intensity = 2;
@@ -340,11 +327,11 @@ function animate(){
 
   // renderer2.render( scene2, camera);
 
-  if ( mixers.length > 0 ) {
-    for ( var i = 0; i < mixers.length; i ++ ) {
-      mixers[ i ].update( clock.getDelta() );
-    }
-  };
+  // if ( mixers.length > 0 ) {
+  //   for ( var i = 0; i < mixers.length; i ++ ) {
+  //     mixers[ i ].update( clock.getDelta() );
+  //   }
+  // };
 
   renderer.render( scene, camera);
   camera.updateProjectionMatrix();
