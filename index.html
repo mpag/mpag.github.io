@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-	<title>BVN - Systems Reef</title>
-
-	<script type="text/javascript" src="js/stats.js"></script>
-	<script type="text/javascript" src="js/three.min.js"></script>
-	<script type="text/javascript" src="js/tween.min.js"></script>
-	<script type="text/javascript" src="js/CSS3DRenderer.js"></script>
-	<script type="text/javascript" src="js/inflate.min.js"></script>
-	<script type="text/javascript" src="js/FBXLoader.js"></script>
+	<title>BVN - WebGL Dashboard</title>
 	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="js/OrbitControl.js"></script>
-	<script type="text/javascript" src="js/stats.js"></script>
-
-	<link rel="stylesheet" type="text/css" href="style/index.css">
-	<link rel="stylesheet" type="text/css" href="style/nouislider.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<link href="https://fonts.googleapis.com/css?family=Advent+Pro:500|Open+Sans" rel="stylesheet">
 </head>
 
 <body>
 
-<div id="loadingScreen">
+<div id="title">
+  <img style="width:60px;" src="img/BVN_Black_Small.png">
+  <h1 id="titleText">WebGL Interactives Lab</h1>
+  <p id="paragraph">Experimental WebGL Projects for Architectural Practice</p>
+</div>
+
+<div class="grid">
+  	<a href="/systemsReef"><div class="module"><img src="img/Robot.png" style="height: 100%;"></div></a>
+	<a href="/stem/stemFacade"><div class="module"><img src="img/stemFacade.png" style="height: 100%;"></div></a>
+	<a href="/stem/stemSolar"><div class="module"><img src="img/stemSolar.png" style="height: 100%;"></div></a>
+	<a href="/stem/stemTestRoom"><div class="module"><img src="img/stemRoom.png" style="height: 100%;"></div></a>
+</div>
+
+<div id="footer">
+	<img src="img/500px-CC-BY-SA_icon.png" style="width:50px">
+  	<p id="paragraph" style="font-size:0.6em">Creative Commons "Attribution-Share Alike"</p>
+</div>
+
+
+
+<!-- <div id="loadingScreen">
 	
 	<img class = "center dropShadow rotating" style="width:300px;" src="img/BVN_White_Small.png">
 
-</div>
+</div> -->
 
-<div class = "threeScene" id="container" style="z-index: 0; position: absolute; left:0px; top:0px; width: 100%px; height:100%px"></div>
-
-<div id="title">
-  <img style="width:60px;" src="img/BVN_Black_Small.png">
-  <h1 id="titleText">Systems Reef<br>Robotic Weaving Routine</h1>
-  <!-- <p id="paragraph"> <br></p> -->
-</div>
 
 <!-- <div class="slidecontainer"><input type="range" min="0" max="100" value="0" step="0.1" class="slider" id="myRange"></div> -->
-<script type="text/javascript" src="js/shtlk02.js"></script>	
 
 </body>
 
