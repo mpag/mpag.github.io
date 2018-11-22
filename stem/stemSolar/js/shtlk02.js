@@ -13,8 +13,10 @@ window.addEventListener( 'resize', onWindowResize, false );
 var index = 0;
 var countLoaded = 0;
 var files = ["models/baseTopo.json", "models/baseStructure01.json", "models/baseStructure02.json", "models/baseStructure03.json", "models/baseStructure04.json", "models/baseStructure05.json"];
-// var sunFile = "ref/sunPosition.json";
-// var sunData = JSON.parse(sunFile);
+
+var sunFile = $.getJSON( "ref/sunPosition.json", function( data ) {
+  // console.log( data );
+});
 
 
 //Init Variables
@@ -25,7 +27,7 @@ var aspect = screenWidth / screenHeight;
 var frustumSize = 1000;
 var slider = document.getElementById("myRange");
 var objectMove = [];
-var dirLight;
+var dirLight, helper;
 
 
 init();
@@ -175,14 +177,18 @@ function init(){
   dirLight.shadow.camera.left = -500;
   dirLight.shadow.camera.top =  500;
   dirLight.shadow.camera.bottom = -500;
-  dirLight.position.y = 200;
-  dirLight.position.z = -100;
-  dirLight.position.x = -100;
+  dirLight.position.y = (sunData[0].sunPosition.Y);
+  dirLight.position.x = (sunData[0].sunPosition.X);
+  dirLight.position.z = -(sunData[0].sunPosition.Z);
   dirLight.shadow.mapSize.width = 2048;
   dirLight.shadow.mapSize.height = 2048;
   dirLight.shadow.camera.near = 0;
   dirLight.shadow.camera.far = 2500;
   dirLight.castShadow = true;
+
+  helper =  new THREE.DirectionalLightHelper( dirLight, 10 );
+  scene.add( helper );
+  scene.add( dirLight.target);
   scene.add( dirLight );
   scene.add( ambientlight );
   
@@ -223,9 +229,16 @@ function animate(){
     
     var sliderNum = this.value;
 
-    dirLight.position.x = (sliderNum * 3) - (sliderNum - 2);
+    // dirLight.position.x = (sliderNum * 3) - (sliderNum - 2);
     // console.log(sliderNum);
-    // console.log(sunData[0]);
+
+    helper.update();
+    dirLight.position.y = (sunData[Math.round(sliderNum)].sunPosition.Y);
+    dirLight.position.x = (sunData[Math.round(sliderNum)].sunPosition.X);
+    dirLight.position.z = -(sunData[Math.round(sliderNum)].sunPosition.Z);
+
+    document.getElementById("timeDate").innerHTML = sunData[Math.round(sliderNum)].dates;
+
 
     // camera.zoom = 4 - sliderNum / 90;
 
