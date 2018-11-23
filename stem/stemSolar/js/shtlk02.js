@@ -1,22 +1,19 @@
 
 
 //Global Variables
-var camera, scene, renderer, rectangle, div, controls, element1, element2;
+var camera, scene, renderer, rectangle, div, controls, element0, element1, element2;
 var scene2, renderer2, manager;
 var line = []; 
 var divs = [];
 var divText = [];
 var divDesc = ["Equitone Natura (PG341) + Solar PV", "Equitone Natura (PG542) + Solar PV", "Equitone Natura (PW841) + Solar PV", "Equitone Natura (PW141) + Solar PV"]
 window.addEventListener( 'resize', onWindowResize, false );
+var sliderVal = 0;
 
 //Loader Variables
 var index = 0;
 var countLoaded = 0;
-var files = ["models/baseTopo.json", "models/baseStructure01.json", "models/baseStructure02.json", "models/baseStructure03.json", "models/baseStructure04.json", "models/baseStructure05.json"];
-
-var sunFile = $.getJSON( "ref/sunPosition.json", function( data ) {
-  // console.log( data );
-});
+var files = ["models/baseTopo.json", "models/baseStructure01.json", "models/baseStructure02.json", "models/baseStructure03.json", "models/baseStructure04.json", "models/baseStructure05.json", "models/solarFacade.json"];
 
 
 //Init Variables
@@ -46,9 +43,9 @@ function init(){
   far = 10000;
   camera = new THREE.OrthographicCamera( frustumSize*aspect/-2, frustumSize*aspect/2, frustumSize/2, frustumSize/-2, near, far );
   camera.position.z = -50;
-  camera.position.y = 35;
+  camera.position.y = 50;
   camera.position.x = 50;
-  camera.zoom = 4;
+  camera.zoom = 3;
   camera.updateProjectionMatrix();
 
 
@@ -68,59 +65,80 @@ function init(){
   /////////CSS GEOM//////////
   element0 = document.createElement('div');
   element0.className = "tag";
-  element0.style.opacity = 0;
+  element0.style.opacity = 1;
   elText0 = document.createElement('div');
   element0.appendChild( elText0 );
   elText0.className = "titleText";
-  elText0.innerHTML = '<b>0. </b>Landscaped Topography';
+  elText0.innerHTML = '<b>Date/Time: </b>' + '<br>' + (sunData[0].dates);
 
   titleDiv0 = new THREE.CSS3DObject(element0);
-  titleDiv0.position.x = -110;
-  titleDiv0.position.y = -65;
+  titleDiv0.position.x = 120;
+  titleDiv0.position.y = -25;
   titleDiv0.position.z = -72;
   titleDiv0.rotation.x = -Math.PI / 2;
   titleDiv0.rotation.z =  Math.PI;
   scene2.add(titleDiv0);
 
-
+  /////////////////
   element1 = document.createElement('div');
   element1.className = "tag";
-  element1.style.opacity = 0;
+  element1.style.opacity = 1;
   elText1 = document.createElement('div');
   element1.appendChild( elText1 );
   elText1.className = "titleText";
-  elText1.innerHTML = '<b>1. </b>Cross-Laminated Timber Structure';
+  elText1.innerHTML = '<b>Panels in Sunlight </b>' + '<br>' + (sunData[0].panelPercent);
 
   titleDiv1 = new THREE.CSS3DObject(element1);
-  titleDiv1.position.x = -110;
-  titleDiv1.position.y = -65;
+  titleDiv1.position.x = 120;
+  titleDiv1.position.y = -25;
   titleDiv1.position.z = -45;
   titleDiv1.rotation.x = -Math.PI / 2;
   titleDiv1.rotation.z =  Math.PI;
   scene2.add(titleDiv1);
-  for (i = 0; i < 4; i++){
-    elementFacade = document.createElement('div');
-    elementFacade.className = "tag";
-    elementFacade.style.opacity = 0;
-    elTextFacade = document.createElement('div');
-    elementFacade.appendChild( elTextFacade );
-    elTextFacade.className = "subText";
-    elTextFacade.id = "model" + i ;
-    elTextFacade.innerHTML = "<b>" + (i+2) + ".  </b>" + divDesc[i];
-    divText.push( elementFacade );
-  };
 
-  for (i = 0; i < divText.length; i++){
-    subText = new THREE.CSS3DObject( divText[i] );
-    divs.push(subText);
-    subText.name = "cssModel" + i;
-    subText.position.x = -110;
-    subText.position.y = -70;
-    subText.position.z = -45;
-    subText.rotation.x = -Math.PI / 2;
-    subText.rotation.z =  Math.PI;
-    scene2.add(subText);
-  };
+  ////////////
+  element2 = document.createElement('div');
+  element2.className = "tag";
+  element2.id = "tagKey";
+  element2.style.opacity = 1;
+  elImg = document.createElement('img');
+  elImg.src = 'img/solarKey.png';
+  elImg.style.height = '60px';
+  element2.appendChild( elImg );
+  elImg.className = "titleText";
+
+  titleDiv2 = new THREE.CSS3DObject(element2);
+  titleDiv2.position.x = -105;
+  titleDiv2.position.y = -25;
+  titleDiv2.position.z = -45;
+  titleDiv2.rotation.x = -Math.PI / 2;
+  titleDiv2.rotation.z =  Math.PI;
+  scene2.add(titleDiv2);
+  
+
+  // for (i = 0; i < 4; i++){
+  //   elementFacade = document.createElement('div');
+  //   elementFacade.className = "tag";
+  //   elementFacade.style.opacity = 0;
+  //   elTextFacade = document.createElement('div');
+  //   elementFacade.appendChild( elTextFacade );
+  //   elTextFacade.className = "subText";
+  //   elTextFacade.id = "model" + i ;
+  //   elTextFacade.innerHTML = "<b>" + (i+2) + ".  </b>" + divDesc[i];
+  //   divText.push( elementFacade );
+  // };
+
+  // for (i = 0; i < divText.length; i++){
+  //   subText = new THREE.CSS3DObject( divText[i] );
+  //   divs.push(subText);
+  //   subText.name = "cssModel" + i;
+  //   subText.position.x = -110;
+  //   subText.position.y = -70;
+  //   subText.position.z = -45;
+  //   subText.rotation.x = -Math.PI / 2;
+  //   subText.rotation.z =  Math.PI;
+  //   scene2.add(subText);
+  // };
 
 
   //////////LOADER///////////
@@ -160,6 +178,9 @@ function init(){
         object.name = "part" + index;
         object.rotation.x = -Math.PI / 2;
         object.position.y = -20;
+        object.scale.x = 2;
+        object.scale.y = 2;
+        object.scale.z = 2;
         scene.add(object);
         objectMove.push(scene.getObjectByName("part" + index));
         index++;
@@ -171,8 +192,8 @@ function init(){
 
 
   //LIGHT
-  var ambientlight = new THREE.AmbientLight( 0x080808, 20 ); 
-  dirLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
+  var ambientlight = new THREE.AmbientLight( 0x080808, 15 ); 
+  dirLight = new THREE.DirectionalLight( 0xFCF8E4, 2.0 );
   dirLight.shadow.camera.right =  500;
   dirLight.shadow.camera.left = -500;
   dirLight.shadow.camera.top =  500;
@@ -216,7 +237,10 @@ function init(){
   controls.enableDamping = true;
   controls.dampingFactor = 0.4;
   controls.enablePan = false;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = -0.2;
   controls.update();
+
   
 };
 
@@ -225,19 +249,30 @@ function init(){
 
 function animate(){
   window.requestAnimationFrame( animate );
+  
+
+  // sliderVal++;
+  // var sliderValSined = Math.sin(sliderVal*0.01)*30;
+  // var sliderValCorrected = 30 + (sliderValSined);
+  // var rangeVal = document.getElementById("myRange").value; 
+  // rangeVal = sliderValCorrected;
+
+  // dirLight.position.y = (sunData[Math.round(rangeVal)].sunPosition.Y);
+  // dirLight.position.x = (sunData[Math.round(rangeVal)].sunPosition.X);
+  // dirLight.position.z = -(sunData[Math.round(rangeVal)].sunPosition.Z);
+
   slider.oninput = function() {
     
     var sliderNum = this.value;
-
-    // dirLight.position.x = (sliderNum * 3) - (sliderNum - 2);
-    // console.log(sliderNum);
 
     helper.update();
     dirLight.position.y = (sunData[Math.round(sliderNum)].sunPosition.Y);
     dirLight.position.x = (sunData[Math.round(sliderNum)].sunPosition.X);
     dirLight.position.z = -(sunData[Math.round(sliderNum)].sunPosition.Z);
 
-    document.getElementById("timeDate").innerHTML = sunData[Math.round(sliderNum)].dates;
+    elText0.innerHTML = '<b>Date/Time: </b>' + '<br>' + sunData[Math.round(sliderNum)].dates;
+    elText1.innerHTML = '<b>Panels in Sunlight </b>' + '<br>' + (sunData[Math.round(sliderNum)].panelPercent);
+
 
 
     // camera.zoom = 4 - sliderNum / 90;
@@ -267,7 +302,7 @@ function setPixelRatio(){
     renderer.setPixelRatio( 2.0 );
   }
 };
-setPixelRatio();
+// setPixelRatio();
 
 
 function onWindowResize() {
@@ -288,9 +323,6 @@ function isMobileDevice() {
 function uiReshuffle(){
   if (isMobileDevice() == true){
     document.getElementById("paragraph").style.display = "none";
-    document.getElementById("title").style.bottom = "20px";
-    document.getElementById("title").style.width = "82%";
-    document.getElementById("title").style.borderTop = "none";
   } else {
     document.getElementById("title").style.top = "20px";
     document.getElementById("title").style.width = "400px";
