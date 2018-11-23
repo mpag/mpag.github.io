@@ -323,6 +323,9 @@ function isMobileDevice() {
 function uiReshuffle(){
   if (isMobileDevice() == true){
     document.getElementById("paragraph").style.display = "none";
+    document.getElementById("title").style.bottom = "20px";
+    document.getElementById("title").style.width = "82%";
+    document.getElementById("title").style.borderTop = "none";
   } else {
     document.getElementById("title").style.top = "20px";
     document.getElementById("title").style.width = "400px";
