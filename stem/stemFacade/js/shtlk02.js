@@ -189,6 +189,7 @@ function init(){
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setPixelRatio( window.devicePixelRatio / 2 );
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
@@ -256,14 +257,14 @@ function animate(){
 }; 
 
 
-function setPixelRatio(){
-  if (isMobileDevice() == true){
-    renderer.setPixelRatio( 1 );
-  } else {
-    renderer.setPixelRatio( 2.0 );
-  }
-};
-setPixelRatio();
+// function setPixelRatio(){
+//   if (isMobileDevice() == true){
+//     renderer.setPixelRatio( 1 );
+//   } else {
+//     renderer.setPixelRatio( 2.0 );
+//   }
+// };
+// setPixelRatio();
 
 
 function onWindowResize() {
