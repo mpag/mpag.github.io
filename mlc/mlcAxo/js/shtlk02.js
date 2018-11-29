@@ -1,12 +1,12 @@
 
 
 //Global Variables
-var camera, scene, renderer, rectangle, div, controls, element1, element2;
+var camera, scene, renderer, rectangle, div, controls, element0, element1, element2, titleDiv0;
 var scene2, renderer2, manager;
 var line = []; 
 var divs = [];
 var divText = [];
-var divDesc = ["Equitone Natura (PG341) + Solar PV", "Equitone Natura (PG542) + Solar PV", "Equitone Natura (PW841) + Solar PV", "Equitone Natura (PW141) + Solar PV"]
+var divDesc = ["Level 00", "Level 01", "Level 02", "Level 03"]
 window.addEventListener( 'resize', onWindowResize, false );
 
 //Loader Variables
@@ -42,7 +42,7 @@ function init(){
   camera.position.z = -50;
   camera.position.y = 35;
   camera.position.x = 50;
-  camera.zoom = 10;
+  camera.zoom = 5;
   camera.updateProjectionMatrix();
 
 
@@ -59,39 +59,55 @@ function init(){
   scene.add( plane );
 
 
-  /////////CSS GEOM//////////
+  ///////CSS GEOM//////////
   element0 = document.createElement('div');
-  element0.className = "tag";
+  element0.className = "bigTag";
   element0.style.opacity = 0;
   elText0 = document.createElement('div');
   element0.appendChild( elText0 );
   elText0.className = "titleText";
-  elText0.innerHTML = '<b>0. </b>Landscaped Topography';
+  elText0.innerHTML = 'The Nook';
 
   titleDiv0 = new THREE.CSS3DObject(element0);
-  titleDiv0.position.x = -110;
-  titleDiv0.position.y = -65;
-  titleDiv0.position.z = -72;
+  titleDiv0.position.x = -0;
+  titleDiv0.position.y = 0;
+  titleDiv0.position.z = 0;
   titleDiv0.rotation.x = -Math.PI / 2;
   titleDiv0.rotation.z =  Math.PI;
   scene2.add(titleDiv0);
 
 
   element1 = document.createElement('div');
-  element1.className = "tag";
+  element1.className = "bigTag";
   element1.style.opacity = 0;
   elText1 = document.createElement('div');
   element1.appendChild( elText1 );
   elText1.className = "titleText";
-  elText1.innerHTML = '<b>1. </b>Cross-Laminated Timber Structure';
+  elText1.innerHTML = 'The Pod';
 
   titleDiv1 = new THREE.CSS3DObject(element1);
-  titleDiv1.position.x = -110;
-  titleDiv1.position.y = -65;
-  titleDiv1.position.z = -45;
+  titleDiv1.position.x = 0;
+  titleDiv1.position.y = 40;
+  titleDiv1.position.z = 0;
   titleDiv1.rotation.x = -Math.PI / 2;
   titleDiv1.rotation.z =  Math.PI;
   scene2.add(titleDiv1);
+
+  element2 = document.createElement('div');
+  element2.className = "bigTag";
+  element2.style.opacity = 0;
+  elText2 = document.createElement('div');
+  element2.appendChild( elText2 );
+  elText2.className = "titleText";
+  elText2.innerHTML = 'The Stair';
+
+  titleDiv2 = new THREE.CSS3DObject(element2);
+  titleDiv2.position.x = 0;
+  titleDiv2.position.y = -20;
+  titleDiv2.position.z = 0;
+  titleDiv2.rotation.x = -Math.PI / 2;
+  titleDiv2.rotation.z =  Math.PI;
+  scene2.add(titleDiv2);
 
 
   for (i = 0; i < 4; i++){
@@ -102,7 +118,7 @@ function init(){
     elementFacade.appendChild( elTextFacade );
     elTextFacade.className = "subText";
     elTextFacade.id = "model" + i ;
-    elTextFacade.innerHTML = "<b>" + (i+2) + ".  </b>" + divDesc[i];
+    elTextFacade.innerHTML = divDesc[i];
     divText.push( elementFacade );
   };
 
@@ -110,9 +126,9 @@ function init(){
     subText = new THREE.CSS3DObject( divText[i] );
     divs.push(subText);
     subText.name = "cssModel" + i;
-    subText.position.x = -110;
-    subText.position.y = -70;
-    subText.position.z = -45;
+    subText.position.x = -70;
+    subText.position.y =  (i*8) - 30;
+    subText.position.z = -25;
     subText.rotation.x = -Math.PI / 2;
     subText.rotation.z =  Math.PI;
     scene2.add(subText);
@@ -155,8 +171,11 @@ function init(){
         });
         object.name = "part" + index;
         object.rotation.x = -Math.PI / 2;
-        object.position.y = -65;
+        object.position.y = -120;
         object.position.x = 8;
+        object.scale.x = 2;
+        object.scale.y = 2;
+        object.scale.z = 2;
         scene.add(object);
         objectMove.push(scene.getObjectByName("part" + index));
         index++;
@@ -203,7 +222,7 @@ function init(){
   renderer2.domElement.style.top = 0;
   renderer2.domElement.style.pointerEvents= 'none';
   renderer2.domElement.style.zIndex = 1;
-  // document.body.appendChild(renderer2.domElement);
+  document.body.appendChild(renderer2.domElement);
 
   //CONTROLS
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -219,50 +238,59 @@ function init(){
 
 function animate(){
   window.requestAnimationFrame( animate );
-  // stats.begin();
+
+  titleDiv0.lookAt( camera.position );
+  titleDiv1.lookAt( camera.position );
+  titleDiv2.lookAt( camera.position );
+
   slider.oninput = function() {
     var sliderNum = this.value;
 
     for (var i = 1; i < (objectMove.length-1); i++) {
-      objectMove[i].position.y = -65 + (sliderNum / 15) * Math.pow(i, 1.5);
+      objectMove[i].position.y = -120 + (sliderNum / 15) * Math.pow(i, 1.5);
+      
     };
 
-    // for (i = 0; i < divs.length; i++){
-    //   divs[i].position.y = objectMove[i+6].position.y + (sliderNum / 15) * Math.pow(i, 0.8);
-    // };
+    for (i = 0; i < divs.length; i++){
+      divs[i].position.y = ((i*8) - 30) + objectMove[i+1].position.y + 120;
+    };
 
-    // for (i = 0; i < divText.length; i++){
-    //   divText[i].style.opacity = (sliderNum / 30);  
-    // };
 
-    // element0.style.opacity = (sliderNum / 30);
-    // element1.style.opacity = (sliderNum / 30);
+    divs[0].position.y = -30;
+
+
+    for (i = 0; i < divText.length; i++){
+      divText[i].style.opacity = (sliderNum / 30);  
+    };
+
+
+    element0.style.opacity = (sliderNum / 30);
+    element1.style.opacity = (sliderNum / 30);
+    element2.style.opacity = (sliderNum / 30);
+    
+
 
     facadeObject = objectMove[objectMove.length-1];
-
     facadeObject.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
-        child.material.opacity = 1 - (sliderNum/65);
         child.material.transparent = true;
+        if (child.material.opacity <= 0){
+          child.material.visible = false;
+        } else {
+          child.material.visible = true;
+        };
+        child.material.opacity = 1 - (sliderNum/65);
+        console.log(child.material.opacity);
       };
     });
 
+    camera.zoom = 5 - sliderNum / 90;
 
-    // console.log(objectMove[objectMove.length-1]);
 
-    camera.zoom = 10 - sliderNum / 90;
-
-    // scene.remove(line);
-    // var geometryLine = new THREE.Geometry();
-    // geometryLine.vertices.push(new THREE.Vector3( div.position.x - 17, div.position.y - 15, div.position.z) );
-    // geometryLine.vertices.push(new THREE.Vector3( meshKnot.position.x + 20, meshKnot.position.y, meshKnot.position.z) );
-    // var lineMaterial = new THREE.LineBasicMaterial( { color: 0x9E9E9E, scale: '0.5' } )
-    // line = new THREE.Line( geometryLine, lineMaterial );
-    // scene.add(line);
 
   };
 
-  // renderer2.render( scene2, camera);
+  renderer2.render( scene2, camera);
   renderer.render( scene, camera);
   camera.updateProjectionMatrix();
   controls.update();
