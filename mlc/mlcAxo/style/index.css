@@ -66,39 +66,52 @@ p {
 }
 
 
-.tag {
-  background-color: rgba(200, 200, 200, 0.4);
+.levelTag {
   padding: 2px;
   border-radius: 1px;
-  border: 0.5px grey;
   text-align: center;
   width: 16px;
 }
 
-.tag:hover {
-  box-shadow: 0px 0px 2px black;
-  background-color: rgba(230, 230, 230, 0.2);
+.levelTag:hover {
+  box-shadow: 0px 0px 1px grey;
 }
 
-.bigTag {
-  background-color: rgba(220, 220, 220, 0.8);
+.noteTag {
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 2px;
   border-radius: 1px;
-  border: 0.5px white;
   text-align: center;
-  width: 16px;
+  width: 18px;
+  box-shadow: 0px 0px 1px grey;
+}
+
+.noteTag:hover {
+  background-color: rgba(255, 255, 255, 1);
+  /*border: 1px blue;*/
 }
 
 .titleText {
   font-family: 'Open Sans', sans-serif;
   font-size: 4px;
-  
 }
 
 .subText {
   font-family: 'Open Sans', sans-serif;
   font-size: 4px;
   pointer-events: auto;
+}
+
+#Nook:hover {
+  border: 0.5px solid blue;
+}
+
+#Pod:hover {
+  border: 0.5px solid red;
+}
+
+#Stair:hover {
+  border: 0.5px solid yellow;
 }
 
 

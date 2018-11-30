@@ -1,20 +1,27 @@
 
 
-//Global Variables
-var camera, scene, renderer, rectangle, div, controls, element0, element1, element2, titleDiv0;
+/////////Global Variables///////////
+var camera, scene, renderer, rectangle, div, controls;
 var scene2, renderer2, manager;
-var line = []; 
-var divs = [];
-var divText = [];
-var divDesc = ["Level 00", "Level 01", "Level 02", "Level 03"]
 window.addEventListener( 'resize', onWindowResize, false );
 
-//Loader Variables
+///////////Loader Variables////////
 var index = 0;
 var files = ["models/Base.json", "models/Level_00.json", "models/Level_01.json", "models/Level_02.json", "models/Level_03.json", "models/Facade.json" ];
 
+////////////CSS3d////////////////
 
-//Init Variables
+//NOTE CSS VARIABLES
+var noteDivObjects = []
+var noteObjects = []
+
+//LEVEL CSS VARIABLES
+var levelDivObjects = [];
+var levelObjects = [];
+ 
+
+
+//////////INIT VAIRABLES////////
 var count = 0;
 var screenWidth = window.innerWidth; 
 var screenHeight = window.innerHeight;
@@ -22,6 +29,9 @@ var aspect = screenWidth / screenHeight;
 var frustumSize = 1000;
 var slider = document.getElementById("myRange");
 var objectMove = [];
+var camTarget = new THREE.Vector3(0, 0, 0);
+
+
 
 
 init();
@@ -29,12 +39,13 @@ animate();
 uiReshuffle();
 
 
+
+
 function init(){
   //Scenes
   scene = new THREE.Scene();
   scene2 = new THREE.Scene();
   
-
   //CAMERA
   near = -100; 
   far = 10000;
@@ -45,9 +56,7 @@ function init(){
   camera.zoom = 5;
   camera.updateProjectionMatrix();
 
-
   //////// GEOMETRY /////////
-
   var planeGeometry = new THREE.PlaneGeometry( 500, 500, 64 );
   planeGeometry.rotateX( - Math.PI / 2 );
   planeGeometry.rotateY( - Math.PI / 4 );
@@ -56,91 +65,13 @@ function init(){
   plane.opacity = 0.5;
   plane.position.y = 0;
   plane.receiveShadow = true;
-  scene.add( plane );
-
-
-  ///////CSS GEOM//////////
-  element0 = document.createElement('div');
-  element0.className = "bigTag";
-  element0.style.opacity = 0;
-  elText0 = document.createElement('div');
-  element0.appendChild( elText0 );
-  elText0.className = "titleText";
-  elText0.innerHTML = 'The Nook';
-
-  titleDiv0 = new THREE.CSS3DObject(element0);
-  titleDiv0.position.x = -0;
-  titleDiv0.position.y = 0;
-  titleDiv0.position.z = 0;
-  titleDiv0.rotation.x = -Math.PI / 2;
-  titleDiv0.rotation.z =  Math.PI;
-  scene2.add(titleDiv0);
-
-
-  element1 = document.createElement('div');
-  element1.className = "bigTag";
-  element1.style.opacity = 0;
-  elText1 = document.createElement('div');
-  element1.appendChild( elText1 );
-  elText1.className = "titleText";
-  elText1.innerHTML = 'The Pod';
-
-  titleDiv1 = new THREE.CSS3DObject(element1);
-  titleDiv1.position.x = 0;
-  titleDiv1.position.y = 40;
-  titleDiv1.position.z = 0;
-  titleDiv1.rotation.x = -Math.PI / 2;
-  titleDiv1.rotation.z =  Math.PI;
-  scene2.add(titleDiv1);
-
-  element2 = document.createElement('div');
-  element2.className = "bigTag";
-  element2.style.opacity = 0;
-  elText2 = document.createElement('div');
-  element2.appendChild( elText2 );
-  elText2.className = "titleText";
-  elText2.innerHTML = 'The Stair';
-
-  titleDiv2 = new THREE.CSS3DObject(element2);
-  titleDiv2.position.x = 0;
-  titleDiv2.position.y = -20;
-  titleDiv2.position.z = 0;
-  titleDiv2.rotation.x = -Math.PI / 2;
-  titleDiv2.rotation.z =  Math.PI;
-  scene2.add(titleDiv2);
-
-
-  for (i = 0; i < 4; i++){
-    elementFacade = document.createElement('div');
-    elementFacade.className = "tag";
-    elementFacade.style.opacity = 0;
-    elTextFacade = document.createElement('div');
-    elementFacade.appendChild( elTextFacade );
-    elTextFacade.className = "subText";
-    elTextFacade.id = "model" + i ;
-    elTextFacade.innerHTML = divDesc[i];
-    divText.push( elementFacade );
-  };
-
-  for (i = 0; i < divText.length; i++){
-    subText = new THREE.CSS3DObject( divText[i] );
-    divs.push(subText);
-    subText.name = "cssModel" + i;
-    subText.position.x = -70;
-    subText.position.y =  (i*8) - 30;
-    subText.position.z = -25;
-    subText.rotation.x = -Math.PI / 2;
-    subText.rotation.z =  Math.PI;
-    scene2.add(subText);
-  };
-
+  // scene.add( plane );
 
 
   //////////LOADER///////////
 
   manager = new THREE.LoadingManager();
   var jsonLoader = new THREE.ObjectLoader( manager );
-
 
   var onProgress = function ( xhr ) {
     if ( xhr.lengthComputable ) {
@@ -154,12 +85,11 @@ function init(){
   manager.onProgress = function ( item, loaded, total ) {
   };
   manager.onLoad = function ( ) {
-    $("#loadingScreen").delay(2000).fadeOut(500);
-    $('#title').delay(3000).fadeIn(1500);
+    // $("#loadingScreen").delay(2000).fadeOut(500);
+    // $('#title').delay(3000).fadeIn(1500);
     animate();
   };
 
-  
   function loadNextFile() {
     if (index > files.length - 1) return;
       jsonLoader.load(files[index], function ( object ) {
@@ -181,8 +111,7 @@ function init(){
         index++;
         loadNextFile();
     }, onProgress, onError);
-  };
-
+    };
   loadNextFile();
 
 
@@ -230,8 +159,62 @@ function init(){
   controls.dampingFactor = 0.4;
   controls.enablePan = false;
   controls.update();
+
+
+  ///////CSS GEOM//////////
   
+  //NOTE CSS OBJECTS//
+  divPositions = [new THREE.Vector3( -20, -20, 0 ), new THREE.Vector3( -20, 125, 0 ), new THREE.Vector3( 20, 205, 0 )]
+  divText1 = ["Stair", "Nook", "Pod"];
+
+  for (var i = 0; i < divText1.length; i++) {
+    var parentDiv = document.createElement('div');
+    parentDiv.className = "noteTag";
+    parentDiv.style.opacity = 0;
+    parentDiv.id = divText1[i];
+
+    var childDiv = document.createElement('div');
+    parentDiv.appendChild(childDiv);
+    childDiv.className = "subText";
+    childDiv.innerHTML = divText1[i];
+    noteDivObjects.push(parentDiv);
+
+    var css3DObject = new THREE.CSS3DObject(parentDiv);
+    css3DObject.position.x = divPositions[i].x;
+    css3DObject.position.y = divPositions[i].y;
+    css3DObject.position.z = divPositions[i].z;
+    css3DObject.rotation.x = -Math.PI / 2;
+    css3DObject.rotation.z =  Math.PI;
+    noteObjects.push(css3DObject);
+    scene2.add(css3DObject);
+  };
+
+  //LEVEL CSS OBJECTS//
+  var divText2 = ["Level 00", "Level 01", "Level 02", "Level 03"]
+
+  for (var i = 0; i < divText2.length; i++) {
+    var parentDiv = document.createElement('div');
+    parentDiv.className = "levelTag";
+    parentDiv.style.opacity = 0;
+
+    var childDiv = document.createElement('div');
+    parentDiv.appendChild(childDiv);
+    childDiv.className = "subText";
+    childDiv.innerHTML = divText2[i];
+    childDiv.id = divText2[i];
+    levelDivObjects.push(parentDiv);
+
+    var css3DObject = new THREE.CSS3DObject(parentDiv);
+    css3DObject.position.x = -70;
+    css3DObject.position.y =  (i*8) - 30;
+    css3DObject.position.z = -25;
+    css3DObject.rotation.y = Math.PI;
+    levelObjects.push(css3DObject);
+    scene2.add(css3DObject);
+  };
 };
+
+
 
 
 //////FUNCTIONS////////
@@ -239,37 +222,31 @@ function init(){
 function animate(){
   window.requestAnimationFrame( animate );
 
-  titleDiv0.lookAt( camera.position );
-  titleDiv1.lookAt( camera.position );
-  titleDiv2.lookAt( camera.position );
+  //NOTE DIV OBJECTS LOOK AT
+  for (var i = 0; i < noteObjects.length; i++) {
+    noteObjects[i].lookAt( new THREE.Vector3( camera.position.x, noteObjects[i].position.y, camera.position.z) );
+  };
 
   slider.oninput = function() {
     var sliderNum = this.value;
 
-    for (var i = 1; i < (objectMove.length-1); i++) {
-      objectMove[i].position.y = -120 + (sliderNum / 15) * Math.pow(i, 1.5);
-      
+    var explodeThreshold = 0.5;
+    var noteThreshold = 0.9;
+    var sliderMax = document.getElementById("myRange").max;
+    var explodeTime = explodeThreshold*sliderMax;
+    var noteTime = noteThreshold*sliderMax;
+
+
+    //JSON OBJECTS MOVE
+    for (var i = 2; i < (objectMove.length-1); i++) {
+      if (sliderNum >= explodeTime){
+        objectMove[i].position.y = (-120 + ((sliderNum - explodeTime) / 2) * Math.pow(i, 1.5));
+      } else {
+        objectMove[i].position.y = (-120 + (sliderNum / 2) * Math.pow(0, 1.5));
+      };
     };
 
-    for (i = 0; i < divs.length; i++){
-      divs[i].position.y = ((i*8) - 30) + objectMove[i+1].position.y + 120;
-    };
-
-
-    divs[0].position.y = -30;
-
-
-    for (i = 0; i < divText.length; i++){
-      divText[i].style.opacity = (sliderNum / 30);  
-    };
-
-
-    element0.style.opacity = (sliderNum / 30);
-    element1.style.opacity = (sliderNum / 30);
-    element2.style.opacity = (sliderNum / 30);
-    
-
-
+    //JSON OBJECTS OPACITY    
     facadeObject = objectMove[objectMove.length-1];
     facadeObject.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
@@ -279,16 +256,78 @@ function animate(){
         } else {
           child.material.visible = true;
         };
-        child.material.opacity = 1 - (sliderNum/65);
-        console.log(child.material.opacity);
+        child.material.opacity = 1 - (sliderNum/30);
       };
     });
 
-    camera.zoom = 5 - sliderNum / 90;
+    //LEVEL DIV OBJECTS MOVE
+    for (i = 0; i < levelObjects.length; i++){
+      levelObjects[i].position.y = ((i*8) - 30) + objectMove[i+1].position.y + 120;
+      levelObjects[0].position.y = -30;
+    };
 
+    //LEVEL DIV OBJECTS OPACITY
+    for (i = 0; i < levelDivObjects.length; i++){
+      levelDivObjects[i].style.opacity = (sliderNum / 30);  
+    };
 
+    //NOTE DIV OBJECTS OPACITY
+    if (sliderNum >= noteTime){
+      for (var i = 0; i < noteDivObjects.length; i++) {
+        noteDivObjects[i].style.opacity = (sliderNum - noteTime) / 10;
+      };
+    } else {
+      for (var i = 0; i < noteDivObjects.length; i++) {
+        noteDivObjects[i].style.opacity = 0;
+      };
+    };
 
+    //CAMERA OBJECTS ZOOM
+    if (sliderNum >= explodeTime){
+      camera.zoom = 5 - (sliderNum - explodeTime) / 30;
+      camTarget = new THREE.Vector3(0, (sliderNum - explodeTime)*1.5, 0);
+      camera.position.y = 35 + (sliderNum - explodeTime)*1.5;
+    } else {
+      camera.zoom = 5;
+      camTarget = new THREE.Vector3(0, 0, 0);
+    };
   };
+  
+  camera.lookAt(camTarget);
+
+
+
+  //DIV HOVER FUNCTION
+  var noteDivHover = [];
+
+  for (var i = 0; i < noteDivObjects.length; i++) {
+    img = document.getElementById("howImg");
+    typeTitle = document.getElementById("howTitle");
+    paragraph = document.getElementById("howText");
+    
+    noteDivObjects[i].onclick = function(){
+
+
+      if (this.id == "Stair"){
+        typeTitle.innerHTML = "<br> The Amphitheatre";
+        img.src = "img/stair.png";
+        paragraph.innerHTML = "Engaging school community spaces at the heart of the building. Technology enables setting with an emphasis on mobility.";
+
+
+      } else if (this.id == "Nook"){
+          typeTitle.innerHTML = "<br> The Nook";
+          img.src = "img/nook.png";
+          paragraph.innerHTML = "Bump spaces maximise interaction and mentorship between staff and different year groups, offering a supportive student experience suited to a range of teaching styles.";
+
+
+      } else if (this.id == "Pod"){
+          typeTitle.innerHTML = "<br> The Pod";
+          img.src = "img/pod.png";
+          paragraph.innerHTML = "Pods offer a variety of smaller teaching spaces that enable the learning to be visible to all and maximise engagement.";
+      }
+    }
+  };  
+  
 
   renderer2.render( scene2, camera);
   renderer.render( scene, camera);
@@ -298,6 +337,7 @@ function animate(){
 }; 
 
 
+
 function setPixelRatio(){
   if (window.devicePixelRatio > 2){
     renderer.setPixelRatio( window.devicePixelRatio / 2 );
@@ -305,12 +345,6 @@ function setPixelRatio(){
     renderer.setPixelRatio( window.devicePixelRatio );
   }
 };
-
-
-
-
-
-
 
 function onWindowResize() {
   var aspect = window.innerWidth / window.innerHeight;
@@ -323,17 +357,9 @@ function onWindowResize() {
   renderer2.setSize( window.innerWidth, window.innerHeight );
 };
 
-
-
-
 function isMobileDevice() {
     return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
 };
-
-
-
-
-
 
 function uiReshuffle(){
   if (isMobileDevice() == true){
