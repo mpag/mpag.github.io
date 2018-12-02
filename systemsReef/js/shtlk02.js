@@ -266,7 +266,7 @@ function init(){
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
-  // renderer.setClearColor( 0xffffff, 0);
+  setPixelRatio();
   renderer.domElement.style.zIndex = 0;
   document.body.appendChild( renderer.domElement );
 
@@ -340,14 +340,14 @@ function animate(){
 }; 
 
 
-// function setPixelRatio(){
-//   if (isMobileDevice() == true){
-//     renderer.setPixelRatio( 1 );
-//   } else {
-//     renderer.setPixelRatio( 2.0 );
-//   }
-// };
-// setPixelRatio();
+function setPixelRatio(){
+  if (window.devicePixelRatio > 2){
+    renderer.setPixelRatio( window.devicePixelRatio / 2 );
+  } else {
+    renderer.setPixelRatio( window.devicePixelRatio );
+  }
+};
+
 
 
 function onWindowResize() {

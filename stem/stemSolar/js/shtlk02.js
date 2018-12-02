@@ -222,6 +222,7 @@ function init(){
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
   renderer.domElement.style.zIndex = 0;
+  setPixelRatio();
   document.body.appendChild( renderer.domElement );
 
   renderer2 = new THREE.CSS3DRenderer();
@@ -296,13 +297,12 @@ function animate(){
 
 
 function setPixelRatio(){
-  if (isMobileDevice() == true){
-    renderer.setPixelRatio( 1 );
+  if (window.devicePixelRatio > 2){
+    renderer.setPixelRatio( window.devicePixelRatio / 2 );
   } else {
-    renderer.setPixelRatio( 2.0 );
+    renderer.setPixelRatio( window.devicePixelRatio );
   }
 };
-// setPixelRatio();
 
 
 function onWindowResize() {
