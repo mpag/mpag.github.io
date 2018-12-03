@@ -106,7 +106,6 @@ function init(){
             child.receiveShadow = false;
             child.fog = false;
           } else {
-            console.log(object);
             child.castShadow = true;
             child.receiveShadow = false;
             child.fog = false;
