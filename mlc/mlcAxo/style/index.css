@@ -22,6 +22,7 @@ body {
   padding-top: 20px;
   padding-bottom: 8px;
   z-index: 2;
+  pointer-events: none;
 }
 
 
@@ -63,6 +64,7 @@ p {
   font-size: 0.8em;
   color: black;
   font-family: 'Open Sans', sans-serif;
+  margin: 0;
 }
 
 
@@ -89,11 +91,6 @@ p {
 .noteTag:hover {
   background-color: rgba(255, 255, 255, 1);
   /*border: 1px blue;*/
-}
-
-.titleText {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 4px;
 }
 
 .subText {

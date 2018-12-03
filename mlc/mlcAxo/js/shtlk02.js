@@ -61,11 +61,17 @@ function init(){
   planeGeometry.rotateX( - Math.PI / 2 );
   planeGeometry.rotateY( - Math.PI / 4 );
   var planeMaterial = new THREE.ShadowMaterial();
+  planeMaterial.opacity = 0.2;
   var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-  plane.opacity = 0.5;
-  plane.position.y = 0;
+  plane.opacity = 0.1;
+  plane.position.y = -30.5;
   plane.receiveShadow = true;
-  // scene.add( plane );
+  scene.add( plane );
+
+  var gridHelper = new THREE.GridHelper(200, 10, 0xCBCBCB, 0xCBCBCB);
+  gridHelper.position.y = -31;
+  gridHelper.scale.z = 0.78;
+  scene.add(gridHelper);
 
 
   //////////LOADER///////////
@@ -87,6 +93,7 @@ function init(){
   manager.onLoad = function ( ) {
     // $("#loadingScreen").delay(2000).fadeOut(500);
     // $('#title').delay(3000).fadeIn(1500);
+
     animate();
   };
 
@@ -94,10 +101,16 @@ function init(){
     if (index > files.length - 1) return;
       jsonLoader.load(files[index], function ( object ) {
         object.traverse(function(child) {
-          if (child instanceof THREE.Mesh) {
-            object.castShadow = true;
-            object.receiveShadow = true;
-          };
+          if (child instanceof THREE.Mesh && index == files.length - 1) {
+            child.castShadow = true;
+            child.receiveShadow = false;
+            child.fog = false;
+          } else {
+            console.log(object);
+            child.castShadow = true;
+            child.receiveShadow = false;
+            child.fog = false;
+          }
         });
         object.name = "part" + index;
         object.rotation.x = -Math.PI / 2;
@@ -118,10 +131,10 @@ function init(){
   //LIGHT
   var ambientlight = new THREE.AmbientLight( 0x080808, 20 ); 
   var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
-  directionalLight.shadow.camera.right =  1000;
-  directionalLight.shadow.camera.left = -1000;
-  directionalLight.shadow.camera.top =  1000;
-  directionalLight.shadow.camera.bottom = -1000;
+  directionalLight.shadow.camera.right =  500;
+  directionalLight.shadow.camera.left = -500;
+  directionalLight.shadow.camera.top =  500;
+  directionalLight.shadow.camera.bottom = -500;
   directionalLight.position.y = 200;
   directionalLight.position.z = -100;
   directionalLight.position.x = -100;
@@ -129,7 +142,7 @@ function init(){
   directionalLight.shadow.mapSize.height = 2048;
   directionalLight.shadow.camera.near = 0;
   directionalLight.shadow.camera.far = 2500;
-  // directionalLight.castShadow = true;
+  directionalLight.castShadow = true;
   scene.add( directionalLight );
   scene.add( ambientlight );
   
@@ -138,7 +151,7 @@ function init(){
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  setPixelRatio();
+  // setPixelRatio();
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
@@ -250,6 +263,7 @@ function animate(){
     facadeObject = objectMove[objectMove.length-1];
     facadeObject.traverse(function(child) {
       if (child instanceof THREE.Mesh) {
+        child.castShadow = true;
         child.material.transparent = true;
         if (child.material.opacity <= 0){
           child.material.visible = false;
@@ -309,19 +323,16 @@ function animate(){
 
 
       if (this.id == "Stair"){
-        typeTitle.innerHTML = "<br> The Amphitheatre";
         img.src = "img/stair.png";
         paragraph.innerHTML = "Engaging school community spaces at the heart of the building. Technology enables setting with an emphasis on mobility.";
 
 
       } else if (this.id == "Nook"){
-          typeTitle.innerHTML = "<br> The Nook";
           img.src = "img/nook.png";
           paragraph.innerHTML = "Bump spaces maximise interaction and mentorship between staff and different year groups, offering a supportive student experience suited to a range of teaching styles.";
 
 
       } else if (this.id == "Pod"){
-          typeTitle.innerHTML = "<br> The Pod";
           img.src = "img/pod.png";
           paragraph.innerHTML = "Pods offer a variety of smaller teaching spaces that enable the learning to be visible to all and maximise engagement.";
       }
@@ -369,7 +380,7 @@ function uiReshuffle(){
     document.getElementById("title").style.borderTop = "none";
   } else {
     document.getElementById("title").style.top = "20px";
-    document.getElementById("title").style.width = "400px";
+    document.getElementById("title").style.width = "250px";
     // document.getElementById("title").style.borderTop = "2px solid lightGrey";
     // document.getElementById("title").style.borderBottom = "2px solid lightGrey";
   }
