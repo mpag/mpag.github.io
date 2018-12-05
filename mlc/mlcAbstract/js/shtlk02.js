@@ -65,8 +65,6 @@ function init(){
   manager.onProgress = function ( item, loaded, total ) {
   };
   manager.onLoad = function ( ) {
-    // $("#loadingScreen").delay(2000).fadeOut(500);
-    // $('#title').delay(3000).fadeIn(1500);  
   };
 
   function loadNextFile() {
@@ -77,7 +75,7 @@ function init(){
             object.castShadow = true;
             object.receiveShadow = true;
             child.material.transparent = true;
-            child.material.opacity = 1;
+            child.material.opacity = 0.2;
           };
         });
         object.name = "part" + index;
@@ -109,21 +107,26 @@ function init(){
   renderer.domElement.style.zIndex = 0;
   document.body.appendChild( renderer.domElement );
 
-  renderer2 = new THREE.CSS3DRenderer();
-  renderer2.setSize(window.innerWidth, window.innerHeight);
-  renderer2.domElement.style.position = 'absolute';
-  renderer2.domElement.style.top = 0;
-  renderer2.domElement.style.pointerEvents= 'none';
-  renderer2.domElement.style.zIndex = 1;
-  // document.body.appendChild(renderer2.domElement);
+  // renderer2 = new THREE.CSS3DRenderer();
+  // renderer2.setSize(window.innerWidth, window.innerHeight);
+  // renderer2.domElement.style.position = 'absolute';
+  // renderer2.domElement.style.top = 0;
+  // renderer2.domElement.style.pointerEvents= 'none';
+  // renderer2.domElement.style.zIndex = 1;
+  // // document.body.appendChild(renderer2.domElement);
 
   //CONTROLS
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.4;
   controls.enablePan = false;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.05;
+  controls.autoRotate = false;
+
+  if (isMobileDevice == true){
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.05;
+  };
+
   controls.update();
 };
 
@@ -139,9 +142,22 @@ function animate(){
   window.requestAnimationFrame( animate );
 
   var time = Date.now() * 0.0005;
+  var time2 = Date.now() * 0.002;
 
   camera.position.x += ( mouseX - camera.position.x ) * .05;
   camera.position.y += ( - mouseY - camera.position.y ) * .05;
+
+
+  //JSON OBJECTS OPACITY    
+  for (var i = 0; i < objectMove.length; i++) {
+    objectMove[i].traverse(function(child) {
+    if (child instanceof THREE.Mesh) {
+      child.material.opacity = Math.abs(Math.sin(time2))/2 + 0.25 ;
+    };
+    });
+  };
+
+
 
   renderer.render( scene, camera);
   camera.updateProjectionMatrix();

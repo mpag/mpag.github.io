@@ -7,7 +7,11 @@ window.addEventListener( 'resize', onWindowResize, false );
 
 ///////////Loader Variables////////
 var index = 0;
+var objindex = 0;
 var files = ["models/Base.json", "models/Level_00.json", "models/Level_01.json", "models/Level_02.json", "models/Level_03.json", "models/Facade.json" ];
+var objfiles = ["models/People.obj"];
+var mtl = ["models/People.mtl"];
+
 
 ////////////CSS3d////////////////
 
@@ -29,6 +33,7 @@ var aspect = screenWidth / screenHeight;
 var frustumSize = 1000;
 var slider = document.getElementById("myRange");
 var objectMove = [];
+var objObjectMove = [];
 var camTarget = new THREE.Vector3(0, 0, 0);
 
 
@@ -93,9 +98,36 @@ function init(){
   manager.onLoad = function ( ) {
     // $("#loadingScreen").delay(2000).fadeOut(500);
     // $('#title').delay(3000).fadeIn(1500);
-
     animate();
   };
+
+
+  var loader = new THREE.OBJLoader( manager );
+  var mtlLoader = new THREE.MTLLoader();
+
+
+  function loadNextFileOBJ(){
+    if (index > objfiles.length - 1) return;
+    var url = mtl[objindex];
+    mtlLoader.load( url, function( materials ) {
+      materials.preload();
+      loader.setMaterials( materials );
+      loader.load(objfiles[objindex], function ( object ){
+        object.name = "objpart" + objindex;
+        object.position.y = -120;
+        object.position.x = 8;
+        object.scale.x = 2;
+        object.scale.y = 2;
+        object.scale.z = 2;
+        scene.add(object);
+        objObjectMove.push(scene.getObjectByName("objpart" + objindex));
+        objindex++;
+        loadNextFileOBJ();
+        }, onProgress, onError);
+    }, onProgress, onError );
+  };
+  loadNextFileOBJ();
+
 
   function loadNextFile() {
     if (index > files.length - 1) return;
@@ -227,8 +259,6 @@ function init(){
 };
 
 
-
-
 //////FUNCTIONS////////
 
 function animate(){
@@ -257,6 +287,27 @@ function animate(){
         objectMove[i].position.y = (-120 + (sliderNum / 2) * Math.pow(0, 1.5));
       };
     };
+
+
+    //TO BE DELETED!!!!!!! OBJ OBJECT OPACITY//
+    peopleObj = objObjectMove[0];
+
+    peopleObj.traverse(function(child) {
+      if (child instanceof THREE.Mesh) {
+        child.castShadow = true;
+        child.material.transparent = true;
+        if (child.material.opacity <= 0){
+          child.material.visible = false;
+        } else {
+          child.material.visible = true;
+        };
+        if (sliderNum >= 40){
+          child.material.opacity = 1 - (sliderNum/50);
+        } else {
+          child.material.opacity = 1;
+        }
+      };
+    });
 
     //JSON OBJECTS OPACITY    
     facadeObject = objectMove[objectMove.length-1];

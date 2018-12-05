@@ -66,6 +66,13 @@ p {
   margin: 0;
 }
 
+#footer {
+  bottom: 20px;
+  left: 20px;
+  z-index: 2;
+  position: absolute;
+}
+
 
 .levelTag {
   padding: 2px;
@@ -94,7 +101,7 @@ p {
 
 .subText {
   font-family: 'Open Sans', sans-serif;
-  font-size: 4px;
+  font-size: 3px;
   pointer-events: auto;
 }
 
