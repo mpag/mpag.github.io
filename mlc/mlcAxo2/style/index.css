@@ -5,6 +5,7 @@ body {
   overflow: hidden;
   z-index: 0;
   width: 100%;
+  touch-action: none;
 }
 
 .threeScene {
