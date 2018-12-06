@@ -346,6 +346,10 @@ function animate(){
     controls.enableRotate = false;
     controls.enabled = false;
 
+    document.body.addEventListener('touchstart', function(e){
+      e.preventdefault;
+    })
+
     document.body.addEventListener('touchmove', function(e){
       e.preventdefault;
       var touchobj = e.changedTouches[0]
