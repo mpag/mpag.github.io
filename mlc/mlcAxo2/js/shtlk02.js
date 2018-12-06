@@ -347,11 +347,10 @@ function animate(){
     controls.enabled = false;
 
     document.body.addEventListener('touchstart', function(e){
-      e.preventdefault;
+      e.preventDefault();
     })
 
     document.body.addEventListener('touchmove', function(e){
-      e.preventdefault;
       var touchobj = e.changedTouches[0]
       
       //CAMERA TOUCH LOCATION
