@@ -1,8 +1,14 @@
 /////////Global Variables///////////
 var camera, scene, renderer, rectangle, div, controls, sliderNum;
 var scene2, renderer2, manager;
+
+
 window.addEventListener( 'resize', onWindowResize, false );
-// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+document.body.addEventListener('touchstart', function(e){
+  e.preventDefault();
+}, { passive: false })
+
+
 var mouseX = 0, mouseY = 0;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -50,10 +56,10 @@ function init(){
   near = -100; 
   far = 10000;
   camera = new THREE.OrthographicCamera( frustumSize*aspect/-2, frustumSize*aspect/2, frustumSize/2, frustumSize/-2, near, far );
-  camera.position.y = 35;
   var x = 45 * Math.cos(radius + startAngle);
   var y = 45 * Math.sin(radius + startAngle);
   camera.position.x = x;
+  camera.position.y = 35;
   camera.position.z = y;
   camera.zoom = 4;
   camera.updateProjectionMatrix();
@@ -92,8 +98,7 @@ function init(){
   manager.onProgress = function ( item, loaded, total ) {
   };
   manager.onLoad = function ( ) {
-    // $("#loadingScreen").delay(2000).fadeOut(500);
-    // $('#title').delay(3000).fadeIn(1500);
+    $("#loadingScreen").delay(1000).fadeOut(500);
     animate(); 
   };
   function loadNextFile() {
@@ -164,7 +169,6 @@ function init(){
   renderer2.domElement.style.zIndex = 1;
   renderer2.domElement.style.pointerEvents = "none";
   document.body.appendChild(renderer2.domElement);
-  console.log(renderer2.getSize());
 
 
   //CONTROLS////////////////////////////////
@@ -178,29 +182,29 @@ function init(){
 
   ///////CSS GEOM////////////////////////////
   //NOTE CSS OBJECTS//
-  divPositions = [new THREE.Vector3( -20, -20, 0 ), new THREE.Vector3( -20, 125, 0 ), new THREE.Vector3( 20, 205, 0 )]
-  divText1 = ["Stair", "Nook", "Pod"];
-  for (var i = 0; i < divText1.length; i++) {
-    var parentDiv = document.createElement('div');
-    parentDiv.className = "noteTag";
-    parentDiv.style.opacity = 0;
-    parentDiv.id = divText1[i];
+  // divPositions = [new THREE.Vector3( -20, -20, 0 ), new THREE.Vector3( -20, 125, 0 ), new THREE.Vector3( 20, 205, 0 )]
+  // divText1 = ["Stair", "Nook", "Pod"];
+  // for (var i = 0; i < divText1.length; i++) {
+  //   var parentDiv = document.createElement('div');
+  //   parentDiv.className = "noteTag";
+  //   parentDiv.style.opacity = 0;
+  //   parentDiv.id = divText1[i];
 
-    var childDiv = document.createElement('div');
-    parentDiv.appendChild(childDiv);
-    childDiv.className = "subText";
-    childDiv.innerHTML = divText1[i];
-    noteDivObjects.push(parentDiv);
+  //   var childDiv = document.createElement('div');
+  //   parentDiv.appendChild(childDiv);
+  //   childDiv.className = "subText";
+  //   childDiv.innerHTML = divText1[i];
+  //   noteDivObjects.push(parentDiv);
 
-    var css3DObject = new THREE.CSS3DObject(parentDiv);
-    css3DObject.position.x = divPositions[i].x;
-    css3DObject.position.y = divPositions[i].y;
-    css3DObject.position.z = divPositions[i].z;
-    css3DObject.rotation.x = -Math.PI / 2;
-    css3DObject.rotation.z =  Math.PI;
-    noteObjects.push(css3DObject);
-    scene2.add(css3DObject);
-  };
+  //   var css3DObject = new THREE.CSS3DObject(parentDiv);
+  //   css3DObject.position.x = divPositions[i].x;
+  //   css3DObject.position.y = divPositions[i].y;
+  //   css3DObject.position.z = divPositions[i].z;
+  //   css3DObject.rotation.x = -Math.PI / 2;
+  //   css3DObject.rotation.z =  Math.PI;
+  //   noteObjects.push(css3DObject);
+  //   scene2.add(css3DObject);
+  // };
   //LEVEL CSS OBJECTS//
   var divText2 = ["Level 00", "Level 01", "Level 02", "Level 03"]
   for (var i = 0; i < divText2.length; i++) {
@@ -233,7 +237,7 @@ function animate(){
   window.requestAnimationFrame( animate );
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-  //NOTE DIV OBJECTS LOOK AT
+  // // NOTE DIV OBJECTS LOOK AT
   // for (var i = 0; i < noteObjects.length; i++) {
   //   noteObjects[i].lookAt( new THREE.Vector3( camera.position.x, noteObjects[i].position.y, camera.position.z) );
   // };
@@ -257,7 +261,6 @@ function animate(){
     controls.enabled = true;
    
     document.body.onmousedown = function( event ){ 
-      console.log("down");
       function onMouseMove(event) {
         sliderNum = map_range(event.pageY, 0, screenHeight, 100, 0);
         
@@ -333,11 +336,9 @@ function animate(){
       document.addEventListener('mousemove', onMouseMove);
       document.body.onmouseup = function() {
         document.removeEventListener('mousemove', onMouseMove);
-        console.log("up");
       };
       document.body.onmouseleave = function() {
         document.removeEventListener('mousemove', onMouseMove);
-        console.log("up");
       };
     };
 
@@ -346,22 +347,27 @@ function animate(){
     controls.enableRotate = false;
     controls.enabled = false;
 
-    document.body.addEventListener('touchstart', function(e){
-      e.preventDefault();
-    }, { passive: false })
-
-    document.body.addEventListener('touchmove', function(e){
+    document.body.addEventListener('touchmove', onTouchMove, { passive: false });
+    function onTouchMove(e){
       var touchobj = e.changedTouches[0]
-    
+
       //CAMERA TOUCH LOCATION
-      var rotation = (radius + startAngle + touchobj.clientX * 0.5) * Math.PI / 180;
+      var rotation =+ (radius + startAngle + touchobj.clientX * 0.5) * Math.PI / 180;
       var newx = radius *  Math.cos(rotation);
       var newy = radius *  Math.sin(rotation);
       camera.position.x = newx;
       camera.position.z = newy;
 
       //SLIDER TOUCH LOCATION
-      sliderNum = map_range(touchobj.clientY, 0, screenHeight, 100, 0);
+      var sliderTemp = map_range(touchobj.clientY, screenHeight* 0.15, screenHeight*0.8, 100, 0);
+
+      if (sliderTemp <= 0){
+        sliderNum = 0;
+      } else if (sliderTemp >= 100){
+        sliderNum = 100;
+      } else {
+        sliderNum = sliderTemp;
+      };
       
       ////json object move//////
       for (var i = 3; i < (objectMove.length-1); i++) {
@@ -382,10 +388,8 @@ function animate(){
         camera.zoom = 4;
         camTarget = new THREE.Vector3(0, 0, 0);
         controls.target = camTarget;
+        camera.position.y = 35;
       };
-
-      controls.update();
-      camera.updateProjectionMatrix();
 
       //JSON OBJECTS OPACITY    
       facadeObject = objectMove[objectMove.length-1];
@@ -413,19 +417,23 @@ function animate(){
         levelDivObjects[i].style.opacity = (sliderNum / 30);  
       };
 
-      //NOTE DIV OBJECTS OPACITY
-      if (sliderNum >= noteTime){
-        for (var i = 0; i < noteDivObjects.length; i++) {
-          noteDivObjects[i].style.opacity = (sliderNum - noteTime) / 10;
-        };
-      } else {
-        for (var i = 0; i < noteDivObjects.length; i++) {
-          noteDivObjects[i].style.opacity = 0;
-        };
-      };
+      // //NOTE DIV OBJECTS OPACITY
+      // if (sliderNum >= noteTime){
+      //   for (var i = 0; i < noteDivObjects.length; i++) {
+      //     noteDivObjects[i].style.opacity = (sliderNum - noteTime) / 10;
+      //   };
+      // } else {
+      //   for (var i = 0; i < noteDivObjects.length; i++) {
+      //     noteDivObjects[i].style.opacity = 0;
+      //   };
+      // };
       e.preventDefault();
-    }, { passive: false });
+    };
+    document.body.ontouchend = function(e){
+      document.body.removeEventListener('touchmove', onTouchMove);  
+    }
   };
+
 
 
   ///VOID FLASHER/////
@@ -472,17 +480,6 @@ function animate(){
 }; 
 
 
-// var threeScene = document.body;
-// console.log(threeScene);
-
-// threeScene.addEventListener('touchmove', function(event) {
-//   console.log("fired");
-//   var touch = event.targetTouches[0];
-//   console.log(touch.pageX);
-//   event.preventDefault();
-// }, false);
-
-
 function onDocumentMouseMove(event) {
     mouseX = ( event.clientX - windowHalfX ) * 0.005;
     mouseY = ( event.clientY - windowHalfY ) * 0.005;
@@ -518,13 +515,6 @@ function isMobileDevice() {
 function uiReshuffle(){
   if (isMobileDevice() == true){
     document.getElementById("paragraph").style.display = "none";
-    // document.getElementById("title").style.bottom = "20px";
-    // document.getElementById("title").style.width = "82%";
-    // document.getElementById("title").style.borderTop = "none";
   } else {
-    // document.getElementById("title").style.top = "20px";
-    // document.getElementById("title").style.width = "250px";
-    // document.getElementById("title").style.borderTop = "2px solid lightGrey";
-    // document.getElementById("title").style.borderBottom = "2px solid lightGrey";
   }
 };
