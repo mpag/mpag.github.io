@@ -1,0 +1,96 @@
+/* THREE Scene */
+
+body, .threeScene {
+  position: absolute;
+  margin: auto;
+  overflow: hidden;
+  z-index: 0;
+}
+
+#example1 {
+  top: 0%;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* TEXT */
+#title {
+  position: fixed;
+  padding: 5px;
+  padding-top: 20px;
+  left: 20px;
+  top: 20px;
+  width: 400px;
+  border-bottom: 2px solid white;
+  border-top: 2px solid white;
+  z-index: 1;
+}
+
+h1 {
+  font-size: 1.2em;
+  color: white;
+  font-family: 'Advent Pro', san-serif;
+}
+
+p {
+  font-size: 0.8em;
+  color: white;
+  font-family: 'Advent Pro', san-serif;
+}
+
+
+/* BACKGROUND */
+html {
+  width: 100%;
+  height: 100%;
+  background: #FDC830; /* Old browsers */
+  background: -moz-linear-gradient(top,  #FDC830 0%, #F37335 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #FDC830 0%, #F37335 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  #FDC830 0%, #F37335 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+
+
+/*LOADER BAR*/
+#progressContainer {
+  z-index:150;
+  height:10%;
+  width:40%;
+  position:absolute; 
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  display: none;
+}
+
+#percentComplete {
+  margin: auto; 
+  font-size:1.3em;
+  font-family: Roboto, sans-serif;
+  font-weight: 100;
+  color:#FFFFFF; 
+  /*display:block;*/
+  display: none;
+}
+
+#fileComplete {
+  font-size:1.3em;
+  font-family: Roboto, sans-serif;
+  font-weight: 100;
+  color:#FFFFFF; 
+  /*display:block;*/
+  display: none;
+}
+
+#svg circle {
+  stroke-dashoffset: 560;
+  transition: stroke-dashoffset 1s linear;
+  stroke: #171717;
+  stroke-width: 0.2em;
+  display: none;
+}
+#svg #bar {
+  stroke: #FFFFFF;
+  display: none;
+}
