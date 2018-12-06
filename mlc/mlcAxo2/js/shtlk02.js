@@ -162,6 +162,7 @@ function init(){
   renderer2.domElement.style.top = 0;
   renderer2.domElement.style.pointerEvents= 'none';
   renderer2.domElement.style.zIndex = 1;
+  renderer2.domElement.style.pointerEvents = "none";
   document.body.appendChild(renderer2.domElement);
   console.log(renderer2.getSize());
 
@@ -223,7 +224,6 @@ function init(){
     scene2.add(css3DObject);
   };
 };
-
 
 
 
@@ -343,96 +343,83 @@ function animate(){
 
   } else {
     camera.zoom = 3;
-    controls.enabled = true
     controls.enableRotate = false;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.5;
+    controls.enabled = false;
 
     document.body.addEventListener('touchmove', function(e){
       e.preventdefault;
       var touchobj = e.changedTouches[0]
-      console.log(touchobj.clientY) // returns BODY
-      // sliderNum = touch.clientY
       
-      // document.body.ontouchstart = function( event ){ 
-      //   console.log("down");
+      //CAMERA TOUCH LOCATION
+      var rotation = (radius + startAngle + touchobj.clientX * 0.5) * Math.PI / 180;
+      var newx = radius *  Math.cos(rotation);
+      var newy = radius *  Math.sin(rotation);
+      camera.position.x = newx;
+      camera.position.z = newy;
 
-      // function onTouchMove(event) {
-          
-        sliderNum = map_range(touch.clientY, 0, screenHeight, 100, 0);
-        
-        ////json object move//////
-        for (var i = 3; i < (objectMove.length-1); i++) {
-          if (sliderNum >= explodeTime){
-            objectMove[i].position.y = (-120 + ((sliderNum - explodeTime) / 4) * Math.pow(i, 1.5));
-          } else {
-            objectMove[i].position.y = (-120 + (sliderNum / 4) * Math.pow(0, 1.5));
-          };
-        };
-
-        ///// CAMERA OBJECTS ZOOM
+      //SLIDER TOUCH LOCATION
+      sliderNum = map_range(touchobj.clientY, 0, screenHeight, 100, 0);
+      
+      ////json object move//////
+      for (var i = 3; i < (objectMove.length-1); i++) {
         if (sliderNum >= explodeTime){
-          camera.zoom = 4 - (sliderNum - explodeTime) / 150;
-          camTarget = new THREE.Vector3(0, (sliderNum - explodeTime)*1, 0);
-          camera.position.y = 35 + (sliderNum - explodeTime) * 1;
-          controls.target = camTarget; 
+          objectMove[i].position.y = (-120 + ((sliderNum - explodeTime) / 4) * Math.pow(i, 1.5));
         } else {
-          camera.zoom = 4;
-          camTarget = new THREE.Vector3(0, 0, 0);
-          controls.target = camTarget;
+          objectMove[i].position.y = (-120 + (sliderNum / 4) * Math.pow(0, 1.5));
         };
+      };
 
-        controls.update();
-        camera.updateProjectionMatrix();
+      ///// CAMERA OBJECTS ZOOM
+      if (sliderNum >= explodeTime){
+        camera.zoom = 4 - (sliderNum - explodeTime) / 150;
+        camTarget = new THREE.Vector3(0, (sliderNum - explodeTime)*1, 0);
+        camera.position.y = 35 + (sliderNum - explodeTime) * 1;
+        controls.target = camTarget; 
+      } else {
+        camera.zoom = 4;
+        camTarget = new THREE.Vector3(0, 0, 0);
+        controls.target = camTarget;
+      };
 
-        //JSON OBJECTS OPACITY    
-        facadeObject = objectMove[objectMove.length-1];
-        facadeObject.traverse(function(child) {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-            child.material.transparent = true;
-            if (child.material.opacity <= 0){
-              child.material.visible = false;
-            } else {
-              child.material.visible = true;
-            };
-            child.material.opacity = 1 - (sliderNum/30);
+      controls.update();
+      camera.updateProjectionMatrix();
+
+      //JSON OBJECTS OPACITY    
+      facadeObject = objectMove[objectMove.length-1];
+      facadeObject.traverse(function(child) {
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true;
+          child.material.transparent = true;
+          if (child.material.opacity <= 0){
+            child.material.visible = false;
+          } else {
+            child.material.visible = true;
           };
-        });
-
-        //LEVEL DIV OBJECTS MOVE
-        for (i = 0; i < levelObjects.length; i++){
-          levelObjects[i].position.y = ((i*8) - 30) + objectMove[i+2].position.y + 120;
-          levelObjects[0].position.y = -30;
+          child.material.opacity = 1 - (sliderNum/30);
         };
+      });
 
-        //LEVEL DIV OBJECTS OPACITY
-        for (i = 0; i < levelDivObjects.length; i++){
-          levelDivObjects[i].style.opacity = (sliderNum / 30);  
+      //LEVEL DIV OBJECTS MOVE
+      for (i = 0; i < levelObjects.length; i++){
+        levelObjects[i].position.y = ((i*8) - 30) + objectMove[i+2].position.y + 120;
+        levelObjects[0].position.y = -30;
+      };
+
+      //LEVEL DIV OBJECTS OPACITY
+      for (i = 0; i < levelDivObjects.length; i++){
+        levelDivObjects[i].style.opacity = (sliderNum / 30);  
+      };
+
+      //NOTE DIV OBJECTS OPACITY
+      if (sliderNum >= noteTime){
+        for (var i = 0; i < noteDivObjects.length; i++) {
+          noteDivObjects[i].style.opacity = (sliderNum - noteTime) / 10;
         };
-
-        //NOTE DIV OBJECTS OPACITY
-        if (sliderNum >= noteTime){
-          for (var i = 0; i < noteDivObjects.length; i++) {
-            noteDivObjects[i].style.opacity = (sliderNum - noteTime) / 10;
-          };
-        } else {
-          for (var i = 0; i < noteDivObjects.length; i++) {
-            noteDivObjects[i].style.opacity = 0;
-          };
+      } else {
+        for (var i = 0; i < noteDivObjects.length; i++) {
+          noteDivObjects[i].style.opacity = 0;
         };
-      
-      // document.addEventListener('touchmove', hello());
-
-      // function hello(){
-      //   console.log("hellllllooooo");
-      // }
-
-      
-      // document.ontouchend = function() {
-      //   document.removeEventListener('touchmove', hello());
-      //   console.log("up");
-      // };    
+      };
     }, false)
   };
 
@@ -481,6 +468,17 @@ function animate(){
 }; 
 
 
+// var threeScene = document.body;
+// console.log(threeScene);
+
+// threeScene.addEventListener('touchmove', function(event) {
+//   console.log("fired");
+//   var touch = event.targetTouches[0];
+//   console.log(touch.pageX);
+//   event.preventDefault();
+// }, false);
+
+
 function onDocumentMouseMove(event) {
     mouseX = ( event.clientX - windowHalfX ) * 0.005;
     mouseY = ( event.clientY - windowHalfY ) * 0.005;
@@ -516,12 +514,12 @@ function isMobileDevice() {
 function uiReshuffle(){
   if (isMobileDevice() == true){
     document.getElementById("paragraph").style.display = "none";
-    document.getElementById("title").style.bottom = "20px";
-    document.getElementById("title").style.width = "82%";
-    document.getElementById("title").style.borderTop = "none";
+    // document.getElementById("title").style.bottom = "20px";
+    // document.getElementById("title").style.width = "82%";
+    // document.getElementById("title").style.borderTop = "none";
   } else {
-    document.getElementById("title").style.top = "20px";
-    document.getElementById("title").style.width = "250px";
+    // document.getElementById("title").style.top = "20px";
+    // document.getElementById("title").style.width = "250px";
     // document.getElementById("title").style.borderTop = "2px solid lightGrey";
     // document.getElementById("title").style.borderBottom = "2px solid lightGrey";
   }
