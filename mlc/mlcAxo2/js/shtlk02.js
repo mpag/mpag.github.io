@@ -38,7 +38,6 @@ var startAngle = 220;
 
 
 init();
-animate(); 
 uiReshuffle();
 
 
@@ -95,6 +94,7 @@ function init(){
   manager.onLoad = function ( ) {
     // $("#loadingScreen").delay(2000).fadeOut(500);
     // $('#title').delay(3000).fadeIn(1500);
+    animate(); 
   };
   function loadNextFile() {
   if (index > files.length - 1) return;
@@ -255,6 +255,7 @@ function animate(){
     camera.position.x = newx;
     camera.position.z = newy;
     controls.enabled = true;
+   
     document.body.onmousedown = function( event ){ 
       console.log("down");
       function onMouseMove(event) {
@@ -340,18 +341,25 @@ function animate(){
       };
     };
 
-  } else if (isMobileDevice() == true) {
+  } else {
     camera.zoom = 3;
     controls.enabled = true
     controls.enableRotate = false;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.1;
+    controls.autoRotateSpeed = 0.5;
 
-    document.body.ontouchstart = function( event ){ 
-      console.log("down");
-      function onTouchMove(event) {
-        sliderNum = map_range(event.pageY, 0, screenHeight, 100, 0);
-        console.log(sliderNum);
+    document.body.addEventListener('touchmove', function(e){
+      e.preventdefault;
+      var touchobj = e.changedTouches[0]
+      console.log(touchobj.clientY) // returns BODY
+      // sliderNum = touch.clientY
+      
+      // document.body.ontouchstart = function( event ){ 
+      //   console.log("down");
+
+      // function onTouchMove(event) {
+          
+        sliderNum = map_range(touch.clientY, 0, screenHeight, 100, 0);
         
         ////json object move//////
         for (var i = 3; i < (objectMove.length-1); i++) {
@@ -413,20 +421,20 @@ function animate(){
             noteDivObjects[i].style.opacity = 0;
           };
         };
-      };
+      
+      // document.addEventListener('touchmove', hello());
 
-      document.addEventListener('touchmove', onTouchMove);
+      // function hello(){
+      //   console.log("hellllllooooo");
+      // }
 
-      document.body.ontouchend = function() {
-        document.removeEventListener('touchmove', onTouchMove);
-        console.log("up");
-      };
-    };    
+      
+      // document.ontouchend = function() {
+      //   document.removeEventListener('touchmove', hello());
+      //   console.log("up");
+      // };    
+    }, false)
   };
-
-
-
-
 
 
   ///VOID FLASHER/////
