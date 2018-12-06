@@ -348,11 +348,11 @@ function animate(){
 
     document.body.addEventListener('touchstart', function(e){
       e.preventDefault();
-    })
+    }, { passive: false })
 
     document.body.addEventListener('touchmove', function(e){
       var touchobj = e.changedTouches[0]
-      
+    
       //CAMERA TOUCH LOCATION
       var rotation = (radius + startAngle + touchobj.clientX * 0.5) * Math.PI / 180;
       var newx = radius *  Math.cos(rotation);
@@ -423,7 +423,8 @@ function animate(){
           noteDivObjects[i].style.opacity = 0;
         };
       };
-    }, false)
+      e.preventDefault();
+    }, { passive: false });
   };
 
 
