@@ -4,9 +4,10 @@ var scene2, renderer2, manager;
 
 
 window.addEventListener( 'resize', onWindowResize, false );
-document.body.addEventListener('touchstart', function(e){
+document.getElementById('container').addEventListener('touchstart', function(e){
   e.preventDefault();
-}, { passive: false })
+}, { passive: false });
+
 
 
 var mouseX = 0, mouseY = 0;
@@ -98,8 +99,35 @@ function init(){
   manager.onProgress = function ( item, loaded, total ) {
   };
   manager.onLoad = function ( ) {
-    $("#loadingScreen").delay(1000).fadeOut(500);
-    animate(); 
+    // $("#loadingScreen").delay(1000).fadeOut(500);
+    animate();
+    //////MODAL////////////
+    // AMPHITHEATRE
+    document.getElementById('Amphitheatre').addEventListener('click', function(){
+      document.querySelector('#modalImg').src = "img/stair.png";
+      document.querySelector('.bg-modal').style.display = 'flex';
+    });
+    //ATTRIUM
+    document.getElementById('The Attrium').addEventListener('click', function(){
+      document.querySelector('.bg-modal').style.display = 'flex';
+      document.querySelector('.modal-content').style.display = 'none';
+      document.querySelector('.modal-iframe').style.display = 'flex';
+    });
+    //POD
+    document.getElementById('The Nook').addEventListener('click', function(){
+      document.querySelector('#modalImg').src = "img/nook.png";
+      document.querySelector('.bg-modal').style.display = 'flex';
+    });
+    //NOOK
+    document.getElementById('The Pod').addEventListener('click', function(){
+      document.querySelector('#modalImg').src = "img/pod.png";
+      document.querySelector('.bg-modal').style.display = 'flex';
+    });
+    document.querySelector('.bg-modal').addEventListener('click', function(){
+      document.querySelector('.bg-modal').style.display = 'none';
+      document.querySelector('.modal-content').style.display = 'inherit';
+      document.querySelector('.modal-iframe').style.display = 'none';
+    });
   };
   function loadNextFile() {
   if (index > files.length - 1) return;
@@ -132,7 +160,7 @@ function init(){
 
 
   //LIGHT//////////////////////////////////
-  var ambientlight = new THREE.AmbientLight( 0x080808, 20 ); 
+    var ambientlight = new THREE.AmbientLight( 0x080808, 20 ); 
   var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
   directionalLight.shadow.camera.right =  500;
   directionalLight.shadow.camera.left = -500;
@@ -149,27 +177,19 @@ function init(){
   scene.add( directionalLight );
   scene.add( ambientlight );
   
-  
   //RENDERERS////////////////////////////////
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
-    renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  // setPixelRatio();
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
   renderer.domElement.style.zIndex = 0;
-  document.body.appendChild( renderer.domElement );
+  document.getElementById('container').appendChild( renderer.domElement );
 
   renderer2 = new THREE.CSS3DRenderer();
   renderer2.setSize(window.innerWidth, window.innerHeight);
-  renderer2.domElement.style.position = 'absolute';
-  renderer2.domElement.style.top = 0;
-  renderer2.domElement.style.pointerEvents= 'none';
-  renderer2.domElement.style.zIndex = 1;
-  renderer2.domElement.style.pointerEvents = "none";
-  document.body.appendChild(renderer2.domElement);
-
+  document.getElementById('css3dScene').appendChild(renderer2.domElement);
 
   //CONTROLS////////////////////////////////
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -179,32 +199,34 @@ function init(){
   controls.target = camTarget;
   controls.update();
 
-
   ///////CSS GEOM////////////////////////////
-  //NOTE CSS OBJECTS//
-  // divPositions = [new THREE.Vector3( -20, -20, 0 ), new THREE.Vector3( -20, 125, 0 ), new THREE.Vector3( 20, 205, 0 )]
-  // divText1 = ["Stair", "Nook", "Pod"];
-  // for (var i = 0; i < divText1.length; i++) {
-  //   var parentDiv = document.createElement('div');
-  //   parentDiv.className = "noteTag";
-  //   parentDiv.style.opacity = 0;
-  //   parentDiv.id = divText1[i];
+  // NOTE CSS OBJECTS//
+  
+  divPositions = [new THREE.Vector3( -33, -22, 0 ), new THREE.Vector3( -32, 91.25, -4 ), new THREE.Vector3( -33, 142, -6 ), new THREE.Vector3( 50, 6, 3 )]
+  divTitleText = ["Amphitheatre", "The Nook", "The Pod", "The Attrium"];
+  divText1 = ["Amphitheatre", "The Nook", "The Pod", "The Attrium"];
 
-  //   var childDiv = document.createElement('div');
-  //   parentDiv.appendChild(childDiv);
-  //   childDiv.className = "subText";
-  //   childDiv.innerHTML = divText1[i];
-  //   noteDivObjects.push(parentDiv);
+  for (var i = 0; i < divTitleText.length; i++) {
+    var parentDiv = document.createElement('div');
+    parentDiv.className = "noteTag";
+    parentDiv.style.opacity = 0;
+    parentDiv.id = divTitleText[i];
 
-  //   var css3DObject = new THREE.CSS3DObject(parentDiv);
-  //   css3DObject.position.x = divPositions[i].x;
-  //   css3DObject.position.y = divPositions[i].y;
-  //   css3DObject.position.z = divPositions[i].z;
-  //   css3DObject.rotation.x = -Math.PI / 2;
-  //   css3DObject.rotation.z =  Math.PI;
-  //   noteObjects.push(css3DObject);
-  //   scene2.add(css3DObject);
-  // };
+    var childDiv = document.createElement('div');
+    parentDiv.appendChild(childDiv);
+    childDiv.className = "subText";
+    childDiv.innerHTML = divTitleText[i];
+    noteDivObjects.push(parentDiv);
+
+    var css3DObject = new THREE.CSS3DObject(parentDiv);
+    css3DObject.position.x = divPositions[i].x;
+    css3DObject.position.y = divPositions[i].y;
+    css3DObject.position.z = divPositions[i].z;
+    css3DObject.rotation.y = Math.PI;
+    noteObjects.push(css3DObject);
+    scene2.add(css3DObject);
+  };
+
   //LEVEL CSS OBJECTS//
   var divText2 = ["Level 00", "Level 01", "Level 02", "Level 03"]
   for (var i = 0; i < divText2.length; i++) {
@@ -231,16 +253,12 @@ function init(){
 
 
 
+
 //////FUNCTIONS////////////////////////////
 
 function animate(){
   window.requestAnimationFrame( animate );
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
-  // // NOTE DIV OBJECTS LOOK AT
-  // for (var i = 0; i < noteObjects.length; i++) {
-  //   noteObjects[i].lookAt( new THREE.Vector3( camera.position.x, noteObjects[i].position.y, camera.position.z) );
-  // };
 
   var time = Date.now() * 0.0005;
   var time2 = Date.now() * 0.002;
@@ -253,16 +271,17 @@ function animate(){
 
 
   if (isMobileDevice() == false){
-    var rotation = (radius + startAngle + mouseX * 5) * Math.PI / 180;
+    var rotation = (radius + startAngle + mouseX * 30) * Math.PI / 180;
     var newx = radius *  Math.cos(rotation);
     var newy = radius *  Math.sin(rotation);
     camera.position.x = newx;
     camera.position.z = newy;
     controls.enabled = true;
    
-    document.body.onmousedown = function( event ){ 
+    document.getElementById('container').onmousedown = function( event ){ 
       function onMouseMove(event) {
-        sliderNum = map_range(event.pageY, 0, screenHeight, 100, 0);
+        sliderNum = map_range(event.pageY, 0, screenHeight*0.9, 100, 0);
+        console.log(sliderNum);
         
         ////json object move//////
         for (var i = 3; i < (objectMove.length-1); i++) {
@@ -273,18 +292,11 @@ function animate(){
           };
         };
 
-        // // ////Small Void//////
-        // if (sliderNum >= explodeTime){
-        //     objectMove[1].traverse( function ( object ) { object.visible = false; } );
-        // } else {
-        //     objectMove[1].traverse( function ( object ) { object.visible = true; } );
-        // };
-
         ///// CAMERA OBJECTS ZOOM
         if (sliderNum >= explodeTime){
           camera.zoom = 4 - (sliderNum - explodeTime) / 150;
-          camTarget = new THREE.Vector3(0, (sliderNum - explodeTime)*1, 0);
-          camera.position.y = 35 + (sliderNum - explodeTime) * 1;
+          camTarget = new THREE.Vector3(0, (sliderNum - explodeTime)*1.2, 0);
+          camera.position.y = 35 + (sliderNum - explodeTime) * 1.2;
           controls.target = camTarget; 
         } else {
           camera.zoom = 4;
@@ -306,7 +318,11 @@ function animate(){
             } else {
               child.material.visible = true;
             };
-            child.material.opacity = 1 - (sliderNum/30);
+            if (sliderNum >= 7){
+              child.material.opacity = 1 - (sliderNum/30);       
+            } else {
+              child.material.opacity = 1;
+            }
           };
         });
 
@@ -332,12 +348,12 @@ function animate(){
           };
         };
       };
-
       document.addEventListener('mousemove', onMouseMove);
-      document.body.onmouseup = function() {
+
+      document.body.onmouseleave = function() {
         document.removeEventListener('mousemove', onMouseMove);
       };
-      document.body.onmouseleave = function() {
+      document.body.onmouseup = function() {
         document.removeEventListener('mousemove', onMouseMove);
       };
     };
@@ -434,45 +450,14 @@ function animate(){
     }
   };
 
-
-
   ///VOID FLASHER/////
   var voidObject = objectMove[1];
   voidObject.traverse(function(child) {
     if (child instanceof THREE.Mesh) {
-      child.material.opacity = Math.abs(Math.sin(time2))/3;
+      child.material.opacity = Math.abs(Math.sin(time2))/4;
     };
   });
-
-  // //DIV HOVER FUNCTION
-  // var noteDivHover = [];
-
-  // for (var i = 0; i < noteDivObjects.length; i++) {
-  //   img = document.getElementById("howImg");
-  //   typeTitle = document.getElementById("howTitle");
-  //   paragraph = document.getElementById("howText");
-    
-  //   noteDivObjects[i].onclick = function(){
-
-
-  //     if (this.id == "Stair"){
-  //       img.src = "img/stair.png";
-  //       paragraph.innerHTML = "Engaging school community spaces at the heart of the building. Technology enables setting with an emphasis on mobility.";
-
-
-  //     } else if (this.id == "Nook"){
-  //         img.src = "img/nook.png";
-  //         paragraph.innerHTML = "Bump spaces maximise interaction and mentorship between staff and different year groups, offering a supportive student experience suited to a range of teaching styles.";
-
-
-  //     } else if (this.id == "Pod"){
-  //         img.src = "img/pod.png";
-  //         paragraph.innerHTML = "Pods offer a variety of smaller teaching spaces that enable the learning to be visible to all and maximise engagement.";
-  //     }
-  //   }
-  // };  
   
-
   camera.updateProjectionMatrix();
   controls.update();
   renderer2.render( scene2, camera);
@@ -518,3 +503,5 @@ function uiReshuffle(){
   } else {
   }
 };
+
+
