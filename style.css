@@ -1,6 +1,7 @@
 body {
   margin: 0 auto;
   padding: 5em 10em;
+  max-width: 70%;
 }
 
 .grid {
