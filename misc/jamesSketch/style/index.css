@@ -1,0 +1,139 @@
+/* THREE Scene */
+
+body {
+  margin: 0;
+  overflow: hidden;
+  z-index: 0;
+  width: 100%;
+}
+
+.threeScene {
+  margin: 0;
+  overflow: hidden;
+  z-index: 0;
+  width: 100%;
+}
+
+/* TEXT */
+#title {
+  position: fixed;
+  left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 8px;
+  z-index: 2;
+}
+
+
+#loadingScreen {
+  position: absolute;
+  overflow: hidden;
+  padding: 60px; 
+  z-index: 4;
+  display: block;
+  bottom: 25%;
+  left:40px;
+  width: 300px;
+}
+
+
+.center {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.dropShadow {
+  -webkit-filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.5));
+  filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.5));
+}
+
+
+h1 {
+  font-size: 1.2em;
+  color: black;
+  font-family: 'Advent Pro', san-serif;
+}
+
+p {
+  font-size: 0.8em;
+  color: black;
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+.levelTag {
+  padding: 2px;
+  border-radius: 1px;
+  text-align: center;
+  width: 16px;
+}
+
+.levelTag:hover {
+  box-shadow: 0px 0px 1px grey;
+}
+
+.noteTag {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px;
+  border-radius: 1px;
+  text-align: center;
+  width: 18px;
+  box-shadow: 0px 0px 1px grey;
+}
+
+.noteTag:hover {
+  background-color: rgba(255, 255, 255, 1);
+  /*border: 1px blue;*/
+}
+
+.titleText {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 4px;
+}
+
+.subText {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 4px;
+  pointer-events: auto;
+}
+
+@-webkit-keyframes moving /* Safari and Chrome */ {
+  from {
+    -webkit-transform: translate(0px, 20px);
+    -o-transform: translate(0px, 20px);
+    transform: translate(0px, 20px);
+  }
+  to {
+    -webkit-transform: translate(0px, 0px);
+    -o-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);
+  }
+}
+@keyframes rotating {
+  from {
+    -ms-transform: translate(0px, 20px);
+    -moz-transform: translate(0px, 20px);
+    -webkit-transform: translate(0px, 20px);
+    -o-transform: translate(0px, 20px);
+    transform: translate(0px, 20px);
+  }
+  to {
+    -ms-transform:  translate(0px, 0px);
+    -moz-transform:  translate(0px, 0px);
+    -webkit-transform:  translate(0px, 0px);
+    -o-transform:  translate(0px, 0px);
+    transform:  translate(0px, 0px);
+  }
+}
+
+.rotating {
+  -webkit-animation: rotating 0.4s ease alternate-reverse infinite;
+  -moz-animation: rotating 0.4s ease alternate-reverse infinite;
+  -ms-animation: rotating 0.4s ease alternate-reverse infinite;
+  -o-animation: rotating 0.4s ease alternate-reverse infinite;
+  animation: rotating 0.4s ease alternate-reverse infinite;
+}
+
