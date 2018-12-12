@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="js/three.min.js"></script>
 	<script type="text/javascript" src="js/tween.min.js"></script>
 	<script type="text/javascript" src="js/CSS3DRenderer.js"></script>
+	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 	<script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="style/index.css">
@@ -17,16 +18,35 @@
 
 <body>
 
-<div id="loadingScreen" class = "dropShadow">
-	<img class = "center dropShadow" style="width:100px;" src="img/BVN_Black_Small.png">
+<!-- <div id="loadingScreen" class = "rotating">
+	<img class = "center dropShadow" style="width:100px;" src="img/BVN_White_Small.png">
 	<br><br>
-	<div class = "center" style="display: inline-block;"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ac purus et dolor pellentesque porta et ac lorem. Nunc lobortis lectus ac quam ultrices maximus. Duis suscipit orci sit amet eros aliquet laoreet. Vestibulum fermentum interdum turpis, sed cursus nisi posuere ut. Maecenas et enim in nulla molestie finibus at volutpat sem. <br><br>Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ac turpis at felis imperdiet consectetur tempus sit amet elit. Praesent ornare velit sit amet fermentum lobortis. Nulla consequat purus augue, sed blandit dui semper sit amet. Nulla lacinia leo a elit faucibus congue.<br><br>- Mitchell Page (note: panorama images to be replaced with MLC render)</p></div>
+	<div class = "center" style="display: inline-block;"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ac purus et dolor pellentesque porta et ac lorem. Nunc lobortis lectus ac quam ultrices maximus. Duis suscipit orci sit amet eros aliquet laoreet. Vestibulum fermentum interdum turpis, sed cursus nisi posuere ut. Maecenas et enim in nulla molestie finibus at volutpat sem. <br><br>- John Citizen</p></div>
+</div> -->
+
+<div class="bg-modal">
+	<div class="modal-content dropShadow">
+		<img class = "center dropShadow" style="width:70px;" src="img/BVN_Black_Small.png"><br>
+		<div class = "center" style="display: inline-block;"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ac purus et dolor pellentesque porta et ac lorem. Nunc lobortis lectus ac quam ultrices maximus. Duis suscipit orci sit amet eros aliquet laoreet. Vestibulum fermentum interdum turpis, sed cursus nisi posuere ut. Maecenas et enim in nulla molestie finibus at volutpat sem. <br><br>- John Citizen</p></div>
+		<div class="close"><strong>+</strong></div>
+	</div>
 </div>
 
-	<a-scene>
-      <a-entity camera look-controls="reverseMouseDrag: true"></a-entity>
-      <a-sky id='sky' src="img/equirectangular.jpg" rotation="0 -130 0"></a-sky>
-    </a-scene>
+
+<a-scene vr-mode-ui="enabled: false">
+  <a-entity camera look-controls="reverseMouseDrag: true"></a-entity>
+  <a-sky id='sky' src="img/equirectangular0.jpg" rotation="0 0 0"></a-sky>
+</a-scene>
+
+
+<div class = 'buttonBar'>
+	<div class="buttonContent">
+		<a href="#" class="previous round" id="previous">&#8249;</a>
+		<div class="imageRef" id="imageRef"><h1>Current Image</h1></div>
+		<a href="#" class="next round" id="next">&#8250;</a>
+	</div>
+</div>
+
 
 <script type="text/javascript" src="js/baseFile.js"></script>
 
