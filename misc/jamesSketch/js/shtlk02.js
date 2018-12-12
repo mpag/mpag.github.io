@@ -4,6 +4,9 @@
 var camera, scene, renderer, rectangle, div, controls;
 var scene2, renderer2, manager;
 window.addEventListener( 'resize', onWindowResize, false );
+document.getElementById('container').addEventListener('touchstart', function(e){
+  e.preventDefault();
+}, { passive: false });
 
 ///////////Loader Variables////////
 var index = 0;
@@ -32,13 +35,12 @@ animate();
 function init(){
   //Scenes
   scene = new THREE.Scene();
-  scene2 = new THREE.Scene();
   
   //CAMERA
   near = -100; 
   far = 10000;
   camera = new THREE.PerspectiveCamera( 70, aspect, 1, 1000 );
-  camera.position.z = 200;
+  camera.position.z = -500;
   camera.position.y = 0;
   camera.position.x = 0;
   camera.updateProjectionMatrix();
@@ -63,29 +65,7 @@ function init(){
   manager.onLoad = function ( ) {
   };
 
-  // function loadNextFile() {
-  //   if (index > files.length - 1) return;
-  //     jsonLoader.load(files[index], function ( object ) {
-  //       object.traverse(function(child) {
-  //         if (child instanceof THREE.Mesh) {
-  //           object.castShadow = true;
-  //           object.receiveShadow = true;
-  //           child.material.transparent = true;
-  //           child.material.opacity = 0.2;
-  //         };
-  //       });
-  //       object.name = "part" + index;
-  //       object.position.y = -55;
-  //       object.rotation.z = -Math.PI / 8;
-  //       scene.add(object);
-  //       objectMove.push(scene.getObjectByName("part" + index));
-  //       index++;
-  //       loadNextFile();
-  //   }, onProgress, onError);
-  //   };
-  // loadNextFile();
 
-  
   ////////GEOMETRY/////////////
   
   planes = [];
@@ -148,11 +128,25 @@ function animate(){
   var time = Date.now() * 0.0005;
   var time2 = Date.now() * 0.002;
 
-  camera.position.x += ( mouseX - camera.position.x ) * .02;
-  camera.position.z += ( mouseY - camera.position.z ) * 0.5;
-
-  centerVec = new THREE.Vector3( 0, 0, camera.position.z - 300);
-  controls.target = centerVec;
+  if (isMobileDevice() == false){
+    camera.position.x += ( mouseX - camera.position.x ) * .01;
+    camera.position.z += ( mouseY - camera.position.z ) * 0.5;
+    centerVec = new THREE.Vector3( 0, 0, camera.position.z - 300);
+    controls.target = centerVec;
+  } else {
+    document.body.addEventListener('touchmove', onTouchMove, { passive: false });
+    function onTouchMove(e){
+      var touchobj = e.changedTouches[0]
+      var sliderTemp = map_range(touchobj.clientY, 0, screenHeight, -600, 0);
+      camera.position.z += ( sliderTemp - camera.position.z ) * 0.5;
+      camTarget = new THREE.Vector3(0, 0, (camera.position.z - 100));
+      controls.target = camTarget;
+      e.preventDefault();
+    }; 
+    document.body.ontouchend = function(e){
+      document.body.removeEventListener('touchmove', onTouchMove);
+    };
+  };
 
   camera.updateProjectionMatrix();
   controls.update();
@@ -174,14 +168,9 @@ function setPixelRatio(){
 };
 
 function onWindowResize() {
-  var aspect = window.innerWidth / window.innerHeight;
-  camera.left   = - frustumSize * aspect / 2;
-  camera.right  =   frustumSize * aspect / 2;
-  camera.top    =   frustumSize / 2;
-  camera.bottom = - frustumSize / 2;
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
-  renderer2.setSize( window.innerWidth, window.innerHeight );
 };
 
 function isMobileDevice() {
