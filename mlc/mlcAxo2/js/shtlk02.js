@@ -23,8 +23,9 @@ var files = ["models/Base.json", "models/Void.json", "models/Level_00.json", "mo
 ////////////CSS3d////////////////
 
 //NOTE CSS VARIABLES
-var noteDivObjects = []
-var noteObjects = []
+var noteDivObjects = [];
+var noteObjects = [];
+var divPositions = [];
 
 //LEVEL CSS VARIABLES
 var levelDivObjects = [];
@@ -277,12 +278,11 @@ function animate(){
     camera.position.x = newx;
     camera.position.z = newy;
     controls.enabled = true;
-   
+
     document.getElementById('container').onmousedown = function( event ){ 
       function onMouseMove(event) {
         sliderNum = map_range(event.pageY, 0, screenHeight*0.9, 100, 0);
-        console.log(sliderNum);
-        
+         
         ////json object move//////
         for (var i = 3; i < (objectMove.length-1); i++) {
           if (sliderNum >= explodeTime){
@@ -443,6 +443,7 @@ function animate(){
       //     noteDivObjects[i].style.opacity = 0;
       //   };
       // };
+
       e.preventDefault();
     };
     document.body.ontouchend = function(e){
@@ -458,6 +459,16 @@ function animate(){
     };
   });
   
+  // console.log(noteDivObjects[0]);
+
+  // LEVEL DIV FLOAT
+  for (var i = 0; i < noteObjects.length; i++) {
+    moveVal = divPositions[i].y + Math.sin(2*time2)/1.5; 
+    noteObjects[i].position.y = moveVal;
+  };
+
+
+
   camera.updateProjectionMatrix();
   controls.update();
   renderer2.render( scene2, camera);
