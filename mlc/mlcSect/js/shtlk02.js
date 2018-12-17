@@ -1,6 +1,8 @@
 /////////Global Variables///////////
-var camera, scene, renderer, rectangle, div, controls, sliderNum;
+var camera, scene, renderer, rectangle, div, controls;
 var scene2, renderer2, manager;
+var mouse = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
 
 
 window.addEventListener( 'resize', onWindowResize, false );
@@ -15,8 +17,26 @@ var windowHalfY = window.innerHeight / 2;
 ///////////Loader Variables////////
 var index = 0;
 var files = ["models/Base.json", "models/Birds.json"];
-var imgFiles = ["img/back.png","img/front.png"]
+var sketchFiles = ["img/back.png","img/front.png"];
+var annoFiles = ["img/bubble.png","img/wind1.png", "img/bubble.png"];
 
+////Audio Pause/////////
+
+var audio1 = document.getElementById("garden");
+var audio2 = document.getElementById("people");
+var audio3 = document.getElementById("class"); 
+
+function playAudio( audio ) { 
+    audio.play(); 
+};
+
+function pauseAudio( audio ) { 
+    audio.pause(); 
+};
+
+pauseAudio( audio1 );
+pauseAudio( audio2 );
+pauseAudio( audio3 );
 
 ////////////CSS3d////////////////
 
@@ -64,15 +84,14 @@ function init(){
   camera.updateProjectionMatrix();
 
   //SKETCH PLANES
-
   planes = [];
   planePos = [[-10,13,8], [5,20,45]];
   planeRot = [Math.PI / 2, Math.PI / 2];
   planeOp = [0.15, 0.5];
 
-  for (var i =  imgFiles.length - 1; i >= 0; i--) {
+  for (var i =  sketchFiles.length - 1; i >= 0; i--) {
     var geometry = new THREE.PlaneGeometry( 75, 75, 32 );
-    var texture = new THREE.TextureLoader().load( imgFiles[i] );
+    var texture = new THREE.TextureLoader().load( sketchFiles[i] );
     var planeMaterial = new THREE.MeshBasicMaterial({
       map: texture, 
       side: THREE.DoubleSide, 
@@ -84,12 +103,35 @@ function init(){
     plane.position.x = planePos[i][0];
     plane.position.y = planePos[i][1];
     plane.position.z = planePos[i][2];
-    console.log(planePos[i][0]);
     plane.rotation.y = planeRot[i];
     planes.push(plane);
     scene.add(plane); 
   };
 
+  //ANNOTATION PLANES
+  annoPlanes = [];
+  annoPlanePos = [[0,5,-28], [-1,6.5,15], [0,21,-28]];
+  annoPlaneRot = [Math.PI / 2, Math.PI / 2, Math.PI / 2];
+  annoPlaneSize = [3 ,8, 3];
+
+  for (var i =  annoFiles.length - 1; i >= 0; i--) {
+    var geometry = new THREE.PlaneGeometry( annoPlaneSize[i], annoPlaneSize[i], 32 );
+    var texture = new THREE.TextureLoader().load( annoFiles[i] );
+    var planeMaterial = new THREE.MeshBasicMaterial({
+      map: texture, 
+      side: THREE.DoubleSide, 
+      transparent: true,
+      opacity: 1
+    });
+    var plane = new THREE.Mesh(geometry, planeMaterial);
+    plane.name = "annoPlane" + i ;
+    plane.position.x = annoPlanePos[i][0];
+    plane.position.y = annoPlanePos[i][1];
+    plane.position.z = annoPlanePos[i][2];
+    plane.rotation.y = annoPlaneRot[i];
+    annoPlanes.push(plane);
+    scene.add(plane); 
+  };
 
   //////////LOADER////////////////////////
 
@@ -105,41 +147,13 @@ function init(){
     console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
   manager.onProgress = function ( item, loaded, total ) {
-    console.log(loaded);
   };
   manager.onLoad = function ( ) {
     // $("#loadingScreen").delay(1000).fadeOut(500);
-    console.log(index + "files");
     if (index == files.length){
+      document.addEventListener( 'mousemove', onDocumentMouseMove, false );
       animate();
     }; 
-    //////MODAL////////////
-    // AMPHITHEATRE
-    // document.getElementById('Amphitheatre').addEventListener('click', function(){
-    //   document.querySelector('#modalImg').src = "img/stair.png";
-    //   document.querySelector('.bg-modal').style.display = 'flex';
-    // });
-    // //ATTRIUM
-    // document.getElementById('The Attrium').addEventListener('click', function(){
-    //   document.querySelector('.bg-modal').style.display = 'flex';
-    //   document.querySelector('.modal-content').style.display = 'none';
-    //   document.querySelector('.modal-iframe').style.display = 'flex';
-    // });
-    // //POD
-    // document.getElementById('The Nook').addEventListener('click', function(){
-    //   document.querySelector('#modalImg').src = "img/nook.png";
-    //   document.querySelector('.bg-modal').style.display = 'flex';
-    // });
-    // //NOOK
-    // document.getElementById('The Pod').addEventListener('click', function(){
-    //   document.querySelector('#modalImg').src = "img/pod.png";
-    //   document.querySelector('.bg-modal').style.display = 'flex';
-    // });
-    // document.querySelector('.bg-modal').addEventListener('click', function(){
-    //   document.querySelector('.bg-modal').style.display = 'none';
-    //   document.querySelector('.modal-content').style.display = 'inherit';
-    //   document.querySelector('.modal-iframe').style.display = 'none';
-    // });
   };
 
   function loadNextFile() {
@@ -210,66 +224,13 @@ function init(){
   controls.target = camTarget;
   controls.update();
 
-  ///////CSS GEOM////////////////////////////
-  // NOTE CSS OBJECTS//
-  
-//   divPositions = [new THREE.Vector3( -33, -22, 0 ), new THREE.Vector3( -32, 91.25, -4 ), new THREE.Vector3( -33, 142, -6 ), new THREE.Vector3( 50, 6, 3 )]
-//   divTitleText = ["Amphitheatre", "The Nook", "The Pod", "The Attrium"];
-//   divText1 = ["Amphitheatre", "The Nook", "The Pod", "The Attrium"];
-
-//   for (var i = 0; i < divTitleText.length; i++) {
-//     var parentDiv = document.createElement('div');
-//     parentDiv.className = "noteTag";
-//     parentDiv.style.opacity = 0;
-//     parentDiv.id = divTitleText[i];
-
-//     var childDiv = document.createElement('div');
-//     parentDiv.appendChild(childDiv);
-//     childDiv.className = "subText";
-//     childDiv.innerHTML = divTitleText[i];
-//     noteDivObjects.push(parentDiv);
-
-//     var css3DObject = new THREE.CSS3DObject(parentDiv);
-//     css3DObject.position.x = divPositions[i].x;
-//     css3DObject.position.y = divPositions[i].y;
-//     css3DObject.position.z = divPositions[i].z;
-//     css3DObject.rotation.y = Math.PI;
-//     noteObjects.push(css3DObject);
-//     scene2.add(css3DObject);
-//   };
-
-//   //LEVEL CSS OBJECTS//
-//   var divText2 = ["Level 00", "Level 01", "Level 02", "Level 03"]
-//   for (var i = 0; i < divText2.length; i++) {
-//     var parentDiv = document.createElement('div');
-//     parentDiv.className = "levelTag";
-//     parentDiv.style.opacity = 0;
-
-//     var childDiv = document.createElement('div');
-//     parentDiv.appendChild(childDiv);
-//     childDiv.className = "subText";
-//     childDiv.innerHTML = divText2[i];
-//     childDiv.id = divText2[i];
-//     levelDivObjects.push(parentDiv);
-
-//     var css3DObject = new THREE.CSS3DObject(parentDiv);
-//     css3DObject.position.x = -70;
-//     css3DObject.position.y =  (i*8) - 30;
-//     css3DObject.position.z = -25;
-//     css3DObject.rotation.y = Math.PI;
-//     levelObjects.push(css3DObject);
-//     scene2.add(css3DObject);
-//   };
 };
-
-
 
 
 //////FUNCTIONS////////////////////////////
 
 function animate(){
   window.requestAnimationFrame( animate );
-  document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
   var time = Date.now() * 0.0005;
   var time2 = Date.now() * 0.002;
@@ -281,11 +242,12 @@ function animate(){
   var noteTime = noteThreshold*sliderMax;
 
 
-  var rotation = (radius + startAngle + mouseX * 2) * Math.PI / 180;
+  var rotation = (radius + startAngle + mouseX * 3) * Math.PI / 180;
   var newx = radius *  Math.cos(rotation);
   var newy = radius *  Math.sin(rotation);
   camera.position.x = newx;
   camera.position.z = newy;
+  camera.position.y =+ mouseY + 15;
   controls.enabled = true;
 
   ///BIRD MOVER///// 
@@ -294,201 +256,47 @@ function animate(){
     if (child instanceof THREE.Mesh) {
       birdIndex++;
       if (birdIndex == 1){
-        child.position.z = Math.sin(1 - time2*2)/16;
+        child.position.z = Math.sin(1 - time2*2)/10;
       } else {
-        child.position.z = Math.sin(time2*2)/16;
+        child.position.z = Math.sin(time2*2)/10;
       }
     }
   });
 
+  // ANNO PLANES FLOAT
+  for (var i =  annoFiles.length - 1; i >= 0; i--) {
+    scene.getObjectByName( 'annoPlane' + i).position.y += Math.sin(time2*2)/120;
+  };
 
-  // if (isMobileDevice() == false){
-  //   var rotation = (radius + startAngle + mouseX * 30) * Math.PI / 180;
-  //   var newx = radius *  Math.cos(rotation);
-  //   var newy = radius *  Math.sin(rotation);
-  //   camera.position.x = newx;
-  //   camera.position.z = newy;
-  //   controls.enabled = true;
+  // Raycaster
+  raycaster.setFromCamera( mouse, camera );
 
-  //   document.getElementById('container').onmousedown = function( event ){ 
-  //     function onMouseMove(event) {
-  //       sliderNum = map_range(event.pageY, 0, screenHeight*0.9, 100, 0);
-         
-  //       ////json object move//////
-  //       for (var i = 3; i < (objectMove.length-1); i++) {
-  //         if (sliderNum >= explodeTime){
-  //           objectMove[i].position.y = (-120 + ((sliderNum - explodeTime) / 4) * Math.pow(i, 1.5));
-  //         } else {
-  //           objectMove[i].position.y = (-120 + (sliderNum / 4) * Math.pow(0, 1.5));
-  //         };
-  //       };
+  // calculate objects intersecting the picking ray
+  var intersects = raycaster.intersectObjects( scene.children );
 
-  //       ///// CAMERA OBJECTS ZOOM
-  //       if (sliderNum >= explodeTime){
-  //         camera.zoom = 4 - (sliderNum - explodeTime) / 150;
-  //         camTarget = new THREE.Vector3(0, (sliderNum - explodeTime)*1.2, 0);
-  //         camera.position.y = 35 + (sliderNum - explodeTime) * 1.2;
-  //         controls.target = camTarget; 
-  //       } else {
-  //         camera.zoom = 4;
-  //         camTarget = new THREE.Vector3(0, 0, 0);
-  //         controls.target = camTarget;
-  //       };
+  for ( var i = 0; i < intersects.length; i++ ) {
+    if (intersects[intersects.length - 1].object.name == "annoPlane0"){
+      scene.getObjectByName("annoPlane0").scale.x = 1.5;
+      scene.getObjectByName("annoPlane0").scale.y = 1.5;
+      audio2.play();
+    } else if (intersects[intersects.length - 1].object.name == "annoPlane2"){
+      scene.getObjectByName("annoPlane2").scale.x = 1.5;
+      scene.getObjectByName("annoPlane2").scale.y = 1.5;
+      audio3.play();
+    } else {
+      scene.getObjectByName("annoPlane0").scale.x = 1;
+      scene.getObjectByName("annoPlane0").scale.y = 1;
+      scene.getObjectByName("annoPlane2").scale.x = 1;
+      scene.getObjectByName("annoPlane2").scale.y = 1;
+      audio2.pause();
+      audio3.pause();
+    }
+  };
 
-  //       controls.update();
-  //       camera.updateProjectionMatrix();
-
-  //       //JSON OBJECTS OPACITY    
-  //       facadeObject = objectMove[objectMove.length-1];
-  //       facadeObject.traverse(function(child) {
-  //         if (child instanceof THREE.Mesh) {
-  //           child.castShadow = true;
-  //           child.material.transparent = true;
-  //           if (child.material.opacity <= 0){
-  //             child.material.visible = false;
-  //           } else {
-  //             child.material.visible = true;
-  //           };
-  //           if (sliderNum >= 7){
-  //             child.material.opacity = 1 - (sliderNum/30);       
-  //           } else {
-  //             child.material.opacity = 1;
-  //           }
-  //         };
-  //       });
-
-  //       //LEVEL DIV OBJECTS MOVE
-  //       for (i = 0; i < levelObjects.length; i++){
-  //         levelObjects[i].position.y = ((i*8) - 30) + objectMove[i+2].position.y + 120;
-  //         levelObjects[0].position.y = -30;
-  //       };
-
-  //       //LEVEL DIV OBJECTS OPACITY
-  //       for (i = 0; i < levelDivObjects.length; i++){
-  //         levelDivObjects[i].style.opacity = (sliderNum / 30);  
-  //       };
-
-  //       //NOTE DIV OBJECTS OPACITY
-  //       if (sliderNum >= noteTime){
-  //         for (var i = 0; i < noteDivObjects.length; i++) {
-  //           noteDivObjects[i].style.opacity = (sliderNum - noteTime) / 10;
-  //         };
-  //       } else {
-  //         for (var i = 0; i < noteDivObjects.length; i++) {
-  //           noteDivObjects[i].style.opacity = 0;
-  //         };
-  //       };
-  //     };
-  //     document.addEventListener('mousemove', onMouseMove);
-
-  //     document.body.onmouseleave = function() {
-  //       document.removeEventListener('mousemove', onMouseMove);
-  //     };
-  //     document.body.onmouseup = function() {
-  //       document.removeEventListener('mousemove', onMouseMove);
-  //     };
-  //   };
-  // } else {
-  //   camera.zoom = 3;
-  //   controls.enableRotate = false;
-  //   controls.enabled = false;
-
-  //   document.body.addEventListener('touchmove', onTouchMove, { passive: false });
-  //   function onTouchMove(e){
-  //     var touchobj = e.changedTouches[0]
-
-  //     //CAMERA TOUCH LOCATION
-  //     var rotation =+ (radius + startAngle + touchobj.clientX * 0.5) * Math.PI / 180;
-  //     var newx = radius *  Math.cos(rotation);
-  //     var newy = radius *  Math.sin(rotation);
-  //     camera.position.x = newx;
-  //     camera.position.z = newy;
-
-  //     //SLIDER TOUCH LOCATION
-  //     var sliderTemp = map_range(touchobj.clientY, screenHeight* 0.15, screenHeight*0.8, 100, 0);
-
-  //     if (sliderTemp <= 0){
-  //       sliderNum = 0;
-  //     } else if (sliderTemp >= 100){
-  //       sliderNum = 100;
-  //     } else {
-  //       sliderNum = sliderTemp;
-  //     };
-      
-  //     ////json object move//////
-  //     for (var i = 3; i < (objectMove.length-1); i++) {
-  //       if (sliderNum >= explodeTime){
-  //         objectMove[i].position.y = (-120 + ((sliderNum - explodeTime) / 4) * Math.pow(i, 1.5));
-  //       } else {
-  //         objectMove[i].position.y = (-120 + (sliderNum / 4) * Math.pow(0, 1.5));
-  //       };
-  //     };
-
-  //     ///// CAMERA OBJECTS ZOOM
-  //     if (sliderNum >= explodeTime){
-  //       camera.zoom = 4 - (sliderNum - explodeTime) / 150;
-  //       camTarget = new THREE.Vector3(0, (sliderNum - explodeTime)*1, 0);
-  //       camera.position.y = 35 + (sliderNum - explodeTime) * 1;
-  //       controls.target = camTarget; 
-  //     } else {
-  //       camera.zoom = 4;
-  //       camTarget = new THREE.Vector3(0, 0, 0);
-  //       controls.target = camTarget;
-  //       camera.position.y = 35;
-  //     };
-
-  //     //JSON OBJECTS OPACITY    
-  //     facadeObject = objectMove[objectMove.length-1];
-  //     facadeObject.traverse(function(child) {
-  //       if (child instanceof THREE.Mesh) {
-  //         child.castShadow = true;
-  //         child.material.transparent = true;
-  //         if (child.material.opacity <= 0){
-  //           child.material.visible = false;
-  //         } else {
-  //           child.material.visible = true;
-  //         };
-  //         child.material.opacity = 1 - (sliderNum/30);
-  //       };
-  //     });
-
-  //     //LEVEL DIV OBJECTS MOVE
-  //     for (i = 0; i < levelObjects.length; i++){
-  //       levelObjects[i].position.y = ((i*8) - 30) + objectMove[i+2].position.y + 120;
-  //       levelObjects[0].position.y = -30;
-  //     };
-
-  //     //LEVEL DIV OBJECTS OPACITY
-  //     for (i = 0; i < levelDivObjects.length; i++){
-  //       levelDivObjects[i].style.opacity = (sliderNum / 30);  
-  //     };
-
-  //     // //NOTE DIV OBJECTS OPACITY
-  //     // if (sliderNum >= noteTime){
-  //     //   for (var i = 0; i < noteDivObjects.length; i++) {
-  //     //     noteDivObjects[i].style.opacity = (sliderNum - noteTime) / 10;
-  //     //   };
-  //     // } else {
-  //     //   for (var i = 0; i < noteDivObjects.length; i++) {
-  //     //     noteDivObjects[i].style.opacity = 0;
-  //     //   };
-  //     // };
-
-  //     e.preventDefault();
-  //   };
-  //   document.body.ontouchend = function(e){
-  //     document.body.removeEventListener('touchmove', onTouchMove);  
-  //   }
+  // var intersectJSON = raycaster.intersectObjects( scene.children, true );
+  // for ( var i = 0; i < intersectJSON.length; i++ ) {
+  //   intersectJSON[intersectJSON.length - 1].object.material.color.set( 0xff0000 );
   // };
-
-  // console.log(noteDivObjects[0]);
-
-  // LEVEL DIV FLOAT
-  // for (var i = 0; i < noteObjects.length; i++) {
-  //   moveVal = divPositions[i].y + Math.sin(2*time2)/1.5; 
-  //   noteObjects[i].position.y = moveVal;
-  // };
-
 
 
   camera.updateProjectionMatrix();
@@ -499,14 +307,12 @@ function animate(){
 
 
 
-
-
-
-
-
 function onDocumentMouseMove(event) {
   mouseX = ( event.clientX - windowHalfX ) * 0.005;
   mouseY = ( event.clientY - windowHalfY ) * 0.005;
+
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 };
 
 function map_range(value, low1, high1, low2, high2) {
