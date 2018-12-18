@@ -16,8 +16,8 @@ var windowHalfY = window.innerHeight / 2;
 
 ///////////Loader Variables////////
 var index = 0;
-var files = ["models/Base.json", "models/Birds.json"];
-var sketchFiles = ["img/back.png","img/front.png"];
+var files = ["models/Base.json", "models/Birds.json", "models/backScreen.json", "models/backGlass.json", "models/backFacade.json"];
+var sketchFiles = ["img/back.png","img/front.png", "img/middle.png"];
 var annoFiles = ["img/bubble.png","img/wind1.png", "img/bubble.png"];
 
 ////Audio Pause/////////
@@ -81,16 +81,19 @@ function init(){
   camera.position.y = 15;
   camera.position.z = y;
   camera.zoom = 12;
+  camera.fog = true;
   camera.updateProjectionMatrix();
 
   //SKETCH PLANES
   planes = [];
-  planePos = [[-10,13,8], [5,20,45]];
-  planeRot = [Math.PI / 2, Math.PI / 2];
-  planeOp = [0.15, 0.5];
+  planePos = [[-60,12,-6], [0,20,31], [-33,17,26]];
+  planeRot = [Math.PI / 2, Math.PI / 2, Math.PI];
+  planeOp = [0.15, 0.5, 0.5];
+  planeSc = [1,1,0.5];
+  planeScX = [1,1,1.8];
 
   for (var i =  sketchFiles.length - 1; i >= 0; i--) {
-    var geometry = new THREE.PlaneGeometry( 75, 75, 32 );
+    var geometry = new THREE.PlaneGeometry( 75*planeSc[i], 75*planeSc[i], 32 );
     var texture = new THREE.TextureLoader().load( sketchFiles[i] );
     var planeMaterial = new THREE.MeshBasicMaterial({
       map: texture, 
@@ -104,13 +107,14 @@ function init(){
     plane.position.y = planePos[i][1];
     plane.position.z = planePos[i][2];
     plane.rotation.y = planeRot[i];
+    plane.scale.x = planeScX[i];
     planes.push(plane);
     scene.add(plane); 
   };
 
   //ANNOTATION PLANES
   annoPlanes = [];
-  annoPlanePos = [[0,5,-28], [-1,6.5,15], [0,21,-28]];
+  annoPlanePos = [[0,5,-43], [-1,6.5,0], [0,21,-43]];
   annoPlaneRot = [Math.PI / 2, Math.PI / 2, Math.PI / 2];
   annoPlaneSize = [3 ,8, 3];
 
@@ -175,6 +179,7 @@ function init(){
         object.scale.x = 2;
         object.scale.y = 2;
         object.scale.z = 2;
+        object.position.z = -15;
         scene.add(object);
         objectMove.push(scene.getObjectByName("part" + index));
         index++;
@@ -191,7 +196,7 @@ function init(){
   directionalLight.shadow.camera.top =  500;
   directionalLight.shadow.camera.bottom = -500;
   directionalLight.position.y = 200;
-  directionalLight.position.z = -100;
+  directionalLight.position.z = 100;
   directionalLight.position.x = -100;
   directionalLight.shadow.mapSize.width = 2048;
   directionalLight.shadow.mapSize.height = 2048;
@@ -241,14 +246,42 @@ function animate(){
   var explodeTime = explodeThreshold*sliderMax;
   var noteTime = noteThreshold*sliderMax;
 
+  if (isMobileDevice() == false){
+    var rotation = (radius + startAngle + mouseX * 3) * Math.PI / 180;
+    var newx = radius *  Math.cos(rotation);
+    console.log(mouseX);
+    var newy = radius *  Math.sin(rotation);
+    camera.position.x = newx;
+    camera.position.z = newy;
+    camera.position.y =+ mouseY/10 + 15;
+    controls.enabled = true;
+    console.log("true!!!!!");
+  } else {
+    if (screenWidth > screenHeight){
+      camera.zoom = 12;
+    } else {
+      camera.zoom = 4;
+    };
+    controls.enableRotate = false;
+    controls.enabled = false;
 
-  var rotation = (radius + startAngle + mouseX * 3) * Math.PI / 180;
-  var newx = radius *  Math.cos(rotation);
-  var newy = radius *  Math.sin(rotation);
-  camera.position.x = newx;
-  camera.position.z = newy;
-  camera.position.y =+ mouseY + 15;
-  controls.enabled = true;
+    document.body.addEventListener('touchmove', onTouchMove, { passive: false });
+    function onTouchMove(e){
+      var touchobj = e.changedTouches[0]
+
+      //CAMERA TOUCH LOCATION
+      var rotation =+ (radius + startAngle + touchobj.clientX * 0.03) * Math.PI / 180;
+      var newx = radius *  Math.cos(rotation);
+      var newy = radius *  Math.sin(rotation);
+      camera.position.x = newx;
+      camera.position.z = newy;
+
+      e.preventDefault();
+    };
+    document.body.ontouchend = function(e){
+      document.body.removeEventListener('touchmove', onTouchMove);  
+    }
+  };
 
   ///BIRD MOVER///// 
   var birdIndex = 0;
@@ -268,12 +301,39 @@ function animate(){
     scene.getObjectByName( 'annoPlane' + i).position.y += Math.sin(time2*2)/120;
   };
 
+  //FACADE OPACITIES
+  scene.getObjectByName( 'part4' ).traverse(function(child) {
+    if (child instanceof THREE.Mesh) {
+      child.material.opacity = 0.5;
+      child.material.transparent = true;
+      child.receiveShadow = false;
+      child.castShadow = false;
+    };
+  });
+
+  scene.getObjectByName( 'part2' ).traverse(function(child) {
+    if (child instanceof THREE.Mesh) {
+      child.material.opacity = 0.05;
+      child.material.transparent = true;
+      child.receiveShadow = false;
+      child.castShadow = false;
+    };
+  });
+
+    scene.getObjectByName( 'part3' ).traverse(function(child) {
+    if (child instanceof THREE.Mesh) {
+      child.material.opacity = 0.1;
+      child.material.transparent = true;
+      child.receiveShadow = false;
+      child.castShadow = false;
+    };
+  });
+
   // Raycaster
   raycaster.setFromCamera( mouse, camera );
 
   // calculate objects intersecting the picking ray
   var intersects = raycaster.intersectObjects( scene.children );
-
   for ( var i = 0; i < intersects.length; i++ ) {
     if (intersects[intersects.length - 1].object.name == "annoPlane0"){
       scene.getObjectByName("annoPlane0").scale.x = 1.5;
@@ -292,6 +352,7 @@ function animate(){
       audio3.pause();
     }
   };
+
 
   // var intersectJSON = raycaster.intersectObjects( scene.children, true );
   // for ( var i = 0; i < intersectJSON.length; i++ ) {
