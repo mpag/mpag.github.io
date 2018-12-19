@@ -6,9 +6,6 @@ var raycaster = new THREE.Raycaster();
 
 
 window.addEventListener( 'resize', onWindowResize, false );
-// document.getElementById('container').addEventListener('touchstart', function(e){
-//   e.preventDefault();
-// }, { passive: false });
 
 var mouseX = 0, mouseY = 0;
 var windowHalfX = window.innerWidth / 2;
@@ -37,18 +34,6 @@ function pauseAudio( audio ) {
 pauseAudio( audio1 );
 pauseAudio( audio2 );
 pauseAudio( audio3 );
-
-////////////CSS3d////////////////
-
-//NOTE CSS VARIABLES
-// var noteDivObjects = [];
-// var noteObjects = [];
-// var divPositions = [];
-
-// //LEVEL CSS VARIABLES
-// var levelDivObjects = [];
-// var levelObjects = [];
- 
 
 /////////INIT VAIRABLES////////
 var count = 0;
@@ -86,7 +71,7 @@ function init(){
 
   //SKETCH PLANES
   planes = [];
-  planePos = [[-60,12,-6], [0,20,31], [-33,17,26]];
+  planePos = [[-60,12,4], [0,20,41], [-33,17,36]];
   planeRot = [Math.PI / 2, Math.PI / 2, Math.PI];
   planeOp = [0.15, 0.5, 0.5];
   planeSc = [1,1,0.5];
@@ -114,7 +99,7 @@ function init(){
 
   //ANNOTATION PLANES
   annoPlanes = [];
-  annoPlanePos = [[0,5,-43], [-1,6.5,0], [0,21,-43]];
+  annoPlanePos = [[0,5,-33], [-1,6.5,10], [0,21,-33]];
   annoPlaneRot = [Math.PI / 2, Math.PI / 2, Math.PI / 2];
   annoPlaneSize = [3 ,8, 3];
 
@@ -148,12 +133,11 @@ function init(){
   var onError = function ( xhr ) {
   };
   manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-    console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
   manager.onProgress = function ( item, loaded, total ) {
   };
   manager.onLoad = function ( ) {
-    // $("#loadingScreen").delay(1000).fadeOut(500);
     if (index == files.length){
       document.addEventListener( 'mousemove', onDocumentMouseMove, false );
       animate();
@@ -179,7 +163,7 @@ function init(){
         object.scale.x = 2;
         object.scale.y = 2;
         object.scale.z = 2;
-        object.position.z = -15;
+        object.position.z = -5;
         scene.add(object);
         objectMove.push(scene.getObjectByName("part" + index));
         index++;
@@ -223,14 +207,13 @@ function init(){
   //CONTROLS////////////////////////////////
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = false;
-  controls.enablePan = false;
+  // controls.enablePan = false;
   controls.enableRotate = false;
   camTarget = new THREE.Vector3(0, camera.position.y, 0);
   controls.target = camTarget;
   controls.update();
 
 };
-
 
 //////FUNCTIONS////////////////////////////
 
@@ -249,13 +232,11 @@ function animate(){
   if (isMobileDevice() == false){
     var rotation = (radius + startAngle + mouseX * 3) * Math.PI / 180;
     var newx = radius *  Math.cos(rotation);
-    console.log(mouseX);
     var newy = radius *  Math.sin(rotation);
     camera.position.x = newx;
     camera.position.z = newy;
     camera.position.y =+ mouseY/10 + 15;
     controls.enabled = true;
-    console.log("true!!!!!");
   } else {
     if (screenWidth > screenHeight){
       camera.zoom = 12;
