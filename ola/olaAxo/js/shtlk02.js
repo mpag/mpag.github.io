@@ -11,8 +11,8 @@ document.getElementById('container').addEventListener('touchstart', function(e){
 ///////////Loader Variables////////
 var index = 0;
 var objindex = 0;
-var files = ['models/topo.json', 'models/existingHouse.json', 'models/existingBuilding.json'];
-var filesName = ['topo', 'existingHouse', 'existingBuilding']; 
+var files = ['models/topo.json', 'models/existingHouse.json', 'models/existingBuilding.json', 'models/crack.json'];
+var filesName = ['topo', 'existingHouse', 'existingBuilding', 'crack']; 
 var objectMove = [];
 
 
@@ -71,17 +71,13 @@ function init(){
   camera.updateProjectionMatrix();
 
 
-  //////// GEOMETRY ///////////////////////
-  // var planeGeometry = new THREE.PlaneGeometry( 500, 500, 64 );
-  // planeGeometry.rotateX( - Math.PI / 2 );
-  // planeGeometry.rotateY( - Math.PI / 4 );
-  // var planeMaterial = new THREE.ShadowMaterial();
-  // planeMaterial.opacity = 0.2;
-  // var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-  // plane.opacity = 0.1;
-  // plane.position.y = -30.5;
-  // plane.receiveShadow = true;
-  // scene.add( plane );
+  var path = 'texture/';
+  var format = '.jpg';
+  var envMap = new THREE.CubeTextureLoader().load( [
+    path + 'posx' + format, path + 'negx' + format,
+    path + 'posy' + format, path + 'negy' + format,
+    path + 'posz' + format, path + 'negz' + format
+  ] );
 
 
   //////////LOADER////////////////////////
@@ -91,13 +87,15 @@ function init(){
   var onProgress = function ( xhr ) {
     if ( xhr.lengthComputable ) {
       var percentComplete = xhr.loaded / xhr.total * 100;
+      console.log( Math.round(percentComplete, 2) + '% downloaded' );
     }};
   var onError = function ( xhr ) {
   };
   manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-    // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
   manager.onProgress = function ( item, loaded, total ) {
+    console.log( loaded, total );
   };
   manager.onLoad = function ( ) {
     // $("#loadingScreen").delay(1000).fadeOut(500);
@@ -139,16 +137,20 @@ function init(){
           if (child instanceof THREE.Mesh && filesName[index]=='topo') {
             child.castShadow = false;
             child.receiveShadow = true;
-          } else if (child instanceof THREE.Mesh && filesName[index]=='existingHouse' && child.userData.Scene.Layer == 'HOUSE::ROOF') {
+          } else if (child instanceof THREE.Mesh && filesName[index]=='existingHouse') {
             child.castShadow = true;
             child.receiveShadow = false;
-          } else if (child instanceof THREE.Mesh && filesName[index]=='existingBuilding' && child.userData.Scene.Layer == 'EXISTING::FACADEWALL') {
+          } else if (child instanceof THREE.Mesh && filesName[index]=='existingBuilding' && child.userData.Scene.Layer == 'EXISTING::FACADEWALL' ) {
             child.castShadow = true;
             child.receiveShadow = false;
           } else {
             child.castShadow = true;
             child.receiveShadow = true;
-          }
+          };
+          if (child instanceof THREE.Mesh && (child.userData.Scene.Layer=='EXISTING::GLASS' || child.userData.Scene.Layer == 'HOUSE::GLASS')){
+            child.material.envMap = envMap;
+            child.material.reflectivity = 0.9;
+          };
         });
         object.name = filesName[index];
         object.rotation.x = -Math.PI / 2;
@@ -176,14 +178,12 @@ function init(){
   dirLight.position.x = (sunData[TOD].sunPosition.X);
   dirLight.position.z = -(sunData[TOD].sunPosition.Z);
   dirLight.rotation.y = Math.PI / 18;
-  dirLight.shadow.mapSize.width = 2048;
-  dirLight.shadow.mapSize.height = 2048;
+  dirLight.shadow.mapSize.width = 2048 * 2;
+  dirLight.shadow.mapSize.height = 2048 * 2;
   dirLight.shadow.camera.near = 0;
   dirLight.shadow.camera.far = 1500;
+  dirLight.bias = 0.0001;
   dirLight.castShadow = true;
-
-  // helper =  new THREE.DirectionalLightHelper( dirLight, 10 );
-  // scene.add( helper );
   scene.add( dirLight.target);
   scene.add( dirLight );
   scene.add( ambientlight );
@@ -191,11 +191,14 @@ function init(){
   //RENDERERS////////////////////////////////
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
   renderer.shadowMap.enabled = true;
+  // renderer.gammaOutput = true;
+  // renderer.gammaFactor = 2.0;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
   renderer.domElement.style.zIndex = 0;
+  setPixelRatio();
   document.getElementById('container').appendChild( renderer.domElement );
 
   renderer2 = new THREE.CSS3DRenderer();
@@ -277,7 +280,13 @@ function animate(){
   });
 
 
-  // if (isMobileDevice() == false){
+  if (isMobileDevice() == true){
+    controls.enabled = true;
+    controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.enableRotate = true;
+  };
+
   //   var rotation = (radius + startAngle + mouseX * 30) * Math.PI / 180;
   //   var newx = radius *  Math.cos(rotation);
   //   var newy = radius *  Math.sin(rotation);
