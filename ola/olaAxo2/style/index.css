@@ -1,0 +1,210 @@
+/* THREE Scene */
+
+body {
+  margin: 0;
+  overflow: hidden;
+  z-index: 0;
+  width: 100%;
+  touch-action: none;
+}
+
+.threeScene {
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+  /*touch-action: none;*/
+}
+
+.css3dScene {
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+  touch-action: none;
+  /*pointer-events: none;*/
+}
+
+.css3dScene:hover {
+  pointer-events: auto;
+}
+
+
+/*text*/
+#loadingScreen {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  background: -moz-linear-gradient(top,  #eef2f3 0%, #8e9eab 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #eef2f3 0%, #8e9eab 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  #eef2f3 0%, #8e9eab 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+
+.center {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    top: 46%;
+    width: 50%;
+}
+
+.dropShadow {
+  -webkit-filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+}
+
+
+h1 {
+  font-size: 1.2em;
+  color: black;
+  font-family: 'Advent Pro', san-serif;
+}
+
+p {
+  font-size: 0.8em;
+  color: black;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+#footer {
+  bottom: 20px;
+  left: 30px;
+  z-index: 2;
+  position: absolute;
+  pointer-events: none;
+}
+
+
+
+/*css3d css*/
+.subText {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 3px;
+  pointer-events: auto;
+}
+
+.levelTag {
+  padding: 2px;
+  border-radius: 1px;
+  text-align: center;
+  width: 16px;
+}
+
+.noteTag {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px;
+  border-radius: 1px;
+  text-align: center;
+  width: 20px;
+  box-shadow: 0px 0px 1px grey;
+  cursor: pointer;
+}
+
+.noteTag:hover {
+  background-color: rgba(255, 255, 255, 1);
+  /*border: 1px blue;*/
+}
+
+
+
+
+/*ANIMATING*/
+/* BACKGROUND */
+html {
+  width: 100%;
+  height: 100%;
+  background: #bdc3c7; /* Old browsers */
+  background: -moz-linear-gradient(top,  #bdc3c7 0%, #2c3e50 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #bdc3c7 0%, #2c3e50 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(top,  #bdc3c7 0%, #2c3e50 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  margin: 0;
+  overflow: hidden;
+}
+
+
+@-webkit-keyframes moving /* Safari and Chrome */ {
+  from {
+    -webkit-transform: translate(0px, 10px);
+    -o-transform: translate(0px, 10px);
+    transform: translate(0px, 10px);
+  }
+  to {
+    -webkit-transform: translate(0px, 0px);
+    -o-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);
+  }
+}
+@keyframes rotating {
+  from {
+    -ms-transform: translate(0px, 10px);
+    -moz-transform: translate(0px, 10px);
+    -webkit-transform: translate(0px, 10px);
+    -o-transform: translate(0px, 10px);
+    transform: translate(0px, 10px);
+  }
+  to {
+    -ms-transform:  translate(0px, 0px);
+    -moz-transform:  translate(0px, 0px);
+    -webkit-transform:  translate(0px, 0px);
+    -o-transform:  translate(0px, 0px);
+    transform:  translate(0px, 0px);
+  }
+}
+
+.rotating {
+  -webkit-animation: rotating 0.4s ease alternate-reverse infinite;
+  -moz-animation: rotating 0.4s ease alternate-reverse infinite;
+  -ms-animation: rotating 0.4s ease alternate-reverse infinite;
+  -o-animation: rotating 0.4s ease alternate-reverse infinite;
+  animation: rotating 0.4s ease alternate-reverse infinite;
+}
+
+
+
+/*MODAL*/
+.bg-modal {
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.7);
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  display: none;
+}
+
+.modal-content {
+  width: 300px;
+  height: 300px;
+  background-color: white;
+  border-radius: 4px;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+}
+
+.modal-iframe {
+  width: 640px;
+  height: 360px;
+  background-color: white;
+  border-radius: 0px;
+  text-align: center;
+  padding: 0px;
+  position: relative;
+  display: none;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 14px;
+  font-size: 42px;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
