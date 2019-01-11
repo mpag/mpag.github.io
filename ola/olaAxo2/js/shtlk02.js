@@ -11,7 +11,7 @@ window.addEventListener( 'resize', onWindowResize, false );
 ///////////Loader Variables////////
 var index = 0;
 var objindex = 0;
-var files = 'models/testGLTF.glb';
+var files = 'models/OLA_Test1.glb';
 var filesName = 'test'; 
 var objectMove = [];
 var clock = new THREE.Clock();
@@ -85,6 +85,14 @@ function init(){
   ] );
 
 
+  var geom = new THREE.PlaneGeometry(500, 500, 10);
+  var planeMat = new THREE.MeshBasicMaterial(0xffffff);
+  var plane = new THREE.Mesh(geom, planeMat);
+  plane.rotation.x = -Math.PI/2;
+  plane.position.y  = 8;
+  scene.add(plane);
+
+
   //////////LOADER////////////////////////
 
   manager = new THREE.LoadingManager();
@@ -102,33 +110,38 @@ function init(){
     // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
   manager.onProgress = function ( item, loaded, total ) {
-    console.log( loaded, total );
+    // console.log( loaded, total );
   };
   manager.onLoad = function ( ) {
     
-    console.log(anim);
-    console.log(mesh);
+    // console.log(anim);
+    // console.log(mesh);
 
-    mixer1 = new THREE.AnimationMixer(mesh[0]);
-    mixer1.clipAction( anim[0] ).setLoop( THREE.LoopPingPong );
-    mixer1.clipAction( anim[0] ).play();
+    // mixer1 = new THREE.AnimationMixer(mesh[0]);
+    // mixer1.clipAction( anim[0] ).setLoop( THREE.LoopPingPong );
+    // mixer1.clipAction( anim[0] ).play();
 
-    mixer2 = new THREE.AnimationMixer(mesh[1]);
-    mixer2.clipAction( anim[1] ).setLoop( THREE.LoopPingPong );
-    mixer2.clipAction( anim[1] ).play();
+    // mixer2 = new THREE.AnimationMixer(mesh[1]);
+    // mixer2.clipAction( anim[1] ).setLoop( THREE.LoopPingPong );
+    // mixer2.clipAction( anim[1] ).play();
 
-    mixer3 = new THREE.AnimationMixer(mesh[2]);
-    mixer3.clipAction( anim[2] ).setLoop( THREE.LoopPingPong );
-    mixer3.clipAction( anim[2] ).play();
+    // mixer3 = new THREE.AnimationMixer(mesh[2]);
+    // mixer3.clipAction( anim[2] ).setLoop( THREE.LoopPingPong );
+    // mixer3.clipAction( anim[2] ).play();
+
+    // mixer4 = new THREE.AnimationMixer(mesh[3]);
+    // mixer4.clipAction( anim[3] ).setLoop( THREE.LoopPingPong );
+    // mixer4.clipAction( anim[3] ).play();
 
     animate();
   };
 
   // Load a glTF resource
   loader.load(
-    'models/testGLTF2.glb',
+    'models/OLA_Test1.glb',
     function ( gltf ) {
-      scene.add( gltf.scene );
+      model = gltf.scene;
+      scene.add( model );
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
       gltf.asset; // Object
@@ -138,20 +151,19 @@ function init(){
         if (object instanceof THREE.Mesh) {
           object.castShadow = "true";
           object.receiveShadow = "true"
-
-          console.log(object);
         };
 
-        if (object instanceof THREE.Mesh && object.name=='HOUSE__FLOOR') {
-          mesh.push(object);
-        } else if (object instanceof THREE.Mesh && object.name=='EXISTING__BACK__FLOOR') {
-          mesh.push(object);
-        } else if (object instanceof THREE.Mesh && object.name=='EXISTING__FRONT__FLOOR') {
-          mesh.push(object);
-        }
+        // if (object.name=='NEW_06_FACADE_A_FACADECLEAN' || object.name=='OLD_EXISTING_BACK_FLOOR' || object.name=='OLD_HOUSE_FLOOR' || object.name=='NEW_02_FLOOR_A_FLOR' || object.name=='OLD_EXISTING_FRONT_FLOOR') {
+        //   mesh.push(object);
+        //   // console.log('object');
+        // };
       });
 
-      anim = gltf.animations;
+      mixer = new THREE.AnimationMixer(model);
+      gltf.animations.forEach((clip) => {
+        mixer.clipAction(clip).setLoop( THREE.LoopPingPong)
+        mixer.clipAction(clip).play();
+      });
     },
 
     function ( xhr ) {
@@ -165,8 +177,8 @@ function init(){
 
 
   //LIGHT//////////////////////////////////
-  var ambientlight = new THREE.AmbientLight( 0x080808, 15 ); 
-  dirLight = new THREE.DirectionalLight( 0xFCF8E4, 1.1 );
+  var ambientlight = new THREE.AmbientLight( 0x080808, 10 ); 
+  dirLight = new THREE.DirectionalLight( 0xFCF8E4, 1.0 );
   dirLight.shadow.camera.right =  200;
   dirLight.shadow.camera.left = -200;
   dirLight.shadow.camera.top =  200;
@@ -249,9 +261,12 @@ function animate(){
 
 
   var delta = 0.5 * clock.getDelta();
-  mixer1.update(delta);
-  mixer2.update(delta);
-  mixer3.update(delta);
+  mixer.update(delta);
+
+  // mixer1.update(delta);
+  // mixer2.update(delta);
+  // mixer3.update(delta);
+  // mixer4.update(delta);
   renderer.render( scene, camera);
 }}; 
 
