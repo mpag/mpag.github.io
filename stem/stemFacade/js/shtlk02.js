@@ -27,7 +27,7 @@ var objectMove = [];
 
 init();
 animate(); 
-uiReshuffle();
+// uiReshuffle();
 
 
 function init(){
@@ -281,16 +281,16 @@ function isMobileDevice() {
     return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
 };
 
-function uiReshuffle(){
-  if (isMobileDevice() == true){
-    document.getElementById("paragraph").style.display = "none";
-    document.getElementById("title").style.bottom = "20px";
-    document.getElementById("title").style.width = "82%";
-    document.getElementById("title").style.borderTop = "none";
-  } else {
-    document.getElementById("title").style.top = "20px";
-    document.getElementById("title").style.width = "400px";
-    document.getElementById("title").style.borderTop = "2px solid white";
-    document.getElementById("title").style.borderBottom = "2px solid white";
-  }
-};
+// function uiReshuffle(){
+//   if (isMobileDevice() == true){
+//     document.getElementById("paragraph").style.display = "none";
+//     document.getElementById("title").style.bottom = "20px";
+//     document.getElementById("title").style.width = "82%";
+//     document.getElementById("title").style.borderTop = "none";
+//   } else {
+//     document.getElementById("title").style.top = "20px";
+//     document.getElementById("title").style.width = "400px";
+//     document.getElementById("title").style.borderTop = "2px solid white";
+//     document.getElementById("title").style.borderBottom = "2px solid white";
+//   }
+// };
