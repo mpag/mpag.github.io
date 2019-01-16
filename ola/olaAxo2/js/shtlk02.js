@@ -215,7 +215,7 @@ function init(){
   controls.enablePan = true;
   controls.enableRotate = true;
   controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.4;
+  controls.autoRotateSpeed = 0.1;
   controls.target = camTarget;
   controls.update();
 
@@ -230,6 +230,9 @@ function animate(){
   // var time = Date.now() * 0.0005;
   var time2 = Date.now() * 0.002;
 
+
+  scene.getObjectByName( "OLD_TOPO_CLOUDS" ).position.y = (Math.sin(time2*2))/4;
+  scene.getObjectByName( "OLD_TOPO_BIRDS" ).position.y = (Math.sin(time2*7))/4;
   // var explodeThreshold = 0.5;
   // var noteThreshold = 0.9;
   // var sliderMax = 100;
