@@ -148,15 +148,10 @@ function init(){
 
       gltf.scene.traverse(function(object) {
 
-        if (object instanceof THREE.Mesh) {
+        if (object instanceof THREE.Mesh && object.name !='OLD_TOPO_CLOUDS') {
           object.castShadow = "true";
           object.receiveShadow = "true"
         };
-
-        // if (object.name=='NEW_06_FACADE_A_FACADECLEAN' || object.name=='OLD_EXISTING_BACK_FLOOR' || object.name=='OLD_HOUSE_FLOOR' || object.name=='NEW_02_FLOOR_A_FLOR' || object.name=='OLD_EXISTING_FRONT_FLOOR') {
-        //   mesh.push(object);
-        //   // console.log('object');
-        // };
       });
 
       mixer = new THREE.AnimationMixer(model);
