@@ -266,7 +266,7 @@ function animate(){
   controls.update();
   // renderer2.render( scene2, camera);
 
-  var delta = 0.5 * clock.getDelta();
+  var delta = 0.65 * clock.getDelta();
   mixer.update(delta);
 
   composer.render();
