@@ -3,14 +3,12 @@ var camera, scene, renderer, rectangle, div, controls, sliderNum;
 var scene2, renderer2, manager;
 
 window.addEventListener( 'resize', onWindowResize, false );
-document.getElementById('container').addEventListener('dblclick', mixerPlay)
+// document.getElementById('container').addEventListener('dblclick', mixerPlay)
 
-// console.log(isMobileDevice());
+Hammer(document.getElementById('container')).on("doubletap", mixerPlay);
 
 
-// document.getElementById('container').addEventListener('touchstart', function(e){
-//   e.preventDefault();
-// }, { passive: false });
+
 var clock = new THREE.Clock();
 var mixer;
 var clips;
@@ -275,7 +273,7 @@ function animate(){
 
 
 function mixerPlay(event){
-  console.log("fired");
+  console.log("fired on double-tap!");
   clips.forEach((clip) => {
     mixer.clipAction(clip).timeScale = 1;
     console.log(mixer.clipAction(clip).isRunning());
