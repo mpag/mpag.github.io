@@ -3,8 +3,6 @@ var camera, scene, renderer, rectangle, div, controls, sliderNum;
 var scene2, renderer2, manager;
 
 window.addEventListener( 'resize', onWindowResize, false );
-// document.getElementById('container').addEventListener('dblclick', mixerPlay)
-
 Hammer(document.getElementById('container')).on("doubletap", mixerPlay);
 
 
@@ -124,15 +122,21 @@ function init(){
   manager.onLoad = function ( ) {
     animate();
 
-    if (isMobileDevice() == true){
-      console.log("true!!!")
-      mixerPlay();
-    } else {
-      clips.forEach((clip) => {
-        mixer.clipAction(clip).timeScale = 0;
-        console.log(mixer.clipAction(clip).getEffectiveTimeScale());
-      });
-    };
+    clips.forEach((clip) => {
+      mixer.clipAction(clip).timeScale = 0;
+      console.log(mixer.clipAction(clip).getEffectiveTimeScale());
+    });
+
+
+    // if (isMobileDevice() == true){
+    //   console.log("true!!!")
+    //   // mixerPlay();
+    // } else {
+    //   clips.forEach((clip) => {
+    //     mixer.clipAction(clip).timeScale = 0;
+    //     console.log(mixer.clipAction(clip).getEffectiveTimeScale());
+    //   });
+    // };
   };
 
   // Load a glTF resource
