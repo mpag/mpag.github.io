@@ -5,20 +5,16 @@ var scene2, renderer2, manager;
 window.addEventListener( 'resize', onWindowResize, false );
 Hammer(document.getElementById('container')).on("doubletap", mixerPlay);
 
-
-
 var clock = new THREE.Clock();
 var mixer;
 var clips;
 var composer;
 
-////////////CSS3d////////////////
 //NOTE CSS VARIABLES
 var noteDivObjects = [];
 var noteObjects = [];
 var divPositions = [];
-var annoFiles = ["img/bubble.png","img/tweet.png", "img/bubble.png"];
-
+var annoFiles = ["img/bubble.png","img/tweet.png"];
 
 /////////INIT VAIRABLES////////
 var screenWidth = window.innerWidth; 
@@ -30,7 +26,6 @@ var windowHalfY = window.innerHeight / 2;
 
 ////CAMERA////////////
 var frustumSize = 1000;
-var slider = document.getElementById("myRange");
 var camTarget = new THREE.Vector3(0, 0, 0);
 var radius = 90;
 var startAngle = 220;
@@ -54,7 +49,7 @@ function init(){
   camera.position.x = 20;
   camera.position.y = 30;
   camera.position.z = 20;
-  camera.zoom = 8;
+  camera.zoom = 6;
   camera.updateProjectionMatrix();
   var camTarget = new THREE.Vector3(0, 20, 0);
 
@@ -67,18 +62,16 @@ function init(){
     path + 'posz' + format, path + 'negz' + format
   ] );
 
-  var geom = new THREE.PlaneGeometry(500, 500, 10);
-  var planeMat = new THREE.MeshBasicMaterial(0xffffff);
-  var plane = new THREE.Mesh(geom, planeMat);
-  plane.rotation.x = -Math.PI/2;
-  plane.position.y  = 8;
-  scene.add(plane);
+  //clippingPlane
+  var globalPlane = new THREE.Plane( new THREE.Vector3( 0, -1, 0 ), 100);
+  var globalPlane2 = new THREE.Plane( new THREE.Vector3( 0, 1, 0 ), -8.5);
+
 
   //ANNOTATION PLANES
   annoPlanes = [];
-  annoPlanePos = [[20.2,16.18,35.04], [13.5,26.6,-48.74], [19.5,14.48,-0.32]];
-  annoPlaneRot = [Math.PI / 2, Math.PI / 2, Math.PI / 2];
-  annoPlaneSize = [3 ,8, 3];
+  annoPlanePos = [[20.2,16.18,35.04], [13.5,26.6,-48.74]];
+  annoPlaneRot = [Math.PI / 2, Math.PI / 2];
+  annoPlaneSize = [5 ,8];
 
   for (var i =  annoFiles.length - 1; i >= 0; i--) {
     var geometry = new THREE.PlaneGeometry( annoPlaneSize[i], annoPlaneSize[i], 32 );
@@ -96,7 +89,7 @@ function init(){
     plane.position.z = annoPlanePos[i][2];
     plane.rotation.y = annoPlaneRot[i];
     plane.rotation.y = Math.PI / 4;
-    // scene.add(plane); 
+    scene.add(plane); 
   };
 
 
@@ -106,10 +99,6 @@ function init(){
   var loader = new THREE.GLTFLoader( manager );
   
   var onProgress = function ( xhr ) {
-    if ( xhr.lengthComputable ) {
-      var percentComplete = xhr.loaded / xhr.total * 100;
-      console.log( Math.round(percentComplete, 2) + '% downloaded' );
-    };
   };
   var onError = function ( xhr ) {
   };
@@ -120,23 +109,13 @@ function init(){
     // console.log( loaded, total );
   };
   manager.onLoad = function ( ) {
+    $(".bg-modal").css("display", "none");
     animate();
-
     clips.forEach((clip) => {
       mixer.clipAction(clip).timeScale = 0;
       console.log(mixer.clipAction(clip).getEffectiveTimeScale());
     });
 
-
-    // if (isMobileDevice() == true){
-    //   console.log("true!!!")
-    //   // mixerPlay();
-    // } else {
-    //   clips.forEach((clip) => {
-    //     mixer.clipAction(clip).timeScale = 0;
-    //     console.log(mixer.clipAction(clip).getEffectiveTimeScale());
-    //   });
-    // };
   };
 
   // Load a glTF resource
@@ -155,6 +134,9 @@ function init(){
         if (object instanceof THREE.Mesh){
           object.material.envMap = envMap;
           object.material.envMapIntensity = 0.3;
+          object.material.clippingPlanes = [ globalPlane, globalPlane2 ];
+          console.log(object.material.clippingPlanes);
+          // clipShadows: true;
         };
 
         if (object instanceof THREE.Mesh && object.name !='OLD_TOPO_CLOUDS') {
@@ -183,7 +165,20 @@ function init(){
     },
 
     function ( xhr ) {
-      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      // console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '%' );
+
+        var percentComplete = xhr.loaded / xhr.total * 100;  
+        var $circle = $('#svg #bar');
+        var r = $circle.attr('r');
+        var c = Math.PI*(r*2);
+
+        var pct = ((100-percentComplete)/100)*c;
+        $circle.css({ strokeDashoffset: pct});
+        document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
+      };
     },
     function ( error ) {
       console.log( 'An error happened' );
@@ -218,6 +213,7 @@ function init(){
   renderer.shadowMap.enabled = true;
   renderer.gammaOutput = true;
   renderer.gammaFactor = 2.2;
+  renderer.localClippingEnabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
