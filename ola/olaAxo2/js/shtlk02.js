@@ -99,6 +99,12 @@ function init(){
   var loader = new THREE.GLTFLoader( manager );
   
   var onProgress = function ( xhr ) {
+    if ( xhr.lengthComputable ) {
+      var percentComplete = xhr.loaded / xhr.total * 100;
+      console.log( Math.round(percentComplete, 2) + '%' );
+      var percentComplete = xhr.loaded / xhr.total * 100;  
+      document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
+    };
   };
   var onError = function ( xhr ) {
   };
@@ -106,14 +112,12 @@ function init(){
     // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
   manager.onProgress = function ( item, loaded, total ) {
-    // console.log( loaded, total );
   };
   manager.onLoad = function ( ) {
     $(".bg-modal").css("display", "none");
     animate();
     clips.forEach((clip) => {
       mixer.clipAction(clip).timeScale = 0;
-      console.log(mixer.clipAction(clip).getEffectiveTimeScale());
     });
 
   };
@@ -135,8 +139,6 @@ function init(){
           object.material.envMap = envMap;
           object.material.envMapIntensity = 0.3;
           object.material.clippingPlanes = [ globalPlane, globalPlane2 ];
-          console.log(object.material.clippingPlanes);
-          // clipShadows: true;
         };
 
         if (object instanceof THREE.Mesh && object.name !='OLD_TOPO_CLOUDS') {
@@ -165,18 +167,10 @@ function init(){
     },
 
     function ( xhr ) {
-      // console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
       if ( xhr.lengthComputable ) {
         var percentComplete = xhr.loaded / xhr.total * 100;
         console.log( Math.round(percentComplete, 2) + '%' );
-
         var percentComplete = xhr.loaded / xhr.total * 100;  
-        var $circle = $('#svg #bar');
-        var r = $circle.attr('r');
-        var c = Math.PI*(r*2);
-
-        var pct = ((100-percentComplete)/100)*c;
-        $circle.css({ strokeDashoffset: pct});
         document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
       };
     },
@@ -273,10 +267,8 @@ function animate(){
 
 
 function mixerPlay(event){
-  console.log("fired on double-tap!");
   clips.forEach((clip) => {
     mixer.clipAction(clip).timeScale = 1;
-    console.log(mixer.clipAction(clip).isRunning());
   });
 };
 
