@@ -55,6 +55,11 @@ function init(){
   };
   manager.onLoad = function ( ) {
 
+    console.log("fired");
+   
+    $(".loader").css('visibility', 'hidden') 
+    $(".modal-content").css('visibility', 'visible');
+
     clips.forEach((clip) => {
       mixer.clipAction(clip).timeScale = 0;
     });
@@ -63,9 +68,9 @@ function init(){
 
     var coords = { y: 200 }; // Start at (0, 0)
     var tween = new TWEEN.Tween(coords) // Create a new tween that modifies 'coords'.
-    tween.to({ y: 60, x: 10 }, 1500) // Move to (300, 200) in 1 second.
+    tween.to({ y: 60, x: 10 }, 2500) // Move to (300, 200) in 1 second.
     tween.easing(TWEEN.Easing.Elastic.Out);
-    tween.delay(750);
+    tween.delay(500);
     tween.start(); // Start the tween immediately.
     tween.onUpdate(function(object) {
       var newHeight = coords.y;
@@ -119,6 +124,12 @@ function init(){
     },
 
     function ( xhr ) {
+      if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '%' );
+        var percentComplete = xhr.loaded / xhr.total * 100;  
+        document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
+      };
     },
     function ( error ) {
       console.log( 'An error happened'+ error );

@@ -119,7 +119,21 @@ html {
   justify-content: center;
   align-items: center;
   z-index: 4;
+  visibility: hidden;
 }
+
+.loader {
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,1.0);
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 8;
+}
+
 
 .modal-content {
   width: 70%;
@@ -130,6 +144,12 @@ html {
   -webkit-transition: background 1s linear;
   -moz-transition: background 1s linear;
   border-radius: 4px;
+  text-align: center;
+  position: relative;
+  display: block;
+}
+
+.loaderContent {
   text-align: center;
   position: relative;
   display: block;
