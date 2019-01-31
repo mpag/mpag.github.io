@@ -52,6 +52,9 @@ function init(){
   var onProgress = function ( xhr ) {
   };
   manager.onProgress = function ( item, loaded, total ) {
+    console.log( Math.round(percentComplete, 2) + '%' );
+    var percentComplete = loaded / total * 100;  
+    document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" )
   };
   manager.onLoad = function ( ) {
 
@@ -124,12 +127,12 @@ function init(){
     },
 
     function ( xhr ) {
-      if ( xhr.lengthComputable ) {
-        var percentComplete = xhr.loaded / xhr.total * 100;
-        console.log( Math.round(percentComplete, 2) + '%' );
-        var percentComplete = xhr.loaded / xhr.total * 100;  
-        document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
-      };
+      // if ( xhr.lengthComputable ) {
+      //   var percentComplete = xhr.loaded / xhr.total * 100;
+      //   console.log( Math.round(percentComplete, 2) + '%' );
+      //   var percentComplete = xhr.loaded / xhr.total * 100;  
+      //   document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
+      // };
     },
     function ( error ) {
       console.log( 'An error happened'+ error );
