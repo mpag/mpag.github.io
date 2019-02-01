@@ -104,6 +104,8 @@ function init(){
       console.log( Math.round(percentComplete, 2) + '%' );
       var percentComplete = xhr.loaded / xhr.total * 100;  
       document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
+    } else {
+      document.getElementById("percentComplete").innerHTML="Loading";
     };
   };
   var onError = function ( xhr ) {
