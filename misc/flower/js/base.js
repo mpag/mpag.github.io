@@ -1,6 +1,8 @@
 /////////Global Variables///////////
 var camera, scene, renderer, rectangle, div, controls, sliderNum;
 var scene2, renderer2, manager;
+var mouse = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
 
 window.addEventListener( 'resize', onWindowResize, false );
 // Hammer(document.getElementById('container')).on("doubletap", mixerPlay);
@@ -14,6 +16,7 @@ var composer;
 var screenWidth = window.innerWidth; 
 var screenHeight = window.innerHeight;
 var aspect = screenWidth / screenHeight;
+
 var mouseX = 0, mouseY = 0;
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
@@ -32,7 +35,6 @@ THREE.DRACOLoader.setDecoderConfig( { type: 'js' } );
 var dracoLoader = new THREE.DRACOLoader();
 
 init();
-animate();
 
 function init(){
   //Scenes//////////////////////////////
@@ -53,6 +55,8 @@ function init(){
     path + 'posz' + format, path + 'negz' + format
   ] );
 
+  // var normalMap = new THREE.TextureLoader().load( "img/boneNormal.jpg" );
+
   // scene.background = envMap;
 
   //clippingPlane
@@ -64,26 +68,24 @@ function init(){
   manager = new THREE.LoadingManager();
   var loader = new THREE.DRACOLoader( manager );
   
-  // var onProgress = function ( xhr ) {
-  //   if ( xhr.lengthComputable ) {
-  //     var percentComplete = xhr.loaded / xhr.total * 100;
-  //     console.log( Math.round(percentComplete, 2) + '%' );
-  //     var percentComplete = xhr.loaded / xhr.total * 100;  
-  //     document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
-  //   } else {
-  //     document.getElementById("percentComplete").innerHTML="Loading";
-  //   };
-  // };
+  var onProgress = function ( xhr ) {
+    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+  };
+
   var onError = function ( xhr ) {
   };
+
   manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-    // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
   };
-  manager.onProgress = function ( item, loaded, total ) {
+
+  manager.onProgress = function ( xhr ) {
+    // console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
   };
+
   manager.onLoad = function ( ) {
     // $(".bg-modal").css("display", "none");
-    // animate();
+    // console.log("loaded!");
+    animate();
     // clips.forEach((clip) => {
     //   mixer.clipAction(clip).timeScale = 0;
     // });
@@ -93,12 +95,17 @@ function init(){
 
     geometry.computeVertexNormals();
 
-    var material = new THREE.MeshPhongMaterial({color: 0x000000, envMap: envMap, reflectivity: 1});
+    var material = new THREE.MeshPhongMaterial({
+      color: 0x000000, 
+      envMap: envMap, reflectivity: 0.97,
+      // normalMap: normalMap
+    });
+
     var mesh = new THREE.Mesh( geometry, material );
     mesh.castShadow = true;
     mesh.receiveShadow = true;
-    mesh.rotation.x = -Math.PI/2;
-
+    mesh.normalsNeedUpdate = true;
+    mesh.name = "skull";
     scene.add( mesh );
 
     // Release decoder resources.
@@ -106,48 +113,8 @@ function init(){
 
   } );
 
-  // Load a glTF resource
-  // loader.load(
-  //   'model/OLA_Plans.drc',
-  //   function ( gltf ) {
-  //     model = gltf.scene;
-  //     clips = gltf.animations;
-  //     scene.add( model );
-  //     gltf.animations; // Array<THREE.AnimationClip>
-  //     gltf.scene; // THREE.Scene
-  //     gltf.asset; // Object
-
-  //     gltf.scene.traverse(function(object) {
-
-  //       if (object instanceof THREE.Mesh){
-  //         object.material.envMap = envMap;
-  //         object.material.envMapIntensity = 0.3;
-  //         object.material.clippingPlanes = [ globalPlane, globalPlane2 ];
-  //       };
-
-  //     mixer = new THREE.AnimationMixer(model);
-  //     gltf.animations.forEach((clip) => {
-  //       mixer.clipAction(clip).setLoop( THREE.LoopPingPong)
-  //       mixer.clipAction(clip).play();
-  //       clips.push(clip);
-  //     }
-  //     )},
-
-  //   function ( xhr ) {
-  //     if ( xhr.lengthComputable ) {
-  //       var percentComplete = xhr.loaded / xhr.total * 100;
-  //       console.log( Math.round(percentComplete, 2) + '%' );
-  //       var percentComplete = xhr.loaded / xhr.total * 100;  
-  //       document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
-  //     };
-  //   },
-  //   function ( error ) {
-  //     console.log( 'An error happened' );
-  //   }
-  // );
-
   //LIGHT//////////////////////////////////
-  var light = new THREE.HemisphereLight( 0xD3CC7B, 0x000000, 1 );
+  var light = new THREE.HemisphereLight( 0xD3CC7B, 0x000000, 100 );
   scene.add( light );
 
   var light = new THREE.SpotLight();
@@ -191,7 +158,12 @@ function init(){
   composer = new THREE.EffectComposer(renderer);
   var renderPass = new THREE.RenderPass(scene, camera);
   composer.addPass(renderPass);
-  renderPass.renderToScreen = true;
+  var glitchPass = new THREE.GlitchPass();
+  composer.addPass(glitchPass);
+  var sepiaPass = new THREE.ShaderPass(THREE.SepiaShader);
+  composer.addPass(sepiaPass);
+
+  glitchPass.renderToScreen = true;
 
 };
 
@@ -199,19 +171,25 @@ function init(){
 //////FUNCTIONS////////////////////////////
 
 function animate(){
+  var time2 = Date.now() * 0.002;
+  try {
+    scene.getObjectByName( "skull" ).rotation.x = -Math.PI/2;
+    scene.getObjectByName( "skull" ).rotation.z = Math.PI + time2/32;
+  } catch (err) {
+    console.log("Unzipping...")
+  };
 
-  camera.updateProjectionMatrix();
+
+  // var rayObj = raycaster.intersectObjects( scene.children, true );
+  // for ( var i = 0; i < rayObj.length; i++ ) {
+  //   rayObj[rayObj.length - 1].object.material.color.set( 0xff0000 );
+  // };
+
   controls.update();
+
+  composer.render();
   window.requestAnimationFrame( animate );
-  renderer.render(scene, camera);
 }; 
-
-
-// function mixerPlay(event){
-//   clips.forEach((clip) => {
-//     mixer.clipAction(clip).timeScale = 1;
-//   });
-// };
 
 
 function onDocumentMouseMove(event) {
