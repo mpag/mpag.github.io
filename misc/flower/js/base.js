@@ -44,8 +44,8 @@ function init(){
   //CAMERA///////////////////////////////
   near = -100; 
   far = 10000;
-  camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 0.1, 20 );
-  camera.position.set( 0, 0, -5 );
+  camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 0.1, 20 );
+  camera.position.set( 0, 0, -2.5 );
 
   var path = 'texture/';
   var format = '.jpg';
@@ -86,6 +86,7 @@ function init(){
     // $(".bg-modal").css("display", "none");
     // console.log("loaded!");
     animate();
+    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
     // clips.forEach((clip) => {
     //   mixer.clipAction(clip).timeScale = 0;
     // });
@@ -152,6 +153,7 @@ function init(){
 
   //CONTROLS////////////////////////////////
   controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = "true";
   controls.update();
 
   //COMPOSER///////////////////////////////
@@ -179,13 +181,20 @@ function animate(){
     console.log("Unzipping...")
   };
 
+  // console.log(isMobileDevice());
 
-  // var rayObj = raycaster.intersectObjects( scene.children, true );
-  // for ( var i = 0; i < rayObj.length; i++ ) {
-  //   rayObj[rayObj.length - 1].object.material.color.set( 0xff0000 );
-  // };
+  if (isMobileDevice() == false){
+    controls.enableRotate = false;
+    camera.position.x = mouseX;
+    camera.position.y = mouseY;
+    console.log(mouseX);
+  } else {
+    controls.enableRotate = true;
+    console.log("true");
+  };
 
   controls.update();
+  camera.updateProjectionMatrix();
 
   composer.render();
   window.requestAnimationFrame( animate );
@@ -193,8 +202,11 @@ function animate(){
 
 
 function onDocumentMouseMove(event) {
-    mouseX = ( event.clientX - windowHalfX ) * 0.005;
-    mouseY = ( event.clientY - windowHalfY ) * 0.005;
+  mouseX = ( event.clientX - windowHalfX ) * 0.0005;
+  mouseY = ( event.clientY - windowHalfY ) * 0.0005;
+
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 };
 
 function map_range(value, low1, high1, low2, high2) {
