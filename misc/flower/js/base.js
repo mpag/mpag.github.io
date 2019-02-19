@@ -146,7 +146,7 @@ function init(){
   renderer.setSize( screenWidth, screenHeight);
   renderer.autoClear = false;
   renderer.setClearColor( 0xffffff, 0);
-  renderer.domElement.style.zIndex = 10;
+  renderer.domElement.style.zIndex = 4;
   setPixelRatio();
   document.getElementById('container').appendChild( renderer.domElement );
 
@@ -185,12 +185,10 @@ function animate(){
 
   if (isMobileDevice() == false){
     controls.enableRotate = false;
-    camera.position.x = mouseX;
-    camera.position.y = mouseY;
-    console.log(mouseX);
+    camera.position.x = mouseX/2;
+    camera.position.y = mouseY/2;
   } else {
     controls.enableRotate = true;
-    console.log("true");
   };
 
   controls.update();
@@ -235,3 +233,20 @@ function onWindowResize() {
 function isMobileDevice() {
     return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
 };
+
+document.addEventListener("keypress", function(e) {
+  if (e.keyCode === 13) {
+    toggleFullScreen();
+    console.log("triggered");
+  }
+}, false);
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen(); 
+    }
+  }
+}
