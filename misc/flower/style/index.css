@@ -114,12 +114,13 @@ html {
   justify-content: center;
   align-items: center;
   z-index: 4;
+  pointer-events: none;
 }
 
 #textContent {
   position: absolute;
   text-align: left;
-  left: -75px;
+  left: -200px;
   width: 75%;
 }
 

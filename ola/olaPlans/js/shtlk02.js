@@ -269,3 +269,20 @@ function onWindowResize() {
 function isMobileDevice() {
     return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
 };
+
+document.addEventListener("keypress", function(e) {
+  if (e.keyCode === 13) {
+    toggleFullScreen();
+    console.log("triggered");
+  }
+}, false);
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen(); 
+    }
+  }
+}

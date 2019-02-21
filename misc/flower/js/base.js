@@ -11,6 +11,9 @@ var clock = new THREE.Clock();
 var mixer;
 var clips;
 var composer;
+var files = ['model/out.drc', 'model/out3.drc'];
+var importMaterials = [];
+var index = 0;
 
 /////////INIT VAIRABLES////////
 var screenWidth = window.innerWidth; 
@@ -92,27 +95,37 @@ function init(){
     // });
   };
 
-  loader.load( 'model/out.drc', function ( geometry ) {
+  var materialOrange = new THREE.MeshBasicMaterial({
+    color: 0x180000
+  });
+  var materialReflect = new THREE.MeshPhongMaterial({
+    color: 0x000000, 
+    envMap: envMap, reflectivity: 0.97,
+  });
+  importMaterials.push(materialReflect, materialOrange);
 
-    geometry.computeVertexNormals();
+  function loadNextFile() {
+    if (index > files.length - 1) return;
+      loader.load( files[index], function ( geometry ) {
+        geometry.computeVertexNormals();
+        var mesh = new THREE.Mesh( geometry, importMaterials[index] );
+        // mesh.castShadow = true;
+        // mesh.receiveShadow = true;
+        mesh.normalsNeedUpdate = true;
+        mesh.name = "skull" + index;
+        console.log(mesh.name);
+        scene.add( mesh );
+        index++;
+        console.log(index);
+        loadNextFile();
+     });
+    if (index > files.length){
+      // Release decoder resources.
+      THREE.DRACOLoader.releaseDecoderModule();
+    };
+  };
 
-    var material = new THREE.MeshPhongMaterial({
-      color: 0x000000, 
-      envMap: envMap, reflectivity: 0.97,
-      // normalMap: normalMap
-    });
-
-    var mesh = new THREE.Mesh( geometry, material );
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    mesh.normalsNeedUpdate = true;
-    mesh.name = "skull";
-    scene.add( mesh );
-
-    // Release decoder resources.
-    THREE.DRACOLoader.releaseDecoderModule();
-
-  } );
+  loadNextFile();
 
   //LIGHT//////////////////////////////////
   var light = new THREE.HemisphereLight( 0xD3CC7B, 0x000000, 100 );
@@ -175,8 +188,14 @@ function init(){
 function animate(){
   var time2 = Date.now() * 0.002;
   try {
-    scene.getObjectByName( "skull" ).rotation.x = -Math.PI/2;
-    scene.getObjectByName( "skull" ).rotation.z = Math.PI + time2/32;
+    scene.getObjectByName( "skull0" ).rotation.x = -Math.PI/2;
+    scene.getObjectByName( "skull0" ).rotation.z = Math.PI + time2/32;
+    scene.getObjectByName( "skull1" ).rotation.x = -Math.PI/2;
+    scene.getObjectByName( "skull1" ).rotation.z = Math.PI + time2/8;
+    scene.getObjectByName( "skull1" ).scale.x = 1.3;
+    scene.getObjectByName( "skull1" ).scale.y = 1.3;
+    scene.getObjectByName( "skull1" ).scale.z = ((Math.sin(time2))/8) + 1;
+
   } catch (err) {
     console.log("Unzipping...")
   };
@@ -184,9 +203,10 @@ function animate(){
   // console.log(isMobileDevice());
 
   if (isMobileDevice() == false){
-    controls.enableRotate = false;
-    camera.position.x = mouseX/2;
-    camera.position.y = mouseY/2;
+    // controls.enableRotate = false;
+    // controls.enableZoom = true;
+    // camera.position.x = mouseX/2;
+    // camera.position.y = mouseY/2;
   } else {
     controls.enableRotate = true;
   };
@@ -220,11 +240,11 @@ function setPixelRatio(){
 };
 
 function onWindowResize() {
-  var aspect = window.innerWidth / window.innerHeight;
   camera.left   = - frustumSize * aspect / 2;
   camera.right  =   frustumSize * aspect / 2;
   camera.top    =   frustumSize / 2;
   camera.bottom = - frustumSize / 2;
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
   // renderer2.setSize( window.innerWidth, window.innerHeight );
