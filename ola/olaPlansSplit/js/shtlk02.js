@@ -244,10 +244,10 @@ function mixerPlay(event){
     // TOD = vals.x;
   });
 
-  // $("#heading").delay(2000).fadeOut(function() {
-  //   $(this).text("Warm."+ "\n" + "Bright." + "\n" + "Sustainable");
-  //   $('.modal-content').css('background', '#fdf7e8');
-  // }).fadeIn(2000);
+  $("#heading").delay(2000).fadeOut(function() {
+    $(this).text("Warm."+ "\n" + "Bright." + "\n" + "Sustainable");
+    $('#left-half').css('background-color', '#fdf7e8');
+  }).fadeIn(2000);
 
 
 };
