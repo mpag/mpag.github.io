@@ -178,12 +178,12 @@ function animate(){
 //creates a div for each possible state with event listener
 function htmlStateSelectors(){
   for (i = 0; i < Object.keys(mats[0].matrixStates).length; i++) {
-    var stateDiv = document.createElement("h1");
+    var stateDiv = document.createElement("h2");
     stateDiv.name = "state"+(i);
     stateDiv.id = i;
-    var stateDivText = document.createTextNode("FITOUT " + (i));
+    var stateDivText = document.createTextNode("Layout " + (i));
     stateDiv.appendChild(stateDivText);
-    var element = document.getElementById("title");
+    var element = document.getElementById("options");
     element.appendChild(stateDiv);
     $('#'+(i)).click( objectAnimator );    
   }

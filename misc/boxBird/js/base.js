@@ -80,7 +80,7 @@ function htmlStateSelectors(){
     var stateDiv = document.createElement("h1");
     stateDiv.name = "state"+(i);
     stateDiv.id = i;
-    var stateDivText = document.createTextNode("FITOUT " + (i));
+    var stateDivText = document.createTextNode("STATE " + (i));
     stateDiv.appendChild(stateDivText);
     var element = document.getElementById("title");
     element.appendChild(stateDiv);
