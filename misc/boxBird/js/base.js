@@ -7,6 +7,7 @@ var meshKnot, div, line;
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
+var container = document.getElementById( 'ThreeJS' );
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
@@ -22,7 +23,7 @@ function init(){
   camera.position.z = 250;
   camera.position.y = 250;
   camera.position.x = 250;
-  controls = new THREE.OrbitControls(camera);
+  controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
   
   //Primary Geometry
@@ -61,8 +62,7 @@ function init(){
   renderer.setClearColor(0xffffff, 0);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.domElement.style.zIndex = 5;
-  container = document.getElementById( 'ThreeJS' );
-	document.body.appendChild( renderer.domElement );
+	container.appendChild( renderer.domElement );
 };
 
 //Animation Loop

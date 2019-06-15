@@ -7,6 +7,7 @@ var meshKnot, div, line;
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
+var container = document.getElementById( 'ThreeJS' );
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
@@ -23,7 +24,7 @@ function init(){
   camera.position.x = 250;
   // vector1 = new THREE.Vector3(23.7, 57.4, 16.4);
   // camera.lookAt(new THREE.Vector3(23.7, 57.4, 16.4));
-  controls = new THREE.OrbitControls(camera);
+  controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
 
   var path = 'texture/';
@@ -81,6 +82,7 @@ function init(){
         if (object instanceof THREE.Mesh && object.material.name =='ELEVATION') {
           object.material.transparent = "true";
           object.material.opacity = 0.5;
+          object.material.doubleSide = true;
         };
       });
 
@@ -138,8 +140,7 @@ function init(){
   renderer.setClearColor(0xffffff, 0);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.domElement.style.zIndex = 5;
-  container = document.getElementById( 'ThreeJS' );
-	document.body.appendChild( renderer.domElement );
+	container.appendChild( renderer.domElement );
   
  //css3d
 	// scene2 = new THREE.Scene();
