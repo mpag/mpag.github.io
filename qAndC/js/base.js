@@ -1,5 +1,5 @@
 //Standard Variables  
-var camera, scene, renderer, controls, element, mixer, composer, manager;
+var camera, scene, renderer, controls, element, mixer, composer, manager, tilt;
 var scene2, renderer2;
 var clock = new THREE.Clock();
 var clips = [];
@@ -8,6 +8,7 @@ var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
 var container = document.getElementById( 'ThreeJS' );
+var tilt = Math.PI / 12;
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
@@ -18,14 +19,20 @@ init();
 function init(){
   //camera
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( 14, window.innerWidth / window.innerHeight, 1, 10000 );
-  camera.position.z = 250;
-  camera.position.y = 250;
-  camera.position.x = 250;
-  // vector1 = new THREE.Vector3(23.7, 57.4, 16.4);
-  // camera.lookAt(new THREE.Vector3(23.7, 57.4, 16.4));
+  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera.position.set( 50, 100, 50 );
+  camera.rotation.order = 'YXZ';
+  var vector1 = new THREE.Vector3(23.7, 57.4, 16.4);
+  camera.lookAt(new THREE.Vector3(23.7, 57.4, 16.4));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
+  controls.enableDamping = true;
+  controls.dampingFactor = 1.0;
+  controls.zoomSpeed = 0.4;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.1;
+  
+  // scene.add( new THREE.AxisHelper( 2000 ) );
 
   var path = 'texture/';
   var format = '.jpg';
@@ -34,17 +41,21 @@ function init(){
     path + 'posy' + format, path + 'negy' + format,
     path + 'posz' + format, path + 'negz' + format
   ] );
+
+  var materialFurniture =  new THREE.MeshPhongMaterial({color: "white"});
+  var groundMaterial = new THREE.ShadowMaterial();
+  groundMaterial.opacity = 0.2;
   
   //Primary Geometry
   htmlStateSelectors(); 
-  boxAdder();
+  // boxAdder();
   // gltfImporter();
 
 
   manager = new THREE.LoadingManager();
   var loader = new THREE.GLTFLoader( manager );
   manager.onLoad = function ( ) {
-    console.log("fired");
+    // console.log("fired");
     // $(".loader").css('visibility', 'hidden');
     clips.forEach((clip) => {
       mixer.clipAction(clip).timeScale = 0;
@@ -53,6 +64,7 @@ function init(){
     animate();
   };
 
+  //load Base glb model.
   loader.load('models/OLA_Test1.glb',
     function ( gltf ) {
       model = gltf.scene;
@@ -74,9 +86,8 @@ function init(){
           object.receiveShadow = "false";
         };
 
-        if (object instanceof THREE.Mesh){
-          object.material.envMap = envMap;
-          object.material.envMapIntensity = 0.5;
+        if (object.name == 'Object_404'){
+          object.material = groundMaterial;
         };
 
         if (object instanceof THREE.Mesh && object.material.name =='ELEVATION') {
@@ -105,6 +116,37 @@ function init(){
       console.log( 'An error happened'+ error );
     }
   );
+
+  // //load Fitout model.
+  loader.load('models/qc_Exchange.glb',
+    function ( gltf ) {
+      model = gltf.scene;
+      // console.log(model);
+      scene.add( model );
+      gltf.animations; // Array<THREE.AnimationClip>
+      gltf.scene; // THREE.Scene
+      gltf.asset; // Object
+
+      gltf.scene.traverse(function(object) {
+        if (object instanceof THREE.Mesh){
+          object.castShadow = "true";
+          object.receiveShadow = "true";
+          object.material = materialFurniture;
+        };
+    },
+    function ( xhr ) {
+      if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '%' );
+        var percentComplete = xhr.loaded / xhr.total * 100;  
+        // document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
+      };
+    },
+    function ( error ) {
+      console.log( 'An error happened'+ error );
+    }
+    );
+  });
 
 
   //Extra Geometry
@@ -168,9 +210,11 @@ function init(){
 function animate(){
   window.requestAnimationFrame( animate );
   // renderer2.render( scene2, camera );
-    // controls.update();
+  controls.update();
   camera.lookAt(new THREE.Vector3(23.7, 57.4, 16.4));
+  camera.rotation.z = tilt;
   camera.updateProjectionMatrix();
+
   var delta = 0.65 * clock.getDelta();
   mixer.update(delta);
   renderer.render( scene, camera);
@@ -190,83 +234,23 @@ function htmlStateSelectors(){
   }
 };
 
-//Adds a box for each JSON object
-function boxAdder(){
-  for (var i = 0; i < mats.length; i++){
-    var box = new THREE.BoxGeometry( 10,10,10 );
-    var material =  new THREE.MeshPhongMaterial({color: "teal"});
-    var cube = new THREE.Mesh(box, material);
-    cube.castShadow = true;
-    cube.receiveShadow = true;
-    cube.visible = false;
-    cube.name = mats[i].name;
-    cube.matrixAutoUpdate = false;
-    var matArray = arrayToMatrix(mats[i].matrixStates.state0);
-    var mat = translateRotateToMatrix(matArray);
-    cube.matrix = mat;
-    scene.add(cube);
-  }
-}
-
-//Imports GLTF file
-function gltfImporter(){
-  manager = new THREE.LoadingManager();
-  var loader = new THREE.GLTFLoader( manager );
-  manager.onLoad = function ( ) {
-    // $(".loader").css('visibility', 'hidden');
-    loader.load('models/OLA_Test1.glb',
-      function ( gltf ) {
-        model = gltf.scene;
-        clips = gltf.animations;
-        scene.add( model );
-        gltf.animations; // Array<THREE.AnimationClip>
-        gltf.scene; // THREE.Scene
-        gltf.asset; // Object
-
-        gltf.scene.traverse(function(object) {
-          if (object instanceof THREE.Mesh && object.name == 'Object__1') {
-            object.castShadow = "false";
-            object.receiveShadow = "false";
-
-            console.log('transparent fired');
-            // object.material.clippingPlanes = [ globalPlane, globalPlane2, globalPlane3 ];
-            // object.material.clipShadows = true; 
-          };
-
-        //   if (object instanceof THREE.Mesh && object.material.name =='Facade') {
-        //     object.castShadow = "false";
-        //     object.receiveShadow = "false"
-        //     object.material.transparent = "true";
-        //   };
-
-          // if (object instanceof THREE.Mesh && object.material.name =='ELEVATION') {
-          //   object.material.transparent = "true";
-          //   object.material.opacity = 0.5;
-          //   console.log('transparent fired');
-          // };
-        });
-
-        mixer = new THREE.AnimationMixer(model);
-        gltf.animations.forEach((clip) => {
-          mixer.clipAction(clip).setLoop( THREE.LoopOnce );
-          mixer.clipAction(clip).play();
-          clips.push(clip);
-        });
-      },
-      function ( xhr ) {
-        if ( xhr.lengthComputable ) {
-          var percentComplete = xhr.loaded / xhr.total * 100;
-          console.log( Math.round(percentComplete, 2) + '%' );
-          var percentComplete = xhr.loaded / xhr.total * 100;  
-          document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
-        };
-      },
-      function ( error ) {
-        console.log( 'An error happened'+ error );
-      }
-    )
-  }
-};
+// //Adds a box for each JSON object
+// function boxAdder(){
+//   for (var i = 0; i < mats.length; i++){
+//     var box = new THREE.BoxGeometry( 10,10,10 );
+//     var material =  new THREE.MeshPhongMaterial({color: "teal"});
+//     var cube = new THREE.Mesh(box, material);
+//     cube.castShadow = true;
+//     cube.receiveShadow = true;
+//     cube.visible = false;
+//     cube.name = mats[i].name;
+//     cube.matrixAutoUpdate = false;
+//     var matArray = arrayToMatrix(mats[i].matrixStates.state0);
+//     var mat = translateRotateToMatrix(matArray);
+//     cube.matrix = mat;
+//     scene.add(cube);
+//   }
+// }
 
 //creates tween functions for each state, for each cube.
 function objectAnimator(){
@@ -303,8 +287,13 @@ function objectAnimator(){
         bx.onUpdate = function() {
           mat1 = new THREE.Matrix4();
           mat2 = new THREE.Matrix4();
-          mat1.makeTranslation(ax[0], ax[1], ax[2]);
-          mat2.makeRotationY(ax[3]);
+          quat = new THREE.Quaternion();
+
+          quat.set(ax[3], ax[5], ax[4], ax[6]);
+          mat1.makeRotationFromQuaternion(quat);
+
+          mat1.makeTranslation(ax[0], ax[1], ax[2]);          
+
           mat1.multiply(mat2);
           child.matrix = mat1;
           child.matrixAutoUpdate = false;
@@ -331,8 +320,11 @@ function arrayToMatrix(array){
   emptyMatrix = new THREE.Matrix4();
   emptyMatrix.set(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8], array[9], array[10], array[11], array[12], array[13], array[14], array[15]);
   emptyMatrix.decompose(pos, quaternion, scale);
+
+  var quaternionArray = quaternion.toArray();
+  console.log(quaternionArray);
   
-  return [pos.x, pos.z, pos.y, quaternion.x, quaternion.y, quaternion.z];
+  return [pos.x, pos.z, pos.y, quaternionArray[0], quaternionArray[1], quaternionArray[2], quaternionArray[3]];
 };
 
 //Inverse of arrayToMatrix
