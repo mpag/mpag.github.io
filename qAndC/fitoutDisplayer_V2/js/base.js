@@ -287,10 +287,8 @@ function objectAnimator(){
           quat = new THREE.Quaternion();
 
           quat.set(ax[3], ax[5], ax[4], ax[6]);
-          mat1.makeRotationFromQuaternion(quat);
-
+          mat2.makeRotationFromQuaternion(quat);
           mat1.makeTranslation(ax[0], ax[1], ax[2]);          
-
           mat1.multiply(mat2);
           child.matrix = mat1;
           child.matrixAutoUpdate = false;
@@ -321,7 +319,7 @@ function arrayToMatrix(array){
   var quaternionArray = quaternion.toArray();
   // console.log(quaternionArray);
   
-  return [pos.x, pos.z, pos.y, quaternionArray[0], quaternionArray[1], quaternionArray[2], quaternionArray[3]];
+  return [pos.x, pos.z, -pos.y, quaternionArray[0], quaternionArray[1], quaternionArray[2], quaternionArray[3]];
 };
 
 //Inverse of arrayToMatrix
@@ -329,8 +327,8 @@ function translateRotateToMatrix(array){
   mat1 = new THREE.Matrix4();
   mat2 = new THREE.Matrix4();
   mat1.makeTranslation(array[0], array[1], array[2]);
-  // mat2.makeRotationY(array[4]);
-  // mat1.multiply(mat2);
+  mat2.makeRotationY(array[4]);
+  mat1.multiply(mat2);
   return (mat1);
 };
 
