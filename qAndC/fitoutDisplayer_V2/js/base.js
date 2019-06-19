@@ -38,7 +38,7 @@ function init(){
     path + 'posz' + format, path + 'negz' + format
   ] );
 
-  var materialFurniture =  new THREE.MeshPhongMaterial({color: "white"});
+  var materialFurniture =  new THREE.MeshPhongMaterial({color: "silver"});
   var groundMaterial = new THREE.ShadowMaterial();
   groundMaterial.opacity = 0.2;
   
@@ -167,6 +167,13 @@ function init(){
   spotlight.shadow.mapSize.width = 1024;  // default
   spotlight.shadow.mapSize.height = 1024; // default
   
+
+  helper = new THREE.CameraHelper( spotlight.shadow.camera );
+  scene.add(helper);
+
+  spotlight.target.position.set(vector1);
+
+
   // scene.add( spotlight );
   scene.add( directionalLight );
   scene.add( ambientlight );
