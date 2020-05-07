@@ -1,5 +1,6 @@
 //Standard Variables  
 var camera, scene, renderer, controls, element, mixer, composer, manager;
+var ambientlight, spotlight, directionallight;
 var scene2, renderer2;
 var clock = new THREE.Clock();
 var clips = [];
@@ -18,19 +19,20 @@ init();
 function init(){
   //camera
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x9BABB3, 1000, 5000);
+  scene.fog = new THREE.Fog(0x9BABB3, 1500, 6000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
+  camera.zoom = 0.5;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
   camera.lookAt(new THREE.Vector3(0, 90, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
-  controls.enableZoom = false;
+  // controls.enableZoom = false;
   controls.autoRotate = true;
   
 
-  var pieceMaterial =  new THREE.MeshPhongMaterial({color: "silver", opacity: 1});
+  // var pieceMaterial =  new THREE.MeshPhongMaterial({color: "white", opacity: 1});
   var groundMaterial = new THREE.ShadowMaterial();
   groundMaterial.opacity = 0.2;
   
@@ -62,9 +64,9 @@ function init(){
 
       gltf.scene.traverse(function(object) {
         if (object instanceof THREE.Mesh){
-          object.castShadow = "true";
-          object.receiveShadow = "true";
-          object.material = pieceMaterial;
+          object.castShadow = true;
+          object.receiveShadow = true;
+          // object.material = pieceMaterial;
         };
     },
     function ( xhr ) {
@@ -83,26 +85,26 @@ function init(){
 
 
   //Extra Geometry
-  var geometryPlane = new THREE.PlaneGeometry(10000,10000);
+  var geometryPlane = new THREE.PlaneGeometry(8000,8000);
   var groundMaterial = new THREE.ShadowMaterial();
-  groundMaterial.opacity = 0.5;
+  groundMaterial.opacity = 0.2;
   var groundMirror = new THREE.Mesh(geometryPlane, groundMaterial);
   groundMirror.rotateX( - Math.PI / 2 );
   groundMirror.receiveShadow = true;
   scene.add( groundMirror );
-  var ambientlight = new THREE.AmbientLight( 0x080808, 10);  
-  var spotlight = new THREE.SpotLight( 0xffffff );
-  var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-  directionalLight.position.z = 200;
-  directionalLight.position.y = 200;
-  spotlight.position.y = 400;
-  spotlight.position.x = 100;
-  spotlight.castShadow = true;
-  spotlight.shadow.mapSize.width = 1024;  // default
-  spotlight.shadow.mapSize.height = 1024; // default
   
+  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 10);  
+  
+  spotlight = new THREE.SpotLight( 0xffffff, 1);
+  spotlight.position.y = 300;
+  spotlight.position.x = 70;
+  spotlight.castShadow = true;
+  spotlight.shadow.mapSize.width = 256;  // default
+  spotlight.shadow.mapSize.height = 256; // default
+
   scene.add( spotlight );
-  scene.add( directionalLight );
+  var spotLightHelper = new THREE.SpotLightHelper( spotlight );
+  // scene.add( spotLightHelper );
   scene.add( ambientlight );
   
   //renderer
@@ -169,6 +171,7 @@ function globalMatrixSet(){
       }});
 }};
 
+
 //creates tween functions for each state, for each cube.
 function objectAnimator(){
   var tweens = [];
@@ -216,13 +219,25 @@ function objectAnimator(){
         };
         bx.ease = Power3.easeInOut;
         bx.paused = "true";
-        tweens.push(TweenMax.to(ax, 4, bx))
+        tweens.push(TweenMax.to(ax, 8, bx))
       }
     })
   };
   for (var i = 0; i < tweens.length; i++){
     tweens[i].play();
   };
+
+  var axLight, bxLight;
+  axLight = [10, 1, 0.5];
+  bxLight = [0.6, 1.0, 1];
+  bxLight.paused = "true"; 
+  bxLight.ease = Power3.easeInOut;
+  bxLight.onUpdate = function(){
+    ambientlight.intensity = axLight[0];
+    spotlight.intensity = axLight[1];
+    camera.zoom = axLight[2];
+  };
+  TweenMax.to(axLight, 8, bxLight).play();
 };
 
 //takes a THREE.matrix4 and turn's it into a translation x,y,z and a z angle 
