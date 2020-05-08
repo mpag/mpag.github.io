@@ -19,10 +19,10 @@ init();
 function init(){
   //camera
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x9BABB3, 1500, 6000);
+  // scene.fog = new THREE.Fog(0x9BABB3, 1500, 6000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
-  camera.zoom = 0.5;
+  camera.zoom = 0.75;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
   camera.lookAt(new THREE.Vector3(0, 90, 0));
@@ -65,7 +65,7 @@ function init(){
       gltf.scene.traverse(function(object) {
         if (object instanceof THREE.Mesh){
           object.castShadow = true;
-          object.receiveShadow = true;
+          // object.receiveShadow = true;
           // object.material = pieceMaterial;
         };
     },
@@ -93,9 +93,9 @@ function init(){
   groundMirror.receiveShadow = true;
   scene.add( groundMirror );
   
-  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 10);  
+  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 0.05);  
   
-  spotlight = new THREE.SpotLight( 0xffffff, 1);
+  spotlight = new THREE.SpotLight( 0xffffff, 0.1);
   spotlight.position.y = 300;
   spotlight.position.x = 70;
   spotlight.castShadow = true;
@@ -138,7 +138,7 @@ function htmlStateSelectors(){
     var stateDiv = document.createElement("h1");
     stateDiv.name = "state"+(i);
     stateDiv.id = i;
-    var stateDivText = document.createTextNode("STATE " + (i));
+    var stateDivText = document.createTextNode("SPAM " + (i));
     stateDiv.appendChild(stateDivText);
     var element = document.getElementById("title");
     element.appendChild(stateDiv);
@@ -228,16 +228,18 @@ function objectAnimator(){
   };
 
   var axLight, bxLight;
-  axLight = [10, 1, 0.5];
-  bxLight = [0.6, 1.0, 1];
+  axLight = [0.05, 0.1, 0.5];
+  bxLight = [0.8, 1.2, 1];
   bxLight.paused = "true"; 
   bxLight.ease = Power3.easeInOut;
   bxLight.onUpdate = function(){
     ambientlight.intensity = axLight[0];
     spotlight.intensity = axLight[1];
-    camera.zoom = axLight[2];
+    // camera.zoom = axLight[2];
   };
   TweenMax.to(axLight, 8, bxLight).play();
+
+  document.documentElement.style.animationPlayState = "running";
 };
 
 //takes a THREE.matrix4 and turn's it into a translation x,y,z and a z angle 

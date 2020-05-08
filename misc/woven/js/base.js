@@ -50,8 +50,8 @@ function init(){
   spotlight.shadow.mapSize.width = 1024;  // default
   spotlight.shadow.mapSize.height = 1024; // default
   
-  scene.add( spotlight );
-  scene.add( directionalLight );
+  // scene.add( spotlight );
+  // scene.add( directionalLight );
   scene.add( ambientlight );
   
   //renderer
