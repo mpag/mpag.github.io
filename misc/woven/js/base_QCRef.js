@@ -63,7 +63,7 @@ function init(){
         if (object instanceof THREE.Mesh){
           object.castShadow = true;
           object.receiveShadow = true;
-          object.material = new THREE.MeshPhongMaterial({color: "white", opacity: 1});
+          // object.material = new THREE.MeshPhongMaterial({color: "white", opacity: 1});
         };
     },
     function ( xhr ) {
@@ -221,7 +221,7 @@ function objectAnimator(){
 
   var axFog, bxFog;
   axFog = [0, 1500];
-  bxFog = [3000, 6000];
+  bxFog = [1500, 6000];
   bxFog.paused = "true"; 
   bxFog.ease = Power3.easeInOut;
   bxFog.onUpdate = function(){
