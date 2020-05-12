@@ -8,6 +8,7 @@ var meshKnot, div, line;
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
+var globalFogState= 0;
 var container = document.getElementById( 'ThreeJS' );
 
 //Event Listeners
@@ -19,7 +20,7 @@ init();
 function init(){
   //camera
   scene = new THREE.Scene();
-  // scene.fog = new THREE.Fog(0x9BABB3, 1500, 6000);
+  scene.fog = new THREE.Fog(0xE8EBED, 0, 3000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
   camera.zoom = 0.75;
@@ -28,12 +29,9 @@ function init(){
   camera.lookAt(new THREE.Vector3(0, 90, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
-  // controls.enableZoom = false;
+  controls.enableZoom = false;
   controls.autoRotate = true;
-  
-
-  // var pieceMaterial =  new THREE.MeshPhongMaterial({color: "white", opacity: 1});
-  var groundMaterial = new THREE.ShadowMaterial();
+    var groundMaterial = new THREE.ShadowMaterial();
   groundMaterial.opacity = 0.2;
   
   //Primary Geometry
@@ -56,7 +54,6 @@ function init(){
   loader.load('models/vasePieces_Compressed.glb',
     function ( gltf ) {
       model = gltf.scene;
-      // console.log(model);
       scene.add( model );
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
@@ -65,8 +62,8 @@ function init(){
       gltf.scene.traverse(function(object) {
         if (object instanceof THREE.Mesh){
           object.castShadow = true;
-          // object.receiveShadow = true;
-          // object.material = pieceMaterial;
+          object.receiveShadow = true;
+          object.material = new THREE.MeshPhongMaterial({color: "white", opacity: 1});
         };
     },
     function ( xhr ) {
@@ -84,8 +81,8 @@ function init(){
   });
 
 
-  //Extra Geometry
-  var geometryPlane = new THREE.PlaneGeometry(8000,8000);
+  //geometry
+  var geometryPlane = new THREE.PlaneGeometry(4000,4000);
   var groundMaterial = new THREE.ShadowMaterial();
   groundMaterial.opacity = 0.2;
   var groundMirror = new THREE.Mesh(geometryPlane, groundMaterial);
@@ -93,18 +90,15 @@ function init(){
   groundMirror.receiveShadow = true;
   scene.add( groundMirror );
   
-  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 0.05);  
-  
-  spotlight = new THREE.SpotLight( 0xffffff, 0.1);
+  //lights
+  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 1.2);
+  spotlight = new THREE.SpotLight( 0xffffff, 1.2);
   spotlight.position.y = 300;
   spotlight.position.x = 70;
   spotlight.castShadow = true;
-  spotlight.shadow.mapSize.width = 256;  // default
-  spotlight.shadow.mapSize.height = 256; // default
-
-  scene.add( spotlight );
-  var spotLightHelper = new THREE.SpotLightHelper( spotlight );
-  // scene.add( spotLightHelper );
+  spotlight.shadow.mapSize.width = 128;  // default
+  spotlight.shadow.mapSize.height = 128; // default
+  // scene.add( spotlight );
   scene.add( ambientlight );
   
   //renderer
@@ -116,7 +110,6 @@ function init(){
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.domElement.style.zIndex = 5;
   container.appendChild( renderer.domElement );
-
 };
 
 //Animation Loop
@@ -126,7 +119,6 @@ function animate(){
   controls.update();
   camera.lookAt(new THREE.Vector3(0,90,0));
   camera.updateProjectionMatrix();
-
   var delta = 0.65 * clock.getDelta();
   // mixer.update(delta);
   renderer.render( scene, camera);
@@ -227,19 +219,23 @@ function objectAnimator(){
     tweens[i].play();
   };
 
-  var axLight, bxLight;
-  axLight = [0.05, 0.1, 0.5];
-  bxLight = [0.8, 1.2, 1];
-  bxLight.paused = "true"; 
-  bxLight.ease = Power3.easeInOut;
-  bxLight.onUpdate = function(){
-    ambientlight.intensity = axLight[0];
-    spotlight.intensity = axLight[1];
-    // camera.zoom = axLight[2];
+  var axFog, bxFog;
+  axFog = [0, 1500];
+  bxFog = [3000, 6000];
+  bxFog.paused = "true"; 
+  bxFog.ease = Power3.easeInOut;
+  bxFog.onUpdate = function(){
+    scene.fog.near = axFog[0];
+    scene.fog.far = axFog[1];
   };
-  TweenMax.to(axLight, 8, bxLight).play();
-
-  document.documentElement.style.animationPlayState = "running";
+  if (globalFogState % 2 == 0){
+    TweenMax.to(axFog, 8, bxFog).play();
+  } else {
+    TweenMax.to(axFog, 8, bxFog).reverse(0);
+    console.log("fired");
+  };
+  globalFogState++;
+  // document.documentElement.style.animationPlayState = "running";
 };
 
 //takes a THREE.matrix4 and turn's it into a translation x,y,z and a z angle 
