@@ -23,15 +23,15 @@ function init(){
   scene.fog = new THREE.Fog(0xE8EBED, 0, 3000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
-  camera.zoom = 0.75;
+  camera.zoom = 0.5;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
   camera.lookAt(new THREE.Vector3(0, 90, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
-  controls.enableZoom = false;
+  // controls.enableZoom = false;
   controls.autoRotate = true;
-    var groundMaterial = new THREE.ShadowMaterial();
+  var groundMaterial = new THREE.ShadowMaterial();
   groundMaterial.opacity = 0.2;
   
   //Primary Geometry
