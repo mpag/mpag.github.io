@@ -20,7 +20,7 @@ init();
 function init(){
   //camera
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0xE8EBED, -20000, 20000);
+  scene.fog = new THREE.Fog(0xE8EBED, -10000, 10000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
   camera.zoom = 0.3;
@@ -29,10 +29,12 @@ function init(){
   camera.lookAt(new THREE.Vector3(0, 90, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
-  // controls.enableZoom = false;
   controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.05;
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.1;
   var groundMaterial = new THREE.ShadowMaterial();
-  groundMaterial.opacity = 0.2;
+  groundMaterial.opacity = 0.5;
   
   //Primary Geometry
   htmlStateSelectors();
@@ -82,25 +84,27 @@ function init(){
 
 
   //geometry
-  var geometryPlane = new THREE.PlaneGeometry(10000,10000);
+  var geometryPlane = new THREE.PlaneGeometry(1000,1000);
   var groundMaterial = new THREE.ShadowMaterial();
-  groundMaterial.opacity = 0.2;
-  var groundMirror = new THREE.Mesh(geometryPlane, groundMaterial);
-  groundMirror.rotateX( - Math.PI / 2 );
-  groundMirror.receiveShadow = true;
-  scene.add( groundMirror );
+  groundMaterial.opacity = 0.5;
+  var ground = new THREE.Mesh(geometryPlane, groundMaterial);
+  ground.rotateX( - Math.PI / 2 );
+  ground.receiveShadow = true;
+  scene.add( ground );
   
   //lights
   ambientlight = new THREE.AmbientLight( 0xFFFFFF, 1.2);
-  spotlight = new THREE.SpotLight( 0xffffff, 1.2);
-  spotlight.position.y = 300;
-  spotlight.angle = Math.PI/4
-  spotlight.position.x = 0;
-  // spotlight.castShadow = true;
-  spotlight.shadow.mapSize.width = 256;  // default
-  spotlight.shadow.mapSize.height = 256; // default
-  scene.add( spotlight );
   scene.add( ambientlight);
+
+  var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+  const d = 500;
+  directionalLight.position.y = 300;
+  directionalLight.castShadow = true;
+  directionalLight.shadow.camera.left = - d;
+  directionalLight.shadow.camera.right = d;
+  directionalLight.shadow.camera.top = d;
+  directionalLight.shadow.camera.bottom = - d;
+  scene.add( directionalLight );
   
   //renderer
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
