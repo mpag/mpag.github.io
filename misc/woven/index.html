@@ -2,44 +2,62 @@
 <html>
 
 <head>
-	<META name="viewport" content="initial-scale=0.66, user-scalable=no">
-	<title>Woven</title>
-	<!-- core libraries -->
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.module.js"></script>
-	<script type="text/javascript" src="https://threejs.org/examples/js/renderers/CSS3DRenderer.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+	<meta name="viewport" content="initial-scale=0.66, user-scalable=no">
+	
+	<title>woven</title>
 
+	<!-- core libraries -->
+	<script type="text/javascript" src="node_modules/three/build/three.min.js"></script>
+	<script type="text/javascript" src="node_modules/three/build/three.module.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/renderers/CSS3DRenderer.js"></script>
+	<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
 	<!-- threejs misc and json import -->
-	<script type="text/javascript" src="js/OrbitControl.js"></script>
-	<script type="text/javascript" src='js/GLTFLoader.js'></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/controls/OrbitControls.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/loaders/GLTFLoader.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/loaders/DRACOLoader.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/libs/draco/gltf/draco_decoder.js"></script>
 	<script type="text/javascript" src="ref/pieceStates.js"></script>
 	
 	<!-- threejs postprocessors -->
-	<script type="text/javascript" src="js/EffectComposer.js"></script>
-	<script type="text/javascript" src="js/CopyShader.js"></script>
-	<script type="text/javascript" src="js/RenderPass.js"></script>
-	<script type="text/javascript" src="js/ShaderPass.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/postprocessing/EffectComposer.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/shaders/CopyShader.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/postprocessing/RenderPass.js"></script>
+	<script type="text/javascript" src="node_modules/three/examples/js/postprocessing/ShaderPass.js"></script>
+
 	<!-- style imports -->
 	<link rel="stylesheet" type="text/css" href="style/index.css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
-	<!-- js content -->
-	<div id="ThreeJS"></div>
-	<div id="options"></div>
-	<div id="title"></div>
-
-	<!-- footer -->
-<!-- 	<div id="footer" style="width:250px">
-		<img src="img/500px-CC-BY-SA_icon.png" style="width:100px">
-	  	<p id="paragraph" style="font-size:0.6em">This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</p>
+	<!-- loading page -->
+	<div id="loadingPage" class="loader">
+		<img id="logo" src="img/wovenLogo.gif" style="height:70%; opacity:40%">
+		<!-- <img src="img/wovenLogo.gif" style="height:60%; opacity:40%"> -->
+		<!-- footer -->
 	</div>
- -->
-	<script type="text/javascript" src="index.js"></script>
+
+	<div id="footer" class ="rotating">
+		<img id="touchCounter" src="img/touchIcon.png" style="height:60px; opacity:20%">
+	</div>
+
+
+	<!-- navigation module -->
+	<div id="navModule">
+		<div></div>
+	</div>
+
+	<!-- woven content -->
+	<div id="woven"></div>
+	<!-- <div id="options"></div> -->
+	<div id="stateModule"></div>
+
+
+	<!-- <script type="text/javascript" src="/index.js"></script> -->
+	<script type="text/javascript" src="/wovenIndex.js"></script>
 
 </body>
 </html>
