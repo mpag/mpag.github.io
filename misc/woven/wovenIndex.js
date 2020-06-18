@@ -1,3 +1,18 @@
+// pageOperation
+
+$('#logo').click(function(){
+  $( '#loadingPage' ).fadeOut( 2000 );
+});
+
+var touchStateCount = 0;
+$('#touchCounter').on('click touchstart', function(){
+  touchStateCount += 1;
+  console.log(touchStateCount);
+});
+
+
+
+////////////////////////WOVEN THREE SCENE///////////////////////
 //Standard Variables  
 var camera, scene, renderer, controls, element, mixer, composer, manager;
 var ambientlight, spotlight, directionallight;
@@ -305,16 +320,3 @@ function toggleFullScreen() {
     }
   }
 };
-
-
-// pageOperation
-
-$('#logo').click(function(){
-  $( '#loadingPage' ).fadeOut( 2000 );
-});
-
-var touchStateCount = 0;
-$('#touchCounter').click(function(){
-  touchStateCount += 1;
-  console.log(touchStateCount);
-});
