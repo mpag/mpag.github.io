@@ -1,10 +1,5 @@
 // pageOperation
 
-$('body').on('click touchstart', function(){
-  $( '#logo' ).fadeOut( 1000 );
-  $( '#loadingPage' ).delay( 1000).fadeOut( 2000 );
-});
-
 
 ////////////////////////WOVEN THREE SCENE///////////////////////
 //Standard Variables  
@@ -58,6 +53,8 @@ function init(){
     mixerPlay();
     animate();
     globalMatrixSet();
+    $( '#logo' ).delay( 2000 ).fadeOut( 1000 );
+    $( '#loadingPage' ).delay( 3000 ).fadeOut( 2000 );
   };
 
 
