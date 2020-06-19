@@ -1,15 +1,9 @@
 // pageOperation
 
-$('#logo').click(function(){
-  $( '#loadingPage' ).fadeOut( 2000 );
+$('body').on('click touchstart', function(){
+  $( '#logo' ).fadeOut( 1000 );
+  $( '#loadingPage' ).delay( 1000).fadeOut( 2000 );
 });
-
-var touchStateCount = 0;
-$('#touchCounter').on('click touchstart', function(){
-  touchStateCount += 1;
-  console.log(touchStateCount);
-});
-
 
 
 ////////////////////////WOVEN THREE SCENE///////////////////////
@@ -38,7 +32,7 @@ function init(){
   // scene.fog = new THREE.Fog(0xE8EBED, -10000, 10000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
-  camera.zoom = 0.3;
+  camera.zoom = 0.5;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
   camera.lookAt(new THREE.Vector3(0, 600, 0));
@@ -47,7 +41,7 @@ function init(){
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.2;
   controls.enableDamping = true;
-  controls.dampingFactor = 0.5;
+  controls.dampingFactor = 0.1;
   var groundMaterial = new THREE.ShadowMaterial();
   groundMaterial.opacity = 0.5;
   
@@ -84,7 +78,7 @@ function init(){
             object.castShadow = true;
           };
           object.receiveShadow = false;
-          object.material = new THREE.MeshPhongMaterial({color: 0x1E1E1E, specular: 0x858585});
+          // object.material = new THREE.MeshPhongMaterial({color: 0x000000, specular: 0x6C6C6C});
         };
     },
     function ( xhr ) {
@@ -110,6 +104,11 @@ function init(){
   ground.rotateX( - Math.PI / 2 );
   ground.receiveShadow = true;
   scene.add( ground );
+
+  var cylGeom = new THREE.CylinderBufferGeometry( 7, 7, 0.5, 32 );
+  var cylMat = new THREE.MeshBasicMaterial( {color: 0x000000} );
+  var cylinder = new THREE.Mesh( cylGeom, cylMat );
+  scene.add( cylinder );
   
   //lights
   ambientlight = new THREE.AmbientLight( 0xFFFFFF, 0.7);
@@ -151,12 +150,11 @@ function animate(){
 // creates a div for each possible state with event listener
 function htmlStateSelectors(){
   for (i = 0; i < Object.keys(pieces[0].matrixStates).length; i++) {
-    var stateDiv = document.createElement("h1");
+    var stateDiv = document.createElement("SPAN");
     stateDiv.name = "state"+(i);
     stateDiv.id = i;
-    var stateDivText = document.createTextNode("SPAM " + (i));
-    stateDiv.appendChild(stateDivText);
-    var element = document.getElementById("stateModule");
+    stateDiv.className = "dot";
+    var element = document.getElementById("footer");
     element.appendChild(stateDiv);
     $('#'+(i)).click( objectAnimator );    
   }
