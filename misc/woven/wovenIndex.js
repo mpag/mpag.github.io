@@ -35,7 +35,7 @@ init();
 function init(){
   //camera
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0xE8EBED, -10000, 10000);
+  // scene.fog = new THREE.Fog(0xE8EBED, -10000, 10000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
   camera.zoom = 0.3;
@@ -84,7 +84,7 @@ function init(){
             object.castShadow = true;
           };
           object.receiveShadow = false;
-          // object.material = new THREE.MeshPhongMaterial({color: "white", opacity: 1});
+          object.material = new THREE.MeshPhongMaterial({color: 0x1E1E1E, specular: 0x858585});
         };
     },
     function ( xhr ) {
@@ -112,7 +112,7 @@ function init(){
   scene.add( ground );
   
   //lights
-  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 1.2);
+  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 0.7);
   scene.add( ambientlight);
 
   var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
@@ -164,8 +164,7 @@ function htmlStateSelectors(){
 
 
 function globalMatrixSet(){
-  var self = this.id;
-  var ax, bx, mat1, mat2;
+  var ax, mat1, mat2;
   for (var i = 0; i < pieces.length; i++) {
     scene.traverse( function(child) {
       if (child.name == pieces[i].name){
@@ -192,6 +191,7 @@ function globalMatrixSet(){
 function objectAnimator(){
   var tweens = [];
   var self = this.id;
+  console.log(self)
   
   for (var i = 0; i < pieces.length; i++) {
     
