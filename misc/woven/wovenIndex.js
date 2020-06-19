@@ -59,7 +59,7 @@ function init(){
 
 
   // //load Fitout model.
-  loader.load('models/vasePieces_Compressed.glb',
+  loader.load('models/wovenPeices.glb',
     function ( gltf ) {
       model = gltf.scene;
       scene.add( model );
