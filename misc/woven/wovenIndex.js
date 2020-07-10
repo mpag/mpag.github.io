@@ -1,22 +1,19 @@
-// pageOperation
-
-
 ////////////////////////WOVEN THREE SCENE///////////////////////
 //Standard Variables  
 var camera, scene, renderer, controls, element, mixer, composer, manager;
 var ambientlight, spotlight, directionallight;
 var scene2, renderer2;
+var mixer2;
 var clock = new THREE.Clock();
 var clips = [];
-var meshKnot, div, line;
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
-var globalFogState= 0;
 var container = document.getElementById( 'woven' );
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
+Hammer(document.getElementById('woven')).on("doubletap", mixerPlay);
 
 init();
 
@@ -32,9 +29,9 @@ function init(){
   var vector1 = new THREE.Vector3(0, 90, 0);
   camera.lookAt(new THREE.Vector3(0, 600, 0));
   controls = new THREE.OrbitControls(camera, container);
-  controls.enablePan = false;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.2;
+  // controls.enablePan = false;
+  // controls.autoRotate = true;
+  // controls.autoRotateSpeed = 0.2;
   controls.enableDamping = true;
   controls.dampingFactor = 0.1;
   var groundMaterial = new THREE.ShadowMaterial();
@@ -50,15 +47,15 @@ function init(){
     clips.forEach((clip) => {
       mixer.clipAction(clip).timeScale = 0;
     });
-    mixerPlay();
     animate();
+    mixerPlay();
     globalMatrixSet();
-    $( '#logo' ).delay( 2000 ).fadeOut( 1000 );
-    $( '#loadingPage' ).delay( 3000 ).fadeOut( 2000 );
+    // $( '#logo' ).delay( 2000 ).fadeOut( 1000 );
+    // $( '#loadingPage' ).delay( 3000 ).fadeOut( 2000 );
   };
 
 
-  // //load Fitout model.
+  ///// Vase Pieces /////////
   loader.load('models/wovenPeices.glb',
     function ( gltf ) {
       model = gltf.scene;
@@ -92,6 +89,47 @@ function init(){
     );
   });
 
+  ///// Flower Model /////////
+  loader.load('models/babysBreath.glb',
+    function ( gltf ) {
+      model = gltf.scene;
+      scene.add( model );
+      gltf.animations; // Array<THREE.AnimationClip>
+      gltf.scene; // THREE.Scene
+      gltf.asset; // Object
+      // console.log(gltf.animations);
+
+      gltf.scene.traverse(function(object) {
+        if (object instanceof THREE.Mesh){
+          object.castShadow = false;
+          object.receiveShadow = false;
+        };
+
+        if (object instanceof THREE.Mesh){
+          // console.log("HELLLOOOOO");
+          // object.scale = new THREE.Vector3( 20, 20, 20 );
+        };
+
+        mixer = new THREE.AnimationMixer(model);
+        gltf.animations.forEach((clip) => {
+          mixer.clipAction(clip).play();
+          clips.push(clip);
+        });
+    },
+
+    function ( xhr ) {
+      if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '%' );
+        var percentComplete = xhr.loaded / xhr.total * 100;  
+        // document.getElementById("percentComplete").innerHTML=(Math.ceil( percentComplete ) + "%" );
+      };
+    },
+    function ( error ) {
+      console.log( 'An error happened'+ error );
+    }
+    );
+  });
 
   //geometry
   var geometryPlane = new THREE.PlaneGeometry(1000,1000);
@@ -108,7 +146,7 @@ function init(){
   scene.add( cylinder );
   
   //lights
-  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 0.7);
+  ambientlight = new THREE.AmbientLight( 0xFFFFFF, 1.2);
   scene.add( ambientlight);
 
   var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
@@ -140,7 +178,7 @@ function animate(){
   camera.lookAt(new THREE.Vector3(0,90,0));
   camera.updateProjectionMatrix();
   var delta = 0.65 * clock.getDelta();
-  // mixer.update(delta);
+  mixer.update(delta);
   renderer.render( scene, camera);
 };
 
@@ -186,7 +224,6 @@ function globalMatrixSet(){
 function objectAnimator(){
   var tweens = [];
   var self = this.id;
-  console.log(self)
   
   for (var i = 0; i < pieces.length; i++) {
     
@@ -296,6 +333,7 @@ function onWindowResize() {
 function mixerPlay(event){  
   clips.forEach((clip) => {
     mixer.clipAction(clip).timeScale = 1;
+    mixer.clipAction(clip).play();
   });
 };
 
