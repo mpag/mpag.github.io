@@ -55,8 +55,13 @@ function init(){
   };
 
 
+<<<<<<< HEAD
   ///// Vase Pieces /////////
   loader.load('models/wovenPeices.glb',
+=======
+  // //load Fitout model.
+  loader.load('models/vasePieces_Compressed.glb',
+>>>>>>> parent of 3663ee0... Updated GLB
     function ( gltf ) {
       model = gltf.scene;
       scene.add( model );
