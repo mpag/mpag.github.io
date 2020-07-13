@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ////////////////////////WOVEN THREE SCENE///////////////////////
 //Standard Variables  
 var camera, scene, renderer, controls, element, mixer, composer, manager;
@@ -10,6 +11,9 @@ var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
 var container = document.getElementById( 'woven' );
+=======
+$("#logo").show();
+>>>>>>> parent of 546cf05... Addition of Babys Breath
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
