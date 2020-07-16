@@ -72,7 +72,7 @@ function init(){
             object.castShadow = true;
           };
           object.receiveShadow = false;
-          // object.material = new THREE.MeshPhongMaterial({color: 0x000000, specular: 0x6C6C6C});
+          // object.material = new THREE.MeshBasicMaterial({color: 0xE2E2E2});
         };
     },
     function ( xhr ) {
@@ -90,7 +90,7 @@ function init(){
   });
 
   ///// Flower Model /////////
-  loader.load('models/babysBreath.glb',
+  loader.load('models/babysBreath1.glb',
     function ( gltf ) {
       model = gltf.scene;
       scene.add( model );
