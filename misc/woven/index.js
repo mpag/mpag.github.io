@@ -9,11 +9,12 @@ var clips = [];
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
+var globalFlowerState = [];
 var container = document.getElementById( 'woven' );
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
-Hammer(document.getElementById('woven')).on("doubletap", mixerPlay);
+// Hammer(document.getElementById('woven')).on("doubletap", mixerPlay); 
 
 init();
 
@@ -24,14 +25,14 @@ function init(){
   // scene.fog = new THREE.Fog(0xE8EBED, -10000, 10000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
-  camera.zoom = 0.5;
+  camera.zoom = 0.4;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
   camera.lookAt(new THREE.Vector3(0, 600, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
-  // controls.autoRotate = true;
-  // controls.autoRotateSpeed = 0.2;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.2;
   controls.enableDamping = true;
   controls.dampingFactor = 0.1;
   var groundMaterial = new THREE.ShadowMaterial();
@@ -62,6 +63,7 @@ function init(){
       scene.add( model );
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
+      gltf.scene.name = "vase";
       gltf.asset; // Object
       var castShadowToggle = 0;
 
@@ -72,7 +74,7 @@ function init(){
             object.castShadow = true;
           };
           object.receiveShadow = false;
-          // object.material = new THREE.MeshBasicMaterial({color: 0xE2E2E2});
+          object.material = new THREE.MeshBasicMaterial({color: 0xE95FD1});
         };
     },
     function ( xhr ) {
@@ -96,6 +98,8 @@ function init(){
       scene.add( model );
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
+      gltf.scene.name = "flower";
+      gltf.scene.scale.set( 0.01, 0.01, 0.01 );
       gltf.asset; // Object
       // console.log(gltf.animations);
 
@@ -103,11 +107,8 @@ function init(){
         if (object instanceof THREE.Mesh){
           object.castShadow = false;
           object.receiveShadow = false;
-        };
-
-        if (object instanceof THREE.Mesh){
-          // console.log("HELLLOOOOO");
-          // object.scale = new THREE.Vector3( 20, 20, 20 );
+          // object.material.transparent = true;
+          // object.material.opacity = 0.7;
         };
 
         mixer = new THREE.AnimationMixer(model);
@@ -191,7 +192,10 @@ function htmlStateSelectors(){
     stateDiv.className = "dot";
     var element = document.getElementById("footer");
     element.appendChild(stateDiv);
-    $('#'+(i)).click( objectAnimator );    
+    $('#'+(i)).click( objectAnimator );
+    if (i == 0){
+      $('#'+(i)).click( flowerAnimate );
+    }   
   }
 };
 
@@ -274,24 +278,6 @@ function objectAnimator(){
   for (var i = 0; i < tweens.length; i++){
     tweens[i].play();
   };
-
-  // var axFog, bxFog;
-  // axFog = [0, 1500];
-  // bxFog = [1500, 6000];
-  // bxFog.paused = "true"; 
-  // bxFog.ease = Power3.easeInOut;
-  // bxFog.onUpdate = function(){
-  //   scene.fog.near = axFog[0];
-  //   scene.fog.far = axFog[1];
-  // };
-  // if (globalFogState % 3 == 0){
-  //   TweenMax.to(axFog, 8, bxFog).play();
-  // } else {
-  //   TweenMax.to(axFog, 8, bxFog).reverse(0);
-  //   console.log("fired");
-  // };
-  // globalFogState++;
-  // document.documentElement.style.animationPlayState = "running";
 };
 
 //takes a THREE.matrix4 and turn's it into a translation x,y,z and a z angle 
@@ -320,6 +306,29 @@ function translateRotateToMatrix(array){
   mat2.makeRotationY(array[4]);
   mat1.multiply(mat2);
   return (mat1);
+};
+
+function flowerAnimate(object){
+
+  var flwrScene = scene.getObjectByName( "flower" );
+  console.log("fired");
+
+  var axFlwr, bxFlwr;
+  axFlwr = [ 0.01, 0 ];
+  bxFlwr = [ 1.0, Math.PI*5 ];
+  bxFlwr.paused = "true"; 
+  bxFlwr.ease = Power3.easeInOut;
+  bxFlwr.onUpdate = function(){
+    flwrScene.scale.set( axFlwr[0], axFlwr[0], axFlwr[0]);
+    flwrScene.rotation.y = axFlwr[1];
+  };
+  if (globalFlowerState % 1 == 0){
+    TweenMax.to(axFlwr, 8, bxFlwr).play();
+  } else {
+    TweenMax.to(axFlwr, 8, bxFlwr).reverse(0);
+  };
+  globalFlowerState++;
+  document.documentElement.style.animationPlayState = "running";
 };
 
 // on resizing of the window, resizes the scene/renderer
