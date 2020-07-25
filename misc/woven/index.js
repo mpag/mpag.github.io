@@ -22,7 +22,7 @@ init();
 function init(){
   //camera
   scene = new THREE.Scene();
-  // scene.fog = new THREE.Fog(0xE8EBED, -10000, 10000);
+  scene.fog = new THREE.Fog(0xE8EBED, 1000, 10000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 500, 3000 );
   camera.zoom = 0.4;
@@ -64,7 +64,7 @@ function init(){
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
       gltf.scene.name = "vase";
-      gltf.asset; // Object
+      console.log(gltf.asset); // Object
       var castShadowToggle = 0;
 
       gltf.scene.traverse(function(object) {
@@ -74,7 +74,10 @@ function init(){
             object.castShadow = true;
           };
           object.receiveShadow = false;
-          object.material = new THREE.MeshBasicMaterial({color: 0xE95FD1});
+          var aoObj = object.geometry;
+          aoObj.setAttribute( 'uv2', new THREE.BufferAttribute( aoObj.attributes.uv.array, 2 ) );
+          // console.log(object.material.aoMap);
+          // object.material = new THREE.MeshBasicMaterial({color: 0xE95FD1});
         };
     },
     function ( xhr ) {
@@ -92,7 +95,7 @@ function init(){
   });
 
   ///// Flower Model /////////
-  loader.load('models/babysBreath1.glb',
+  loader.load('models/babysBreath2.glb',
     function ( gltf ) {
       model = gltf.scene;
       scene.add( model );
@@ -100,6 +103,7 @@ function init(){
       gltf.scene; // THREE.Scene
       gltf.scene.name = "flower";
       gltf.scene.scale.set( 0.01, 0.01, 0.01 );
+      gltf.scene.translateY(20);
       gltf.asset; // Object
       // console.log(gltf.animations);
 
@@ -311,7 +315,7 @@ function translateRotateToMatrix(array){
 function flowerAnimate(object){
 
   var flwrScene = scene.getObjectByName( "flower" );
-  console.log("fired");
+  // console.log("fired");
 
   var axFlwr, bxFlwr;
   axFlwr = [ 0.01, 0 ];
