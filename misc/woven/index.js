@@ -31,6 +31,7 @@ function init(){
   camera.lookAt(new THREE.Vector3(0, 600, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
+  controls.enableZoom = false;
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.2;
   controls.enableDamping = true;
