@@ -25,7 +25,7 @@ function init(){
   scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0xE8EBED, 1000, 10000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
-  camera.position.set( 0, 500, 3000 );
+  camera.position.set( 0, 2500, 3000 );
   camera.zoom = 0.4;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
@@ -339,6 +339,7 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
+  mobileUI();
   // renderer2.setSize(window.innerWidth, window.innerHeight);
 };
 
@@ -353,7 +354,7 @@ function mixerPlay(event){
 
 // UI Functions
 
-function gridChange() {
+function gridMobile() {
   var infoPanel = document.getElementsByClassName('infoPanel');
   var gridContainerA = document.getElementsByClassName('gridContainerA');
   var gridRightA = document.getElementsByClassName('gridRightA');
@@ -362,7 +363,7 @@ function gridChange() {
     gridContainerA[i].classList.add('gridContainerAMobile');
   };
   for(i = 0; i < gridRightA.length; i++) {
-    gridRightA[i].style.height = '400px';
+    // gridRightA[i].style.height = '400px';
   };
   for(i = 0; i < infoPanel.length; i++) {
     infoPanel[i].style.width = '100%';
@@ -387,8 +388,7 @@ function isSmallWindow() {
 function mobileUI(){
   if (isMobileDevice() == true || isSmallWindow() == true ){
     console.log('mobile/small client');
-    // $('#footer').delay(20000).fadeOut();
-    gridChange();
+    gridMobile();
   } else {
     // document.getElementById('right-half').style.display = 'flex';
     // document.getElementById('footer').style.display = 'none';

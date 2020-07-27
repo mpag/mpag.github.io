@@ -27,14 +27,11 @@ h3 {
   text-transform: uppercase;
   font-size: 0.8em;
   font-style: italic;
-  font-weight: 600;
-  opacity: 50%;
+  font-weight: 400;
+  /*opacity: 50%;*/
   margin-top: 0px;
   margin-bottom: 0px;
-  color: #5f4b8b;
-}
-h3:hover {
-  opacity: 30%;
+  color: #ffaf12;
 }
 
 p {
@@ -45,7 +42,7 @@ p {
 }
 
 em {
-  color: #5f4b8b;
+  color: #ffaf12;
   opacity: 100%;
 }
 
@@ -81,8 +78,8 @@ img:hover {
 .gridContainerA {
   display: grid;
   grid-template-areas:
-    'gridLeft gridLeft gridLeft gridRight gridRight'
-    'header header header gridRight gridRight';
+    'header header header header header'
+    'gridLeft gridLeft gridLeft gridRight gridRight';
   grid-row-gap: 10px;
   grid-column-gap: 80px;
   grid-auto-flow: column;
@@ -102,9 +99,9 @@ img:hover {
 .gridContainerAMobile {
   display: grid;
   grid-template-areas:
+    'header header header'
     'gridLeft gridLeft gridLeft' 
-    'gridRight gridRight gridRight'
-    'header header header';
+    'gridRight gridRight gridRight';
   grid-row-gap: 20px;
   grid-column-gap: 80px;
   padding: 10px;
