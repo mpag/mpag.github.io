@@ -191,7 +191,7 @@ function animate(){
 // creates a div for each possible state with event listener
 function htmlStateSelectors(){
   for (i = 0; i < Object.keys(pieces[0].matrixStates).length; i++) {
-    var stateDiv = document.createElement("SPAN");
+    var stateDiv = document.createElement("span");
     stateDiv.name = "state"+(i);
     stateDiv.id = i;
     stateDiv.className = "dot";

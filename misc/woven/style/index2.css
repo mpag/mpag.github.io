@@ -129,7 +129,7 @@ img:hover {
 #footer {
   bottom: 100px;
   width: 100%;
-  z-index: -1;
+  z-index: 100;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -172,7 +172,6 @@ img:hover {
   -o-animation: rotating 0.5s ease alternate-reverse infinite;
   animation: rotating 0.5s ease alternate-reverse infinite;
 }
-
 
 /*Three Scene Temp*/
 .dot {
