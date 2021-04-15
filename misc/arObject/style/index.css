@@ -1,7 +1,9 @@
 body {
   margin: 0;
+  vertical-align: center;
   overflow: hidden;
   height:100%;
+  width: 100%;
 }
 
 #ThreeJS {
@@ -34,30 +36,46 @@ h1 {
   font-family: 'Roboto Condensed', sans-serif;
 }
 
-h1:hover{
-  color: grey;
-  cursor: pointer;
-}
-
 p {
   font-size: 0.8em;
-  color: white;
+  color: black;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
+  justify-content:center;
 }
 
-.arObject {
+#container {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  height:100%;"
+}
+
+#arObject {
+  margin: 20px auto;
+  padding: 20px;
   width: 100%;
   height: 100%;
+  max-height: 600px;
+  max-width: 600px;
+  min-height: 300px;
+  min-width: 300px;
+  box-shadow: 0px 0px 10px grey;
+  border-radius: 10px;
+  outline: 0;
+  border: none;
+  justify-content:center;
 }
 
 model-viewer {
-  margin: auto;
-  vertical-align: center;
-  width: 100%;
   height: 100%;
-  min-height: 300px;
-  min-width: 300px;
+  width: 100%;
+}
+
+model-viewer:focus {
+  outline: 0;
+  border: none;
 }
 
 .text {
@@ -68,14 +86,6 @@ model-viewer {
 #footer {
   bottom: 20px;
   left: 30px;
-  z-index: 2;
-  position: absolute;
-  pointer-events: none;
-}
-
-#footerRight {
-  bottom: 20px;
-  right: 30px;
   z-index: 2;
   position: absolute;
   pointer-events: none;
