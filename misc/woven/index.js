@@ -172,7 +172,7 @@ function init(){
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setClearColor(0xffffff, 0);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.domElement.style.zIndex = 5;
+  renderer.domElement.style.zIndex = -10;
   container.appendChild( renderer.domElement );
 };
 
@@ -193,13 +193,13 @@ function htmlStateSelectors(){
   for (i = 0; i < Object.keys(pieces[0].matrixStates).length; i++) {
     var stateDiv = document.createElement("span");
     stateDiv.name = "state"+(i);
-    stateDiv.id = i;
+    stateDiv.id = stateDiv.name;
     stateDiv.className = "dot";
     var element = document.getElementById("footer");
     element.appendChild(stateDiv);
     $('#'+(i)).click( objectAnimator );
-    if (i == 0){
-      $('#'+(i)).click( flowerAnimate );
+      if (i == 0){
+        $('#'+(i)).click( flowerAnimate );
     }   
   }
 };
