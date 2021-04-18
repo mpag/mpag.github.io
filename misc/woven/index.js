@@ -11,7 +11,7 @@ var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
 var globalFlowerState = [];
 var container = document.getElementById( 'woven' );
-var sceneShift = 1.4;
+var sceneShift = 1.5;
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
@@ -27,10 +27,10 @@ function init(){
   scene.fog = new THREE.Fog(0xE8EBED, 1000, 10000);
   camera = new THREE.PerspectiveCamera( 6, window.innerWidth*sceneShift / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 2500, 3000 );
-  camera.zoom = 0.4;
+  camera.zoom = 0.7;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
-  camera.lookAt(new THREE.Vector3(0, 600, 0));
+  camera.lookAt(new THREE.Vector3(0, 1000, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
   controls.enableZoom = false;
@@ -54,8 +54,8 @@ function init(){
     animate();
     mixerPlay();
     globalMatrixSet();
-    // $( '#logo' ).delay( 2000 ).fadeOut( 1000 );
-    // $( '#loadingPage' ).delay( 3000 ).fadeOut( 2000 );
+    $( '#logo' ).delay( 1000 ).fadeIn(1000).delay(1000).fadeOut( 1000 );
+    $( '#loadingPage' ).delay( 4500 ).fadeOut( 2000 );
   };
 
 
@@ -199,9 +199,9 @@ function htmlStateSelectors(){
     var element = document.getElementById("stateModule");
     element.appendChild(stateDiv);
     $('#'+(i)).click( objectAnimator );
-      if (i == 1){
-        $('#'+(i)).click( flowerAnimate );
-    }   
+      // if (i == 0){
+    $('#'+(i)).click( flowerAnimate );
+    // }   
   }
 };
 

@@ -150,7 +150,7 @@ img:hover {
 #threeContent {
   position: fixed;
   z-index: -2;
-  width: 140%;
+  width: 150%;
 }
 
 /*Primary Three Scene*/
@@ -177,6 +177,17 @@ img:hover {
   z-index: 100;
   justify-content: center;
   align-items: center;
+}
+
+.loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #F0EFE9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 30;
 }
 
 /*Misc Animation*/
