@@ -9,7 +9,7 @@ body {
 h1 {
 }
 
-h2 {
+h1 {
   font-family: 'Oswald', sans-serif;
   font-size: 2.5em;
   text-transform: uppercase;
@@ -21,7 +21,23 @@ h2 {
   line-height: 1.2em;
 }
 
+h2 {
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+h2:hover {
+  color: #ffaf12;
+  cursor: pointer;
+}
+
 h3 {
+  display: block;
   font-family: 'Roboto', sans-serif;
   text-transform: uppercase;
   font-size: 0.8em;
@@ -48,19 +64,35 @@ img:hover {
   background-color: white;
 }
 
+#stateModule {
+  position: fixed;
+  margin: auto;
+  padding: 15px;
+  bottom: 50px;
+  width: 100px;
+  right: 30px;
+  text-align: center;
+  line-height: 3em;
+  justify-content: center;
+  vertical-align: center;
+  z-index: 2;
+  background-color: rgba(255,255,255,0.9);
+  opacity:0;
+}
+
 
 /*InfoPanel Type A*/
 .infoPanel {
   position: absolute;
   z-index: 1;
   width: 60%;
-  background-color: rgba(255,255,255,1.0);
   min-height: 400px;
   margin-left: 0px;
   margin-right:0px;
   padding-top: 0px;
   padding-bottom: 0px;
-  border: 0px solid black;  
+  border: 0px solid black;
+  opacity:0;
 }
 
 .infoContent {
@@ -69,6 +101,16 @@ img:hover {
   margin: auto;
   padding-top: 40px;
   padding-bottom: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
+  background-color: rgba(255,255,255,0.9);
+  transform: perspective(1200px) rotateY(23deg);
+  transition: transform 0.2s ease-out
+}
+
+.infoContent:hover {
+  box-shadow: 5px 5px 5px grey;
+  transform: perspective(1200px) rotateY(20deg);
 }
 
 .gridContainerA {
@@ -108,6 +150,7 @@ img:hover {
 #threeContent {
   position: fixed;
   z-index: -2;
+  width: 140%;
 }
 
 /*Primary Three Scene*/
@@ -117,7 +160,7 @@ img:hover {
   position: fixed;
   display: block;
   height: 100%;
-  width: 100%;
+  width: 140%;
   z-index: -10;
 }
 

@@ -11,6 +11,7 @@ var HEIGHT = window.innerHeight;
 var globalMatrixState = [];
 var globalFlowerState = [];
 var container = document.getElementById( 'woven' );
+var sceneShift = 1.4;
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
@@ -24,7 +25,7 @@ function init(){
   //camera
   scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0xE8EBED, 1000, 10000);
-  camera = new THREE.PerspectiveCamera( 6, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera = new THREE.PerspectiveCamera( 6, window.innerWidth*sceneShift / window.innerHeight, 1, 10000 );
   camera.position.set( 0, 2500, 3000 );
   camera.zoom = 0.4;
   camera.rotation.order = 'YXZ';
@@ -34,7 +35,7 @@ function init(){
   controls.enablePan = false;
   controls.enableZoom = false;
   controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.2;
+  controls.autoRotateSpeed = 0.4;
   controls.enableDamping = true;
   controls.dampingFactor = 0.1;
   var groundMaterial = new THREE.ShadowMaterial();
@@ -171,7 +172,7 @@ function init(){
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setClearColor(0xffffff, 0);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(window.innerWidth*sceneShift, window.innerHeight);
   renderer.domElement.style.zIndex = -10;
   container.appendChild( renderer.domElement );
 };
@@ -191,14 +192,14 @@ function animate(){
 // creates a div for each possible state with event listener
 function htmlStateSelectors(){
   for (i = 0; i < Object.keys(pieces[0].matrixStates).length; i++) {
-    var stateDiv = document.createElement("span");
+    var stateDiv = document.createElement("h2");
     stateDiv.name = "state"+(i);
-    stateDiv.id = stateDiv.name;
-    stateDiv.className = "dot";
-    var element = document.getElementById("footer");
+    stateDiv.innerHTML = "State " + i;
+    stateDiv.id = i;
+    var element = document.getElementById("stateModule");
     element.appendChild(stateDiv);
     $('#'+(i)).click( objectAnimator );
-      if (i == 0){
+      if (i == 1){
         $('#'+(i)).click( flowerAnimate );
     }   
   }
@@ -336,9 +337,9 @@ function flowerAnimate(object){
 
 // on resizing of the window, resizes the scene/renderer
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = window.innerWidth*sceneShift / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( window.innerWidth*sceneShift, window.innerHeight );
   mobileUI();
   // renderer2.setSize(window.innerWidth, window.innerHeight);
 };
@@ -389,6 +390,7 @@ function mobileUI(){
   if (isMobileDevice() == true || isSmallWindow() == true ){
     console.log('mobile/small client');
     gridMobile();
+    sceneShift = 1;
   } else {
     // document.getElementById('right-half').style.display = 'flex';
     // document.getElementById('footer').style.display = 'none';
@@ -411,6 +413,22 @@ document.addEventListener("keypress", function(e) {
     console.log("triggered");
   }
 }, false);
+
+$(document).ready(function() {
+    $(window).scroll( function(){
+        $('.infoPanel').each( function(i){
+            console.log($(window).scrollTop());
+            var bottom_of_object = $(this).position().top + $(this).outerHeight() - 200;
+            var bottom_of_window = $(window).scrollTop() + $(window).height();
+            if( bottom_of_window > bottom_of_object ){
+                $(this).animate({'opacity':'1'},400);
+            }
+            if ( $(window).scrollTop() >= 500) {
+              $('#stateModule').animate({'opacity':'1'},1000);
+            }
+        }); 
+    }); 
+});
 
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
