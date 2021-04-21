@@ -30,7 +30,7 @@ function init(){
   camera.zoom = 0.7;
   camera.rotation.order = 'YXZ';
   var vector1 = new THREE.Vector3(0, 90, 0);
-  camera.lookAt(new THREE.Vector3(0, 1000, 0));
+  camera.lookAt(new THREE.Vector3(0, 1500, 0));
   controls = new THREE.OrbitControls(camera, container);
   controls.enablePan = false;
   controls.enableZoom = false;
@@ -182,7 +182,7 @@ function animate(){
   window.requestAnimationFrame( animate );
   // renderer2.render( scene2, camera );
   controls.update();
-  camera.lookAt(new THREE.Vector3(0,90,0));
+  camera.lookAt(new THREE.Vector3(0,180,0));
   camera.updateProjectionMatrix();
   var delta = 0.65 * clock.getDelta();
   mixer.update(delta);
