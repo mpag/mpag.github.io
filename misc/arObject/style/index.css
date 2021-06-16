@@ -12,12 +12,33 @@ h1 {
   font-family: 'Roboto Condensed', sans-serif;
 }
 
+h2 {
+  font-size: 1.0em;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
 p {
   font-size: 0.8em;
   color: black;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
   justify-content:center;
+}
+
+button {
+  color: white; 
+  background-color: #ee2b82; 
+  text-align: center;
+  border: 0px; 
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-left: 15px;
+  padding-left: 15px; 
+  position: absolute; 
+  top: 50px; 
+  right: 50px; 
+  font-size: 1.0em;
 }
 
 #container {
@@ -51,19 +72,6 @@ model-viewer:focus {
   border: none;
 }
 
-.text {
-  font-family: century;
-  font-size: 2.8px;
-}
-
-#footer {
-  bottom: 20px;
-  left: 30px;
-  z-index: 2;
-  position: absolute;
-  pointer-events: none;
-}
-
 /* BACKGROUND & ANIMATION */
 html {
   width: 100%;
@@ -74,90 +82,3 @@ html {
   background: linear-gradient(top,  #2c3e50 0%, #bdc3c7 100%);*/
   margin: 0;
   /*overflow: hidden;*/
-
-@-webkit-keyframes moving /* Safari and Chrome */ {
-  from {
-    -webkit-transform: translate(0px, 10px);
-    -o-transform: translate(0px, 10px);
-    transform: translate(0px, 10px);
-  }
-  to {
-    -webkit-transform: translate(0px, 0px);
-    -o-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-}
-@keyframes rotating {
-  from {
-    -ms-transform: translate(0px, 10px);
-    -moz-transform: translate(0px, 10px);
-    -webkit-transform: translate(0px, 10px);
-    -o-transform: translate(0px, 10px);
-    transform: translate(0px, 10px);
-  }
-  to {
-    -ms-transform:  translate(0px, 0px);
-    -moz-transform:  translate(0px, 0px);
-    -webkit-transform:  translate(0px, 0px);
-    -o-transform:  translate(0px, 0px);
-    transform:  translate(0px, 0px);
-  }
-}
-
-.rotating {
-  -webkit-animation: rotating 0.4s ease alternate-reverse infinite;
-  -moz-animation: rotating 0.4s ease alternate-reverse infinite;
-  -ms-animation: rotating 0.4s ease alternate-reverse infinite;
-  -o-animation: rotating 0.4s ease alternate-reverse infinite;
-  animation: rotating 0.4s ease alternate-reverse infinite;
-}
-
-.loader {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(255,255,255,1.0);
-  /*top: 0;*/
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 8;
-}
-
-.modal-content {
-  width: 70%;
-  max-width: 400px;
-  height: 650px;
-  background-color: #F5F5F5;
-  transition: background 1s linear;
-  -webkit-transition: background 1s linear;
-  -moz-transition: background 1s linear;
-  border-radius: 4px;
-  text-align: center;
-  position: relative;
-  display: block;
-}
-
-.loaderContent {
-  text-align: center;
-  position: relative;
-  display: block;
-}
-
-#percentComplete {
-  font-size: 2em;
-}
-
-/*MODAL*/
-.bg-modal {
-  width: 100%;
-  height: 100%;
-  background: rgba(255,255,255,0.7);
-  position: absolute;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 4;
-  visibility: hidden;
-}
