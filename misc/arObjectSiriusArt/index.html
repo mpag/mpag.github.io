@@ -11,8 +11,12 @@
 	<body>
 			<div id="container">
 				<div id="arObject">
-					<model-viewer alt="A 3D model of Robotic Fabrication Scene." src="models/SR2_RobotPrint.glb" ios-src="models/SR2_RobotPrint.usdz" poster="img/robotThumb.gif"ar ar-modes="quick-look webxr scene-viewer" autoplay camera-controls shadow-intensity="2" shadow-softness="0.48" animation-name="A04Action.024">
-						 <button slot="ar-button"><h2>Activate AR</h2></button>
+					<model-viewer src="models/SR2_RobotPrint.glb" camera-controls exposure="0.07" exposure="0.67" orbit-sensitivity="0.7" shadow-intensity="8.3" shadow-softness="0.15" ar ar-modes="quick-look webxr scene-viewer" ar-placement="wall">
+					    <button class="arTrigger" slot="ar-button"><h2>Activate AR</h2></button>
+					    <div class="progress-bar" slot="progress-bar">
+					        <div class="update-bar"></div>
+					    </div>
+					</model-viewer>
 				</div>
 			</div>
 	</body>
