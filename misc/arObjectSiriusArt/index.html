@@ -11,13 +11,29 @@
 	<body>
 			<div id="container">
 				<div id="arObject">
-					<model-viewer src="models/SR2_RobotPrint.glb" camera-controls exposure="1.2" orbit-sensitivity="0.7" shadow-intensity="2" shadow-softness="0.15" ar ar-modes="quick-look webxr scene-viewer" ar-placement="wall">
+					<model-viewer src="models/SR2_RobotPrint.glb" camera-controls exposure="1.2" orbit-sensitivity="0.7" shadow-intensity="2" shadow-softness="0.15" ar ar-modes="quick-look webxr scene-viewer" ar-placement="wall" poster="img/robotThumb.gif">
 					    <button class="arTrigger" slot="ar-button"><h2>Activate AR</h2></button>
 					    <div class="progress-bar" slot="progress-bar">
 					        <div class="update-bar"></div>
 					    </div>
+					    <button id="info"><h2>i</h2></button>
 					</model-viewer>
 				</div>
 			</div>
+
+			<div class="bg-modal">
+				<div class="modal-content dropShadow">
+					<div class="close"><strong>+</strong></div>
+					<img id="modalImg" src="img/lobby.jpg" style="width: 100%; height:100%;">
+					<h4>Animal sculptures in the lobby of Sydney's <a href="https://en.wikipedia.org/wiki/Sirius_building" target="_blank">Sirius Building</a> by architect <a href="https://www.linkedin.com/in/penny-rosier-38a9b778/" target="_blank">Penny Rosier</a>.
+					<br><br>
+					<h3>Reminiscent of the cave art paintings of Lascaux, <a href="https://en.wikipedia.org/wiki/Sirius_building" target="_blank">Sirius Building</a> Architect <a href="https://www.afr.com/work-and-careers/management/tao-gofers-the-closet-showman-behind-sydneys-sirius-building-20161007-grx54i" target="_blank">Theo (Tao) Gofers</a> calls these sculptures arranged throughout the communal foyer spaces of the building <i>URO's</i> ; <i>unidentified running objects.</i><br><br></h3>
+					<h4>📷 <a href="https://www.mrp.photography/" target="_blank">Mitchell Page</a></h4>
+				</div>
+			</div>
+
+			<script type="text/javascript" src="index.js"></script>
+
 	</body>
 </html>
+
