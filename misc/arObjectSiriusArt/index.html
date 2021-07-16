@@ -11,7 +11,7 @@
 	<body>
 			<div id="container">
 				<div id="arObject">
-					<model-viewer src="models/SR2_RobotPrintNew.glb" camera-controls exposure="0.5" orbit-sensitivity="0.7" shadow-intensity="2" shadow-softness="0.15" ar ar-modes="quick-look webxr scene-viewer" ar-placement="wall" poster="img/robotThumb.gif">
+					<model-viewer src="models/SR2_RobotPrintNew.glb" camera-controls exposure="1.5" orbit-sensitivity="0.7" shadow-intensity="1" shadow-softness="0.5" ar ar-modes="quick-look webxr scene-viewer" ar-placement="wall" poster="img/robotThumb.gif" environment-image="img/kitchenTestHDR.jpg">
 					    <button class="arTrigger dropShadowSmall" slot="ar-button"><h2>Activate AR</h2></button>
 					    <div class="progress-bar" slot="progress-bar">
 					        <div class="update-bar"></div>
@@ -23,7 +23,7 @@
 
 			<div class="bg-modal">
 				<div class="modal-content dropShadow">
-					<div class="close"><strong>+</strong></div>
+					<div id="close" class="close"><strong>+</strong></div>
 					<img id="modalImg" src="img/lobby.jpg">
 					<h4>Animal sculptures in the lobby of Sydney's <a href="https://en.wikipedia.org/wiki/Sirius_building" target="_blank">Sirius Building</a> by architect <a href="https://www.linkedin.com/in/penny-rosier-38a9b778/" target="_blank">Penny Rosier</a>.
 					<br><br><br>
