@@ -1,47 +1,74 @@
 ////////////////////////WOVEN THREE SCENE///////////////////////
 //Standard Variables  
-var camera, scene, renderer, controls, element, mixer, composer, manager;
+var camera, scene, renderer, controls, element, mixer, composer, manager, tween;
+var scene3, renderer3;
 var ambientlight, spotlight, directionallight;
-var scene2, renderer2;
-var mixer2;
 var clock = new THREE.Clock();
 var clips = [];
-var WIDTH = window.innerWidth;
-var HEIGHT = window.innerHeight;
+var callouts = [];
+
+var container = document.getElementById( 'container' );
+
+var camTarget = new THREE.Vector3(0, 300, 0);
+var camPos = new THREE.Vector3(0, 500, 5000);
 var globalMatrixState = [];
 var globalFlowerState = [];
-var container = document.getElementById( 'woven' );
-var sceneShift = 1.5;
+var sceneShift = 1.3;
+
 
 //Event Listeners
 window.addEventListener( 'resize', onWindowResize, false );
-// Hammer(document.getElementById('woven')).on("doubletap", mixerPlay); 
 mobileUI();
 
 init();
 
 //THREE JS initiation function
 function init(){
-  //camera
+  
+  ///_____Scene
   scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0xE8EBED, 1000, 10000);
-  camera = new THREE.PerspectiveCamera( 6, window.innerWidth*sceneShift / window.innerHeight, 1, 10000 );
-  camera.position.set( 0, 2500, 3000 );
+  scene.name = "scene1";
+  scene.fog = new THREE.Fog(0xE8EBED, 5000, 10000);
+
+  scene3 = new THREE.Scene();
+  scene3.name = "scene3";
+
+
+  ///_____Camera
+  camera = new THREE.PerspectiveCamera( 12, window.innerWidth*sceneShift / window.innerHeight, 1, 10000 );
+  camera.position.x = camPos.x;
+  camera.position.y = camPos.y;
+  camera.position.z = camPos.z;
+
   camera.zoom = 0.7;
   camera.rotation.order = 'YXZ';
-  var vector1 = new THREE.Vector3(0, 90, 0);
-  camera.lookAt(new THREE.Vector3(0, 1500, 0));
+
+  // controls = new THREE.OrbitControls(camera, container);
+  // controls.enablePan = false;
+  // controls.enableZoom = true;
+  // controls.autoRotate = true;
+  // controls.autoRotateSpeed = 0.4;
+  // controls.enableDamping = true;
+  // controls.dampingFactor = 0.1;
+
   controls = new THREE.OrbitControls(camera, container);
-  controls.enablePan = false;
-  controls.enableZoom = false;
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.25;
   controls.autoRotate = true;
   controls.autoRotateSpeed = 0.4;
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.1;
-  var groundMaterial = new THREE.ShadowMaterial();
-  groundMaterial.opacity = 0.5;
+  controls.rotateSpeed = 0.5;
+  controls.enablePan = false;
+  controls.maxZoom = 20;
+  controls.minZoom = 1;
+  controls.enableRotate = true;
+  controls.minPolarAngle = 0;
+  controls.maxPolarAngle = Math.PI/2; 
+  controls.target = new THREE.Vector3(0, camTarget.y, 0);
+  controls.update();
+
+
   
-  //Primary Geometry
+  ///_____Primary Geometry
   htmlStateSelectors();
 
   manager = new THREE.LoadingManager();
@@ -60,7 +87,7 @@ function init(){
 
 
   ///// Vase Pieces /////////
-  loader.load('models/wovenPeices.glb',
+  loader.load('models/wovenPeicesTest.glb',
     function ( gltf ) {
       model = gltf.scene;
       scene.add( model );
@@ -72,14 +99,10 @@ function init(){
       gltf.scene.traverse(function(object) {
         if (object instanceof THREE.Mesh){
           castShadowToggle += 1;
-          if (castShadowToggle % 5 == 0){
+          if (castShadowToggle % 2 == 0){
             object.castShadow = true;
           };
           object.receiveShadow = false;
-          var aoObj = object.geometry;
-          aoObj.setAttribute( 'uv2', new THREE.BufferAttribute( aoObj.attributes.uv.array, 2 ) );
-          // console.log(object.material.aoMap);
-          // object.material = new THREE.MeshBasicMaterial({color: 0xE95FD1});
         };
     },
     function ( xhr ) {
@@ -105,7 +128,7 @@ function init(){
       gltf.scene; // THREE.Scene
       gltf.scene.name = "flower";
       gltf.scene.scale.set( 0.01, 0.01, 0.01 );
-      gltf.scene.translateY(20);
+      gltf.scene.translateY(100);
       gltf.asset; // Object
       // console.log(gltf.animations);
 
@@ -138,16 +161,15 @@ function init(){
     );
   });
 
-  //geometry
-  var geometryPlane = new THREE.PlaneGeometry(1000,1000);
+  ///_____Geometry
+  var geometryPlane = new THREE.PlaneGeometry(5000,5000);
   var groundMaterial = new THREE.ShadowMaterial();
   groundMaterial.opacity = 0.5;
   var ground = new THREE.Mesh(geometryPlane, groundMaterial);
   ground.rotateX( - Math.PI / 2 );
   ground.receiveShadow = true;
   scene.add( ground );
-
-  var cylGeom = new THREE.CylinderBufferGeometry( 7, 7, 0.5, 32 );
+  var cylGeom = new THREE.CylinderBufferGeometry( 12, 12, 1, 32 );
   var cylMat = new THREE.MeshBasicMaterial( {color: 0x000000} );
   var cylinder = new THREE.Mesh( cylGeom, cylMat );
   scene.add( cylinder );
@@ -155,38 +177,90 @@ function init(){
   //lights
   ambientlight = new THREE.AmbientLight( 0xFFFFFF, 1.2);
   scene.add( ambientlight);
-
-  var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-  const d = 500;
-  directionalLight.position.y = 300;
+  var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.3 );
+  const d = 5000;
+  directionalLight.position.y = 500;
   directionalLight.castShadow = true;
   directionalLight.shadow.camera.left = - d;
   directionalLight.shadow.camera.right = d;
   directionalLight.shadow.camera.top = d;
   directionalLight.shadow.camera.bottom = - d;
+  directionalLight.shadow.mapSize.width = 1024;
+  directionalLight.shadow.mapSize.height = 1024;
+  directionalLight.bias = 0.0001;
   scene.add( directionalLight );
   
-  //renderer
+  ///_____Renderer
   renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.setClearColor(0xffffff, 0);
+  renderer.setClearColor(0xffffffF0EFE9, 0);
+  renderer.gammaFactor = 2.2;
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth*sceneShift, window.innerHeight);
   renderer.domElement.style.zIndex = -10;
   container.appendChild( renderer.domElement );
+
+  //_____CSS2D Renderers //
+  //callouts
+  for (i = 0; i < calloutText.length; i++){
+    element = document.createElement('div');
+    element.style.opacity = 1;
+    element.style.borderColor = calloutText[i].bColor;
+    element.className = "calloutTag";
+    element.id = calloutText[i].state;
+    console.log(calloutText[i].state);
+    elTitle = document.createElement('h4');
+    elText = document.createElement('h5');
+    // element.appendChild( elTitle );
+    element.appendChild( elText );
+    elTitle.className = "elTitle";
+    elTitle.innerHTML = calloutText[i].state;
+    elText.className = "elText";
+    elText.innerHTML = calloutText[i].textContent;
+
+    calloutObj = new THREE.CSS3DObject(element);
+    calloutObj.rotation.x = -Math.PI;
+    calloutObj.rotation.z = Math.PI;
+    calloutObj.position.x = calloutText[i].pos[0];
+    calloutObj.position.y = calloutText[i].pos[1];
+    calloutObj.position.z = calloutText[i].pos[2];
+
+    var calloutOrient = new THREE.Vector3(camPos.x*10000, calloutObj.position.y, camPos.z*10000);
+    calloutObj.lookAt(calloutOrient);
+
+    callouts.push(calloutObj);
+    scene3.add(calloutObj);
+  };
+
+  renderer3 = new THREE.CSS3DRenderer();
+  containerCSS2 = document.getElementById('containerCSS2');
+  renderer3.setSize($(containerCSS2).width(), $(containerCSS2).height());
+  renderer3.domElement.style.pointerEvents= 'none';
+  // renderer3.domElement.style.zIndex = 1000;
+  containerCSS2.appendChild(renderer3.domElement);
+
 };
 
 //Animation Loop
 function animate(){
-  window.requestAnimationFrame( animate );
-  // renderer2.render( scene2, camera );
-  controls.update();
-  camera.lookAt(new THREE.Vector3(0,180,0));
+  camera.lookAt(camTarget);
   camera.updateProjectionMatrix();
+  controls.update();
+  TWEEN.update();
+  
   var delta = 0.65 * clock.getDelta();
   mixer.update(delta);
+  
+  for (i = 0; i < callouts.length; i++){
+    var calloutOrient = new THREE.Vector3(camera.position.x*1000, camera.position.y*1000, camera.position.z*1000);
+    callouts[i].lookAt(calloutOrient);
+  };
+
   renderer.render( scene, camera);
+  renderer3.render( scene3, camera);
+  window.requestAnimationFrame( animate );
 };
 
 // creates a div for each possible state with event listener
@@ -199,9 +273,9 @@ function htmlStateSelectors(){
     var element = document.getElementById("stateModule");
     element.appendChild(stateDiv);
     $('#'+(i)).click( objectAnimator );
-      // if (i == 0){
-    $('#'+(i)).click( flowerAnimate );
-    // }   
+    if (i == 4){
+      $('#'+(i)).click( flowerAnimate );
+    }   
   }
 };
 
@@ -211,14 +285,15 @@ function globalMatrixSet(){
   for (var i = 0; i < pieces.length; i++) {
     scene.traverse( function(child) {
       if (child.name == pieces[i].name){
-        var matrixArrayKey = Object.keys(pieces[i].matrixStates)[1];
+        var matrixArrayKey = Object.keys(pieces[i].matrixStates)[0];
         var matrixArray = pieces[i].matrixStates[matrixArrayKey];
-        
+
         mat1 = new THREE.Matrix4();
         mat2 = new THREE.Matrix4();
         quat = new THREE.Quaternion();
 
-        ax = arrayToMatrix(pieces[i].matrixStates.state1);
+        //SETS INITIAL STATE
+        ax = arrayToMatrix(matrixArray);
 
         quat.set(ax[3], ax[5], ax[4], ax[6]);
         mat2.makeRotationFromQuaternion(quat);
@@ -234,6 +309,7 @@ function globalMatrixSet(){
 function objectAnimator(){
   var tweens = [];
   var self = this.id;
+  console.log(this.id);
   
   for (var i = 0; i < pieces.length; i++) {
     
@@ -251,7 +327,7 @@ function objectAnimator(){
         bx = arrayToMatrix(matrixArray);
         //Sets the initial tween state to the first state in the JSON
         if (globalMatrixState.length == 0){
-          ax = arrayToMatrix(pieces[i].matrixStates.state1);  
+          ax = arrayToMatrix(pieces[i].matrixStates.state0);  
         } else {
           ax = globalMatrixState[i];
         };        
@@ -286,21 +362,18 @@ function objectAnimator(){
   };
 };
 
+
 //takes a THREE.matrix4 and turn's it into a translation x,y,z and a z angle 
 function arrayToMatrix(array){
   //empty variables to populate
   pos = new THREE.Vector3(0,0,0);
   quaternion = new THREE.Quaternion();
   scale = new THREE.Vector3(0,0,0);
-  
   //empty matrix
   emptyMatrix = new THREE.Matrix4();
   emptyMatrix.set(array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7], array[8], array[9], array[10], array[11], array[12], array[13], array[14], array[15]);
   emptyMatrix.decompose(pos, quaternion, scale);
-
   var quaternionArray = quaternion.toArray();
-  // console.log(quaternionArray);
-  
   return [pos.x, pos.z, -pos.y, quaternionArray[0], quaternionArray[1], quaternionArray[2], quaternionArray[3]];
 };
 
@@ -319,7 +392,7 @@ function flowerAnimate(object){
   var flwrScene = scene.getObjectByName( "flower" );
   var axFlwr, bxFlwr;
   axFlwr = [ 0.01, 0 ];
-  bxFlwr = [ 1.0, Math.PI*5 ];
+  bxFlwr = [ 1.5, Math.PI*5 ];
   bxFlwr.paused = "true"; 
   bxFlwr.ease = Power3.easeInOut;
   bxFlwr.onUpdate = function(){
@@ -341,7 +414,7 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth*sceneShift, window.innerHeight );
   mobileUI();
-  // renderer2.setSize(window.innerWidth, window.innerHeight);
+  renderer3.setSize(window.innerWidth, window.innerHeight);
 };
 
 function mixerPlay(event){  
@@ -350,7 +423,6 @@ function mixerPlay(event){
     mixer.clipAction(clip).play();
   });
 };
-
 
 
 // UI Functions
@@ -404,7 +476,6 @@ function scrollEvent(){
   }
 };
 
-
 // Miscellaneous Functions
 
 document.addEventListener("keypress", function(e) {
@@ -439,3 +510,129 @@ function toggleFullScreen() {
     }
   }
 };
+
+
+
+
+
+
+// 05____Position Selector //
+
+var scenePos = [];
+var scenePosNames = [];
+var scenePosText = [];
+var scenePosZoom = [];
+var scenePosCol = [];
+var count = 0;
+
+// console.log(els);
+
+for (i = 0; i < camControls.length; i++){
+  scenePos.push(new THREE.Vector3(camControls[i].pos[0],camControls[i].pos[1],camControls[i].pos[2]))
+  scenePosNames.push(camControls[i].name);
+  scenePosText.push(camControls[i].text);
+  scenePosZoom.push(camControls[i].zoom);
+  scenePosCol.push(camControls[i].col);
+};
+
+// document.getElementById('previous').addEventListener('click', prevImage, false);
+// document.getElementById('next').addEventListener('click', nextImage, false);
+// document.getElementById('imageRef').innerHTML = "<h3>" + scenePosNames[count] + "</h3>";
+// document.getElementById('imageRef').style.display.color = scenePosCol[count];
+// document.getElementById('posText').innerHTML = "<p>" + scenePosText[count] + "</p>";
+
+
+// 06____TextReveal //
+
+// function prevImage(){
+//   var vals = { y: scenePos[count].y, x: scenePos[count].x, z: camera.zoom }; // Start at (0, 0)
+  
+//   count--;
+  
+//   if (count < 0){
+//     count = scenePos.length-1;
+//   };
+
+//   console.log(count);
+//   var tweenMoveScene = new TWEEN.Tween(vals) // Create a new tween that modifies 'vals'.
+//   tweenMoveScene.to({ y: scenePos[count].y, x: scenePos[count].x, z: scenePosZoom[count] }, 500) // Move to (300, 200) in 1 second.
+//   tweenMoveScene.easing(TWEEN.Easing.Quadratic.InOut);
+//   tweenMoveScene.delay(0);
+//   tweenMoveScene.start(); // Start the tween immediately.
+//   tweenMoveScene.onUpdate(function(object) {
+//     scene.getObjectByName( "scene" ).position.z = vals.y;
+//     scene.getObjectByName( "scene" ).position.x = vals.x;
+//     scene2.getObjectByName( "scene2" ).position.z = vals.y;
+//     scene2.getObjectByName( "scene2" ).position.x = vals.x;
+//     scene3.getObjectByName( "scene3" ).position.z = vals.y;
+//     scene3.getObjectByName( "scene3" ).position.x = vals.x;
+//     camera.zoom = vals.z;
+//   });
+//   document.getElementById('imageRef').innerHTML = "<h3>" + scenePosNames[count] + "</h3>";
+//   document.getElementById('posText').innerHTML = "<p>" + scenePosText[count] + "</p>";
+
+//   var els = document.getElementsByClassName("calloutTag");
+
+
+//   for (var i = 0; i < els.length; i++) {
+//     if (count == 0){
+//       els[i].style.visibility = 'hidden';
+//     } else if (count==1 && els[i].id == "magnet"){
+//       els[i].style.visibility = 'visible';
+//     } else if (count==2 && els[i].id == "matrix"){
+//       els[i].style.visibility = 'visible';
+//     } else if (count==3 && els[i].id == "mentor"){
+//       els[i].style.visibility = 'visible';
+//     } else if (count==4 && els[i].id == "mutual"){
+//       els[i].style.visibility = 'visible';
+//     } else {
+//       els[i].style.visibility = 'hidden';
+//     }
+//   };
+  
+//   controls.update();
+// };
+
+// function nextImage(){
+//   var vals = { y: scenePos[count].y, x: scenePos[count].x, z: camera.zoom }; // Start at (0, 0)
+//   count++;
+//   if (count >= scenePos.length){
+//     count = 0;
+//   };
+//   console.log(count);
+//   var tweenMoveScene = new TWEEN.Tween(vals) // Create a new tween that modifies 'vals'.
+//   tweenMoveScene.to({ y: scenePos[count].y, x: scenePos[count].x, z: scenePosZoom[count] }, 500) // Move to (300, 200) in 1 second.
+//   tweenMoveScene.easing(TWEEN.Easing.Quadratic.InOut);
+//   tweenMoveScene.delay(0);
+//   tweenMoveScene.start(); // Start the tween immediately.
+//   tweenMoveScene.onUpdate(function(object) {
+//     scene.getObjectByName( "scene" ).position.z = vals.y;
+//     scene.getObjectByName( "scene" ).position.x = vals.x;
+//     scene3.getObjectByName( "scene3" ).position.z = vals.y;
+//     scene3.getObjectByName( "scene3" ).position.x = vals.x;
+//     camera.zoom = vals.z;
+//   });
+//   document.getElementById('imageRef').innerHTML = "<h3>" + scenePosNames[count] + "</h3>";
+//   document.getElementById('posText').innerHTML = "<p>" + scenePosText[count] + "</p>";
+  
+//   var els = document.getElementsByClassName("calloutTag");
+
+
+//   for (var i = 0; i < els.length; i++) {
+//     if (count == 0){
+//       els[i].style.visibility = 'hidden';
+//     } else if (count==1 && els[i].id == "magnet"){
+//       els[i].style.visibility = 'visible';
+//     } else if (count==2 && els[i].id == "matrix"){
+//       els[i].style.visibility = 'visible';
+//     } else if (count==3 && els[i].id == "mentor"){
+//       els[i].style.visibility = 'visible';
+//     } else if (count==4 && els[i].id == "mutual"){
+//       els[i].style.visibility = 'visible';
+//     } else {
+//       els[i].style.visibility = 'hidden';
+//     }
+//   };
+
+//   controls.update();
+// };
