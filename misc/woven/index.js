@@ -49,7 +49,7 @@ function init(){
   controls.enableDamping = true;
   controls.dampingFactor = 0.5;
   controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.4;
+  controls.autoRotateSpeed = 0.7;
   controls.rotateSpeed = 0.5;
   controls.enablePan = false;
   controls.maxZoom = 20;
@@ -261,10 +261,10 @@ function htmlStateSelectors(){
     // stateDiv.innerHTML = "State " + i;
     // var element = document.getElementById("stateModule");
     // element.appendChild(stateDiv);
-
     $('#'+(i)).click( objectAnimator );
     $('#'+(i)).click( buttonDisplayer );
     $('#'+(i)).click( cameraChanger );
+    $('#'+(i)).click( copyChanger );
     if (i == 4){
       $('#'+(i)).click( flowerAnimate );
     }   
@@ -295,22 +295,6 @@ function globalMatrixSet(){
         child.matrixAutoUpdate = false;
       }});
 }};
-
-
-function buttonDisplayer(){
-  var self = parseFloat(this.id);
-  // animCounter += 1;
-  if (this.className == "calloutTag"){
-    $('#'+ self).css({"text-decoration": "underline"});
-    $('#'+ self).css({"display": "auto"});
-    $('#'+ self).fadeTo( "slow" , 0.35);
-    $('#'+ (self + 1)).fadeTo( "slow" , 1);
-    $('#'+ (self - 1)).fadeTo( "slow" , 0.35);
-    $('#'+ (self)).css({"text-decoration": "none"});
-    $('#'+ self).children("img").css({"display": "none"});
-  }
-};
-
 
 //creates tween functions for each state, for each cube.
 function objectAnimator(){
@@ -367,7 +351,6 @@ function objectAnimator(){
     tweens[i].play();
   };
 };
-
 
 //takes a THREE.matrix4 and turn's it into a translation x,y,z and a z angle 
 function arrayToMatrix(array){
@@ -429,7 +412,6 @@ function mixerPlay(event){
     mixer.clipAction(clip).play();
   });
 };
-
 
 // UI Functions
 
@@ -541,8 +523,6 @@ for (i = 0; i < camControls.length; i++){
 
 function cameraChanger(){
   var self = parseFloat(this.id);
-  // console.log(scenePos[self].y);
-  // console.log(scene);
 
   // var vals = { y: scenePos[this.id].z, x: scenePos[this.id].x, z: camera.zoom }; // Start at (0, 0)
   var vals = { y: camera.position.z, x: camera.position.x, z: camera.zoom }; // Start at (0, 0)
@@ -552,13 +532,36 @@ function cameraChanger(){
   tweenMoveScene.easing(TWEEN.Easing.Quadratic.InOut);
   tweenMoveScene.delay(0);
   tweenMoveScene.start(); // Start the tween immediately.
-  tweenMoveScene.onUpdate(function(object) {
-    
-    console.log(vals.y);
-    // camera.position.y = vals.y;
-    // camera.position.x = vals.x;
-    camera.zoom = vals.z;
+  tweenMoveScene.onUpdate(function(object) {   
+  camera.zoom = vals.z;
   });
 
   controls.update();
+};
+
+
+function buttonDisplayer(){
+  var self = parseFloat(this.id);
+  // animCounter += 1;
+  if (this.className == "calloutTag"){
+    $('#'+ self).css({"text-decoration": "underline"});
+    $('#'+ self).css({"display": "auto"});
+    $('#'+ self).fadeTo( "slow" , 1);
+    $('#'+ (self + 1)).fadeTo( "slow" , 1);
+    $('#'+ (self - 1)).fadeTo( "slow" , 0.35);
+    $('#'+ (self)).css({"text-decoration": "none"});
+    $('#'+ self).children("img").css({"display": "none"});
+  }
+};
+
+
+function copyChanger(){
+  if (this.className == "calloutTag"){
+    $('#'+ "infoTitle").html(calloutText[this.id].textContent);
+    $('#'+ "bodyText").html(calloutText[this.id].bodyContent);
+  };
+
+  console.log(calloutText[this.id].state);
+  console.log(calloutText[this.id].textContent);
+  console.log(calloutText[this.id].bodyContent);
 };

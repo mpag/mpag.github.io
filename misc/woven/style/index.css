@@ -110,7 +110,8 @@ p {
 }
 
 em {
-  color: #ffaf12;
+  /*color: #ffaf12;*/
+  text-decoration: underline;
   opacity: 100%;
 }
 

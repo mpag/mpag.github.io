@@ -20,7 +20,7 @@ var calloutText =
 	"pos": [10, 300, -570],
 	"bColor":matrixCol,
 	"textContent":"2 ↠ Design",
-	"bodyContent":"These simple rules, extended to hundreds-of-thousands of starlings, result in emergent patterns of movement that appear inconceivably complex. A kind of <em>floating fabric. At no two moments in time do the positions of flocking starlings ever combine to the same shape - an emergent property we can mimic with computer algorithms."
+	"bodyContent":"These simple rules, extended to hundreds-of-thousands of starlings, result in emergent patterns of movement that appear inconceivably complex. A kind of floating fabric. At no two moments in time do the positions of flocking starlings ever combine to the same shape - an emergent property we can mimic with computer algorithms."
 	}
 	,
 	{
