@@ -11,6 +11,7 @@ body {
   margin: 0;
   z-index: -20;
   height:100%;
+  background-color: #EEECE6;
 }
 
 /*THREE SCENES*/
@@ -40,7 +41,6 @@ body {
   margin: 0;
   overflow: hidden;
   position: absolute;
-  display: block;
   height: 100%;
   width: 100%;
   z-index: -9;
@@ -76,43 +76,37 @@ h2:hover {
 }
 
 h3 {
-  display: block;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Oswald', sans-serif;
   text-transform: uppercase;
-  font-size: 0.8em;
-  font-style: italic;
-  font-weight: 600;
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
-h4 {
-  display: block;
-  font-family: 'Roboto', sans-serif;
-  text-transform: lowercase;
-  font-size: 0.8em;
-  font-style: italic;
-  font-weight: 600;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  font-size: 1.1em;
+  font-weight: 100; 
+  margin: 0;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 h5 {
   display: block;
   font-family: 'Oswald', sans-serif;
   text-transform: uppercase;
-  font-size: 2.0em;
+  font-size: 1.1em;
   font-weight: 300;
   margin-top: 0px;
   margin-bottom: 0px;
   padding: 0;
 }
 
+h5:active, h5:visited {
+  color: grey;
+}
+
 p {
-  font-size: 1.0em;
   text-indent: 20px;
-  font-family: 'Roboto', sans-serif;
   margin-top: 0px;
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-size: 0.8em;
+  line-height: 1.6em;
+  font-weight: 100;
 }
 
 em {
@@ -120,104 +114,33 @@ em {
   opacity: 100%;
 }
 
-/*img:hover {
-  opacity: 70%;
-  background-color: white;
-}*/
-
-#stateModule {
-  position: fixed;
-  margin: auto;
-  padding: 15px;
-  bottom: 50px;
-  width: 100px;
-  right: 30px;
-  text-align: center;
-  line-height: 3em;
-  justify-content: center;
-  vertical-align: center;
-  z-index: 2;
-  background-color: rgba(255,255,255,0.9);
-  opacity:1;
-}
-
-
-/*InfoPanel Type A*/
-.infoPanel {
-  position: absolute;
-  z-index: 1;
-  width: 60%;
-  min-height: 400px;
-  margin-left: 0px;
-  margin-right:0px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  border: 0px solid black;
-  opacity:0;
-}
-
-.infoContent {
-  width: 90%;
-  max-width: 1000px;
-  margin: auto;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  padding-left: 40px;
-  padding-right: 40px;
-  background-color: rgba(255,255,255,0.9);
-  transform: perspective(1200px) rotateY(23deg);
-  transition: transform 0.2s ease-out
-}
-
-.infoContent:hover {
-  box-shadow: 5px 5px 5px grey;
-  transform: perspective(1200px) rotateY(20deg);
-}
-
-.gridContainerA {
-  display: grid;
-  grid-template-areas:
-    'header header header header header'
-    'gridLeft gridLeft gridLeft gridRight gridRight';
-  grid-row-gap: 10px;
-  grid-column-gap: 80px;
-  grid-auto-flow: column;
-  padding: 10px;
-}
-.gridHeaderA {
-  grid-area: header;
-}
-.gridLeftA {
-  grid-area: gridLeft;
-}
-.gridRightA {
-  grid-area: gridRight;
-  align-content: center;
-  min-width: 100px;
-}
-.gridContainerAMobile {
-  display: grid;
-  grid-template-areas:
-    'header header header'
-    'gridLeft gridLeft gridLeft' 
-    'gridRight gridRight gridRight';
-  grid-row-gap: 20px;
-  grid-column-gap: 80px;
-  padding: 10px;
-}
-
-
-
-
-#footer {
-  position: fixed;
-  display: flex;
-  bottom: 100px;
+.title {
+  height: 45px;
   width: 100%;
-  height: 100%;
-  z-index: 100;
+  line-height: 43px;
+  background-color: #D7D5D0;
+}
+
+/*CSS 3D*/
+.calloutTag {
+  background-color: rgba(255, 255, 255, 1);
+  border-left: 8px #D7D5D0 solid;
+  text-align: left;
+  max-width: 180px;
+  z-index: 200;
+  padding: 10px;
+  margin: auto;
+  box-shadow: 3px 3px 3px rgba(150,150,150,0.4););
+  vertical-align: middle;
   justify-content: center;
-  align-items: center;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.calloutTag:hover {
+  opacity: 1;
+  text-decoration: underline;
+  border-left: 8px black solid;
 }
 
 .loader {
@@ -231,78 +154,63 @@ em {
   z-index: 30;
 }
 
-/*Misc Animation*/
-@-webkit-keyframes moving /* Safari and Chrome  {
-  from {
-    -webkit-transform: translate(0px, 4px);
-    -o-transform: translate(0px, 4px);
-    transform: translate(0px, 4px);
-  }
-  to {
-    -webkit-transform: translate(0px, 0px);
-    -o-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-  }
-}
-@keyframes rotating {
-  from {
-    -ms-transform: translate(0px, 10px);
-    -moz-transform: translate(0px, 10px);
-    -webkit-transform: translate(0px, 10px);
-    -o-transform: translate(0px, 10px);
-    transform: translate(0px, 10px);
-  }
-  to {
-    -ms-transform:  translate(0px, 0px);
-    -moz-transform:  translate(0px, 0px);
-    -webkit-transform:  translate(0px, 0px);
-    -o-transform:  translate(0px, 0px);
-    transform:  translate(0px, 0px);
-  }
-}
-.rotating {
-  -webkit-animation: rotating 0.5s ease alternate-reverse infinite;
-  -moz-animation: rotating 0.5s ease alternate-reverse infinite;
-  -ms-animation: rotating 0.5s ease alternate-reverse infinite;
-  -o-animation: rotating 0.5s ease alternate-reverse infinite;
-  animation: rotating 0.5s ease alternate-reverse infinite;
+.navigation {
+  position: fixed;
+  bottom: 0px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: stretch;
+  margin: 50px;
+  pointer-events:none;
 }
 
-/*Three Scene Temp*/
-.dot {
-  height: 40px;
-  width: 40px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 40px;
-  margin-right: 40px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  cursor: pointer;
+.navigation a {
+  text-decoration: none;
+  display: block;
+  color: black;
+  background-color: #fdfdfc;
+  box-shadow: 5px 5px 0px rgba(150,150,150,0.6);
 }
 
-.dot:active{background-color: #000000;}
+@media all and (max-width: 800px) {
+  .navigation {
+    flex-flow: column wrap;
+    padding: 0;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .navigation a { 
+    text-align: center; 
+    padding-bottom: 0px;
+  }
+  
+  .navigation p {
+    text-align: left;
+  }
 
-.dot:hover{background-color: #000000;}
+  #container {
+    transform: translate(0px, -150px);
+  }
+}
 
+#InfoPanel {
+  flex-basis: 70%;
+  background-color: rgba(210,210,210,0.9);
+  max-width: 800px;
+  border: 0px white solid;
+}
 
-/*CSS 3D*/
-.calloutTag {
-  background-color: rgba(235, 235, 235, 0.85);
-  text-align: left;
-  max-width: 180px;
-  z-index: 200;
+.bodyText {
+  height: 100%;
   padding: 15px;
-  margin: auto;
-  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.35);
-  vertical-align: middle;
-  justify-content: center;
-  cursor: pointer;
-  /*visibility: hidden;*/
+  text-indent: 15px;
 }
 
-.calloutTag:hover {
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.5);
-  text-decoration: underline;
+#clickHelper {
+  width: 23px;
+  height: 30px;
+  position: absolute;
+  right: 5px;
+  bottom: -20px;
 }
