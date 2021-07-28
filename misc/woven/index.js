@@ -551,6 +551,9 @@ function buttonDisplayer(){
     $('#'+ (self - 1)).fadeTo( "slow" , 0.35);
     $('#'+ (self)).css({"text-decoration": "none"});
     $('#'+ self).children("img").css({"display": "none"});
+    
+    $('#'+ self).css({"borderLeft": "8px solid #000000"});
+    $('#'+ (self - 1)).css({"borderLeft": "8px solid #D7D5D0"});
   }
 };
 

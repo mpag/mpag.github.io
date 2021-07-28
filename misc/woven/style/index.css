@@ -193,6 +193,10 @@ em {
   #container {
     transform: translate(0px, -150px);
   }
+
+  p {
+    font-size: 1.0em;
+  }
 }
 
 #InfoPanel {

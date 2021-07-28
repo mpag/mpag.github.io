@@ -19,31 +19,38 @@ var calloutText =
 	"state":"1",
 	"pos": [10, 300, -570],
 	"bColor":matrixCol,
-	"textContent":"2 ↠ Design",
-	"bodyContent":"These simple rules, extended to hundreds-of-thousands of starlings, result in emergent patterns of movement that appear inconceivably complex. A kind of floating fabric. At no two moments in time do the positions of flocking starlings ever combine to the same shape - an emergent property we can mimic with computer algorithms."
+	"textContent":"2 ↠ Variation",
+	"bodyContent":"At no two moments in time do the positions of flocking starlings ever combine to the same shape - an emergent formal property we can mimic with computer algorithms."
 	}
 	,
 	{
 	"state":"2",
 	"pos": [1100, calloutHeight, -200],
 	"bColor":matrixCol,
-	"textContent":"3 ↠ Resin",
-	"bodyContent":"Each vase forms a seamless knit of solid resin. This interlocking of solid material in the fashion of yarn gives it flexibility, strength, and porosity."
+	"textContent":"3 ↠ Floating Fabric",
+	"bodyContent":"These simple rules, extended to hundreds-of-thousands of starlings, result in emergent patterns of movement that appear inconceivably complex. A kind of floating fabric."
 	}
 	,
 	{
 	"state":"3",
 	"pos": [-800, calloutHeight, -800],
 	"bColor":matrixCol,
-	"textContent":"4 ↠ Light",
-	"bodyContent":"Printing with light and resin in three-dimensions allows for the finest of detail to be captured in the most complex of shapes. Where hand-based crafting techniques are limited by precision and manufacturing techniques such as casting are constrained by design complexity, 3D printing excels."
+	"textContent":"4 ↠ Design",
+	"bodyContent":"Each vase forms a seamless knit of solid resin. This interlocking of solid material in the fashion of yarn gives it flexibility, strength, and porosity.<br><br>Printing with light and resin in three-dimensions allows for the finest of detail to be captured in the most complex of shapes. Where hand-based crafting techniques are limited by precision and manufacturing techniques such as casting are constrained by design complexity, 3D printing excels."
 	}
 	,
 	{
 	"state":"4",
-	"pos": [-500, calloutHeight, -500],
+	"pos": [-500, 400, -500],
 	"bColor":mentorCol,
-	"textContent":"5 ↠ Vase",
-	"bodyContent":"Each design is delicate, and as such, has been proportioned for the display of small dried flower arrangements or decorative herbs. Each design comes with one of three dried flower arrangements; native wattle, baby's breath, or cotton ball.These Australian native arrangements are the work of Agatha Snape, a renowned Sydney-based florist."
+	"textContent":"5 ↠ Flowers",
+	"bodyContent":"Each design is delicate, and as such, has been proportioned for the display of small, dried-flower arrangements. Each design comes with a simple arrangement of Australian natives."
+	},
+	{
+	"state":"5",
+	"pos": [-500, 300, 0],
+	"bColor":mentorCol,
+	"textContent":"6 ↠ Own",
+	"bodyContent":"Woven is a run of 10 design variations. Each is a computer-generated one-off, with each physical design associated to a corresponding NFT as a means to certifying it’s authenticity. A small QR code within each designs packaging allows for AR visualisation of its corresponding animated form as above. <br><br>For purchasing, please get in touch."
 	}
 ]
