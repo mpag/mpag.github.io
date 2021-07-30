@@ -27,7 +27,7 @@ var calloutText =
 	"state":"2",
 	"pos": [1100, calloutHeight, -200],
 	"bColor":matrixCol,
-	"textContent":"3 ↠ Floating Fabric",
+	"textContent":"3 ↠ 100,000's",
 	"bodyContent":"These simple rules, extended to hundreds-of-thousands of starlings, result in emergent patterns of movement that appear inconceivably complex. A kind of floating fabric."
 	}
 	,
@@ -36,21 +36,29 @@ var calloutText =
 	"pos": [-800, calloutHeight, -800],
 	"bColor":matrixCol,
 	"textContent":"4 ↠ Design",
-	"bodyContent":"Each vase forms a seamless knit of solid resin. This interlocking of solid material in the fashion of yarn gives it flexibility, strength, and porosity.<br><br>Printing with light and resin in three-dimensions allows for the finest of detail to be captured in the most complex of shapes. Where hand-based crafting techniques are limited by precision and manufacturing techniques such as casting are constrained by design complexity, 3D printing excels."
+	"bodyContent":"Each vase forms a seamless knit of solid resin. This interlocking of solid material in the fashion of yarn gives it flexibility, strength, and porosity."
 	}
 	,
 	{
 	"state":"4",
 	"pos": [-500, 400, -500],
 	"bColor":mentorCol,
-	"textContent":"5 ↠ Flowers",
-	"bodyContent":"Each design is delicate, and as such, has been proportioned for the display of small, dried-flower arrangements. Each design comes with a simple arrangement of Australian natives."
+	"textContent":"5 ↠ Print",
+	"bodyContent":"Printing with light and resin in three-dimensions allows for the finest of detail to be captured in the most complex of shapes. Where hand-based crafting techniques are limited by precision and manufacturing techniques such as casting are constrained by design complexity, SLA 3D-printing excels."
 	},
 	{
 	"state":"5",
+	"pos": [-500, 300, -200],
+	"bColor":mentorCol,
+	"textContent":"6 ↠ Flowers",
+	"bodyContent":"Each design is delicate, and as such, has been proportioned for the display of small, dried-flower arrangements. Each design comes with a simple arrangement of Australian natives."
+	},
+	{
+	"state":"6",
 	"pos": [-500, 300, 0],
 	"bColor":mentorCol,
-	"textContent":"6 ↠ Own",
-	"bodyContent":"Woven is a run of 10 design variations. Each is a computer-generated one-off, with each physical design associated to a corresponding NFT as a means to certifying it’s authenticity. A small QR code within each designs packaging allows for AR visualisation of its corresponding animated form as above. <br><br>For purchasing, please get in touch."
+	"textContent":"7 ↠ Own",
+	"bodyContent":"Woven is a run of 10 design variations. Each is a computer-generated one-off, with each physical design associated to a corresponding NFT as a means to certifying it’s authenticity. A small QR code within each designs packaging allows for AR visualisation of its corresponding animated form as above. <br><br>For purchasing, please get in <em>touch</em>."
 	}
 ]
+

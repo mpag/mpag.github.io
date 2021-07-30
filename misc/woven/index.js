@@ -265,7 +265,7 @@ function htmlStateSelectors(){
     $('#'+(i)).click( buttonDisplayer );
     $('#'+(i)).click( cameraChanger );
     $('#'+(i)).click( copyChanger );
-    if (i == 4){
+    if (i == 3){
       $('#'+(i)).click( flowerAnimate );
     }   
   }
@@ -553,7 +553,7 @@ function buttonDisplayer(){
     $('#'+ self).children("img").css({"display": "none"});
     
     $('#'+ self).css({"borderLeft": "8px solid #000000"});
-    $('#'+ (self - 1)).css({"borderLeft": "8px solid #D7D5D0"});
+    // $('#'+ (self - 1)).css({"borderLeft": "8px solid #D7D5D0"});
   }
 };
 

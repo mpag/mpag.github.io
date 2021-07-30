@@ -27,11 +27,17 @@ var camControls =
 	{
 	"state":"state4",
 	"pos": [0,0,0],
-	"zoom": 1.3,
+	"zoom": 4,
 	"text":"When one-hundred thousand flocking starlings pulse through an array of shifting shapes, they are each concerned only with the movements of their 7 closest neighbours. If their neighbours are too close, they move further apart; if their neighbours are too distant, they move closer together; if they change direction, they copy."
 	},
 	{
 	"state":"state5",
+	"pos": [0,0,0],
+	"zoom": 1.4,
+	"text":"When one-hundred thousand flocking starlings pulse through an array of shifting shapes, they are each concerned only with the movements of their 7 closest neighbours. If their neighbours are too close, they move further apart; if their neighbours are too distant, they move closer together; if they change direction, they copy."
+	},
+	{
+	"state":"state6",
 	"pos": [0,0,0],
 	"zoom": 1.0,
 	"text":"When one-hundred thousand flocking starlings pulse through an array of shifting shapes, they are each concerned only with the movements of their 7 closest neighbours. If their neighbours are too close, they move further apart; if their neighbours are too distant, they move closer together; if they change direction, they copy."

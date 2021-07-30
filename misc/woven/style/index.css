@@ -191,11 +191,11 @@ em {
   }
 
   #container {
-    transform: translate(0px, -150px);
+    transform: translate(0px, 0px);
   }
 
   p {
-    font-size: 1.0em;
+    font-size: 0.9em;
   }
 }
 
