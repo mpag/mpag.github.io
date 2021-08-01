@@ -49,7 +49,7 @@ function init(){
   controls.enableDamping = true;
   controls.dampingFactor = 0.5;
   controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.7;
+  controls.autoRotateSpeed = 1;
   controls.rotateSpeed = 0.5;
   controls.enablePan = false;
   controls.maxZoom = 20;
@@ -121,7 +121,7 @@ function init(){
       gltf.scene; // THREE.Scene
       gltf.scene.name = "flower";
       gltf.scene.scale.set( 0.01, 0.01, 0.01 );
-      gltf.scene.translateY(100);
+      gltf.scene.translateY(250);
       gltf.asset; // Object
       // console.log(gltf.animations);
 
@@ -165,14 +165,15 @@ function init(){
   var cylGeom = new THREE.CylinderBufferGeometry( 12, 12, 1, 32 );
   var cylMat = new THREE.MeshBasicMaterial( {color: 0x000000} );
   var cylinder = new THREE.Mesh( cylGeom, cylMat );
-  scene.add( cylinder );
+  cylinder.position.y = 150;
+  // scene.add( cylinder );
   
   //____Lights
   ambientlight = new THREE.AmbientLight( 0xFFFFFF, 0.8);
   scene.add( ambientlight);
   var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
   const d = 5000;
-  directionalLight.position.y = 500;
+  directionalLight.position.y = 1500;
   directionalLight.castShadow = true;
   directionalLight.shadow.camera.left = - d;
   directionalLight.shadow.camera.right = d;
@@ -227,7 +228,7 @@ function init(){
   };
   renderer3 = new THREE.CSS2DRenderer();
   containerCSS2 = document.getElementById('containerCSS2');
-  renderer3.setSize($(containerCSS2).width(), $(containerCSS2).height());
+  renderer3.setSize($(containerCSS2).width()*sceneShift, $(containerCSS2).height());
   // renderer3.domElement.style.pointerEvents= 'none';
   containerCSS2.appendChild(renderer3.domElement);
 
@@ -265,7 +266,7 @@ function htmlStateSelectors(){
     $('#'+(i)).click( buttonDisplayer );
     $('#'+(i)).click( cameraChanger );
     $('#'+(i)).click( copyChanger );
-    if (i == 3){
+    if (i == 5){
       $('#'+(i)).click( flowerAnimate );
     }   
   }
@@ -402,6 +403,7 @@ function onWindowResize() {
   camera.aspect = window.innerWidth*sceneShift / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth*sceneShift, window.innerHeight );
+  renderer3.setSize($(containerCSS2).width()*sceneShift, $(containerCSS2).height());
   mobileUI();
   renderer3.setSize(window.innerWidth, window.innerHeight);
 };
@@ -562,9 +564,6 @@ function copyChanger(){
   if (this.className == "calloutTag"){
     $('#'+ "infoTitle").html(calloutText[this.id].textContent);
     $('#'+ "bodyText").html(calloutText[this.id].bodyContent);
+    $('#'+ "infoPanelImg").attr("src", calloutText[this.id].imgSource);
   };
-
-  console.log(calloutText[this.id].state);
-  console.log(calloutText[this.id].textContent);
-  console.log(calloutText[this.id].bodyContent);
 };
