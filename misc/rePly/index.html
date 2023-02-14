@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<META name="viewport" content="initial-scale=0.66, user-scalable=no">
+		<title>ArObject Host</title>
+		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="style/index.css">
+	</head>
+	<body>
+			<div id="container">
+				<div id="arObject">
+					<model-viewer src="models/RePlyBench.glb" camera-controls exposure="1" orbit-sensitivity="0.7" shadow-intensity="1" shadow-softness="0.8" ar ar-modes="quick-look webxr scene-viewer" ar-placement="floor" environment-image="neutral">
+					    <button class="arTrigger dropShadowSmall" slot="ar-button"><h2>Activate AR</h2></button>
+					    <div class="progress-bar" slot="progress-bar">
+					        <div class="update-bar"></div>
+					    </div>
+					    <button id="info" class="dropShadowSmall" style="visibility: hidden;"><h2>i</h2></button>
+					</model-viewer>
+				</div>
+			</div>
+
+			<div class="bg-modal">
+				<div class="modal-content dropShadow">
+					<div id="close" class="close"><strong>+</strong></div>
+					<img id="modalImg" src="img/lobby.jpg">
+					<h4>Animal sculptures in the lobby of Sydney's <a href="https://en.wikipedia.org/wiki/Sirius_building" target="_blank">Sirius Building</a> by architect <a href="https://www.linkedin.com/in/penny-rosier-38a9b778/" target="_blank">Penny Rosier</a>.
+					<br><br><br>
+					<h3>Reminiscent of the cave art paintings of Lascaux, <a href="https://en.wikipedia.org/wiki/Sirius_building" target="_blank">Sirius Building</a> Architect <a href="https://www.afr.com/work-and-careers/management/tao-gofers-the-closet-showman-behind-sydneys-sirius-building-20161007-grx54i" target="_blank">Theo (Tao) Gofers</a> calls these sculptures arranged throughout the communal foyer spaces of the building <i>URO's</i> ; <i>unidentified running objects.</i><br><br></h3>
+					<h4>📷 <a href="https://www.mrp.photography/" target="_blank">Mitchell Page</a></h4>
+				</div>
+			</div>
+
+			<script type="text/javascript" src="index.js"></script>
+
+	</body>
+</html>
+
